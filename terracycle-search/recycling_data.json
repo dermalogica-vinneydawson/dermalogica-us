@@ -1,0 +1,87 @@
+{
+  "products": [
+    {
+      "type": "Trial + Travel Sizes",
+      "entireProductShips": "Yes",
+      "recycleAtHome": "Yes",
+      "shipsFreeToTerraCycle": ["Caps", "Pumps", "Bottles", "Tubes"],
+      "productExamples": [
+        {"name": "Daily Microfoliant", "size": "0.45 oz"},
+        {"name": "Daily Milkfoliant", "size": "0.45 oz"},
+        {"name": "Daily Superfoliant", "size": "0.45 oz"},
+        {"name": "Dynamic Skin Recovery SPF50", "size": "0.4 oz / 0.04 oz"},
+        {"name": "Intensive Moisture Balance", "size": "0.5 oz"},
+        {"name": "Multi-Active Toner", "size": "0.34 oz / 1.7 oz"},
+        {"name": "MultiVitamin Power Recovery Masque", "size": "0.34 oz / 0.5 oz"}
+      ]
+    },
+    {
+      "type": "Tubes + Caps",
+      "entireProductShips": "Yes",
+      "recycleAtHome": "No",
+      "shipsFreeToTerraCycle": ["Caps", "Pumps"],
+      "productExamples": [
+        {"name": "Active Moist"},
+        {"name": "Awaken Peptide Eye Gel"},
+        {"name": "BioLumin-C Eye Serum"},
+        {"name": "Calm Water Gel"},
+        {"name": "Intensive Moisture Balance"},
+        {"name": "MultiVitamin Power Firm"},
+        {"name": "MultiVitamin Power Recovery Masque"},
+        {"name": "Skin Perfect Primer SPF 30"},
+        {"name": "Skin Smoothing Cream"}
+      ]
+    },
+    {
+      "type": "Droppers",
+      "entireProductShips": "No",
+      "recycleAtHome": "Bottles",
+      "shipsFreeToTerraCycle": ["Droppers"],
+      "productExamples": [
+        {"name": "AGE Bright Clearing Serum"},
+        {"name": "BioLumin-C Serum"},
+        {"name": "Circular Hydration Serum"},
+        {"name": "Retinol Clearing Oil"}
+      ]
+    },
+    {
+      "type": "Sprayers + Pumps",
+      "entireProductShips": "No",
+      "recycleAtHome": "No",
+      "shipsFreeToTerraCycle": ["Pumps"],
+      "productExamples": [
+        {"name": "Clearing Skin Wash", "size": "16.9 oz"},
+        {"name": "Special Cleansing Gel", "size": "16.9 oz"},
+        {"name": "Ultra Calming Cleanser", "size": "16.9 oz"},
+        {"name": "Antioxidant HydraMist"},
+        {"name": "Body Hydrating Cream"},
+        {"name": "Conditioning Body Wash"},
+        {"name": "Multi-Active Toner"}
+      ]
+    },
+    {
+      "type": "PET Bottles + Pumps",
+      "entireProductShips": "Yes",
+      "recycleAtHome": "No",
+      "shipsFreeToTerraCycle": ["Pumps", "Bottles"],
+      "productExamples": [
+        {"name": "Intensive Moisture Cleanser"},
+        {"name": "PreCleanse"},
+        {"name": "Skin Resurfacing Cleanser"}
+      ]
+    },
+    {
+      "type": "Airless Pumps + Bottles + Caps",
+      "entireProductShips": "Yes",
+      "recycleAtHome": "No",
+      "shipsFreeToTerraCycle": ["Caps", "Pumps", "Bottles"],
+      "productExamples": [
+        {"name": "BioLumin-C Gel Moisturizer"},
+        {"name": "Dynamic Skin Recovery SPF50"},
+        {"name": "PowerBright Dark Spot Serum"},
+        {"name": "Smart Response Serum"},
+        {"name": "Super Rich Repair"}
+      ]
+    }
+  ]
+}

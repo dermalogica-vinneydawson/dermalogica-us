@@ -1,0 +1,174 @@
+:root {
+    --font-base: 'Helvetica', sans-serif;
+    --font-size-base: 1rem;
+    --font-color-primary: #454D54;
+    --color-white: #FFFFFF;
+    --color-gray-300: #D0D5DD;
+    --color-gray-500: #667085;
+    --color-brand: #5B6670;
+    --gradient-brand: linear-gradient(180deg, #5B6670 0%, #454D54 100%);
+    --border-radius: 0.3rem;
+    --box-shadow-base: 0px 0px 0px 1px rgba(16, 24, 40, 0.18) inset,
+                       0px -2px 0px 0px rgba(16, 24, 40, 0.05) inset,
+                       0px 1px 2px 0px rgba(16, 24, 40, 0.05);
+}
+
+/* Global Styles */
+body {
+    font-family: var(--font-base);
+    margin: 0;
+    padding: 0;
+    color: var(--font-color-primary);
+}
+
+/* Main Section */
+.recycling-section {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    width: 100vw;
+    text-align: center;
+    gap: 1.5rem;
+    padding: 4rem 0;
+    background: var(--gradient-brand);
+    box-sizing: border-box;
+}
+
+/* Content Container */
+.recycling-container {
+    max-width: 48rem; /* 768px */
+    width: 100%;
+    padding: 0 1rem;
+    margin: 0 auto;
+    box-sizing: border-box;
+}
+
+@media screen and (min-width: 48rem) {
+    .recycling-section {
+        padding: 6rem 0;
+    }
+
+    .recycling-container {
+        padding: 0 2rem;
+    }
+}
+
+/* Header Container */
+.header-container {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 0.75rem;
+    color: var(--color-white);
+}
+
+.header-container h1 {
+    font-size: 1.5rem;
+    font-weight: 700;
+    line-height: 2rem;
+    margin: 0;
+}
+
+.header-container p {
+    font-size: var(--font-size-base);
+    font-weight: 300;
+    line-height: 1.5rem;
+    margin: 0;
+}
+
+/* Recycling Info */
+.recycling-info {
+    display: flex;
+    flex-direction: column;
+    text-align: left;
+    gap: 1rem;
+    width: 100%;
+    margin: 0 auto;
+    color: var(--color-white); /* Set text color to white */
+}
+
+.recycling-info h2 {
+    font-size: 1.25rem;
+    font-weight: 700;
+    line-height: 1.75rem;
+    margin: 0;
+    color: var(--color-white); /* Ensure the heading is white */
+}
+
+.recycling-info p {
+    font-size: var(--font-size-base);
+    font-weight: 300;
+    line-height: 1.5rem;
+    margin: 0;
+    color: var(--color-white); /* Ensure paragraph text is white */
+}
+
+/* Dropdown */
+.dropdown-container {
+    position: relative;
+    display: flex;
+    align-items: center;
+    width: 100%;
+    border: 1px solid var(--color-gray-300);
+    border-radius: var(--border-radius);
+    background: var(--color-white);
+    box-shadow: var(--box-shadow-base);
+    height: 3.5rem;
+    margin: 0;
+}
+
+#productDropdown {
+    width: calc(100% - 2.5rem);
+    padding: 1rem;
+    border: none;
+    font-family: var(--font-base);
+    font-size: var(--font-size-base);
+    font-weight: 700;
+    line-height: 1.75rem;
+    color: var(--color-gray-500);
+    appearance: none;
+    background: transparent;
+    cursor: pointer;
+    height: 100%;
+    box-sizing: border-box;
+    outline: none;
+    user-select: none;
+}
+
+/* Chevron */
+.dropdown-chevron {
+    position: absolute;
+    right: 1rem;
+    top: 50%;
+    transform: translateY(-50%);
+    pointer-events: none;
+}
+
+/* Button */
+.shipping-button {
+    border: 1px solid var(--color-brand);
+    background: var(--color-white);
+    box-shadow: var(--box-shadow-base);
+    padding: 0.625rem 1.25rem; /* 10px 20px */
+    color: var(--color-brand);
+    font-family: var(--font-base);
+    font-size: var(--font-size-base);
+    font-weight: 700;
+    line-height: 1.75rem;
+    text-align: center;
+    cursor: pointer;
+    text-decoration: none;
+    display: inline-flex;
+    align-items: center;
+    gap: 0.625rem;
+    text-transform: uppercase;
+    border-radius: 0;
+    transition: box-shadow 0.3s ease, background-color 0.3s ease;
+    margin-top: 1rem; /* 16px */
+}
+
+.shipping-button:hover {
+    box-shadow: 0px 4px 8px rgba(0, 0, 0, 0.1);
+    background: var(--color-white);
+}

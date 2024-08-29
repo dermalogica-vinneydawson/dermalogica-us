@@ -1,0 +1,45 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Recycling Options Finder</title>
+    <link rel="stylesheet" href="styles.css"> <!-- Link to external CSS -->
+</head>
+<body>
+    <section class="recycling-section">
+        <!-- Header Container for Title and Subheading -->
+        <div class="header-container">
+            <h1>What can be recycled?</h1>
+            <p>Discover how to give your Dermalogica empties a second life. Find out which products are recyclable and join us in reducing waste.</p>
+        </div>
+        
+        <!-- Container for Content -->
+        <div class="recycling-container">
+            <div class="recycling-info">
+                <h2>Select your product:</h2>
+
+                
+                <!-- Dropdown and Chevron Container -->
+                <div class="dropdown-container">
+                    <select id="productDropdown" onchange="displayRecyclingInfo()">
+                        <option value="">Choose from the list…</option>
+                    </select>
+                    <!-- Chevron icon for the dropdown -->
+                    <div class="dropdown-chevron">
+                        <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none">
+                            <path d="M6 9L12 15L18 9" stroke="#344054" stroke-width="1.66667" stroke-linecap="round" stroke-linejoin="round"/>
+                        </svg>
+                    </div>
+                </div>
+                
+                <!-- This div will display recycling information after a product is selected -->
+                <div id="recyclingInfo"></div>
+            </div>
+        </div>
+    </section>
+
+    <script src="recycling_data.json" type="application/json" defer></script> <!-- Link to JSON data -->
+    <script src="scripts.js" defer></script> <!-- Link to external JavaScript -->
+</body>
+</html>
