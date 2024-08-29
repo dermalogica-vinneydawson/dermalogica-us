@@ -43,27 +43,29 @@ body {
     box-sizing: border-box;
 }
 
-@media screen and (min-width: 48rem) {
+@media screen and (max-width: 48rem) {
     .recycling-section {
         padding: 6rem 0;
     }
 
     .recycling-container {
-        padding: 0 2rem;
+        padding: 0 1rem;
     }
 }
 
 /* Header Container */
 .header-container {
+    max-width: 48rem;
     display: flex;
     flex-direction: column;
     align-items: center;
-    gap: 0.75rem;
+    gap: 1.5rem;
     color: var(--color-white);
+    padding: 0 1rem;
 }
 
 .header-container h1 {
-    font-size: 1.5rem;
+    font-size: 2.25rem;
     font-weight: 700;
     line-height: 2rem;
     margin: 0;
@@ -72,7 +74,7 @@ body {
 .header-container p {
     font-size: var(--font-size-base);
     font-weight: 300;
-    line-height: 1.5rem;
+    line-height: 1.875rem;
     margin: 0;
 }
 
@@ -88,9 +90,9 @@ body {
 }
 
 .recycling-info h2 {
-    font-size: 1.25rem;
+    font-size: 1.5rem;
     font-weight: 700;
-    line-height: 1.75rem;
+    line-height: 2rem;
     margin: 0;
     color: var(--color-white); /* Ensure the heading is white */
 }
@@ -115,6 +117,12 @@ body {
     box-shadow: var(--box-shadow-base);
     height: 3.5rem;
     margin: 0;
+    transition: box-shadow 0.3s ease, background-color 0.3s ease;
+}
+
+.dropdown-container:hover {
+    border: 1px solid var(--Brand-500, #5B6670);
+    box-shadow: 0px 4px 8px rgba(0, 0, 0, 0.1);
 }
 
 #productDropdown {
@@ -146,15 +154,16 @@ body {
 
 /* Button */
 .shipping-button {
-    border: 1px solid var(--color-brand);
-    background: var(--color-white);
-    box-shadow: var(--box-shadow-base);
+    border: 1px solid var(--Base-White, #FFF);
+    background: var(--Base-White, #FFF);
+    box-shadow: 0px 1px 2px 0px rgba(16, 24, 40, 0.05);
     padding: 0.625rem 1.25rem; /* 10px 20px */
     color: var(--color-brand);
     font-family: var(--font-base);
     font-size: var(--font-size-base);
     font-weight: 700;
     line-height: 1.75rem;
+    letter-spacing: 1.4px;
     text-align: center;
     cursor: pointer;
     text-decoration: none;
@@ -167,7 +176,12 @@ body {
     margin-top: 1rem; /* 16px */
 }
 
+.shipping-button:hover svg path {
+    stroke: white; /* Change the stroke color to white */
+}
+
 .shipping-button:hover {
     box-shadow: 0px 4px 8px rgba(0, 0, 0, 0.1);
-    background: var(--color-white);
+    background: rgba(0, 0, 0, 0);
+    color: var(--Base-White, #FFF);
 }
