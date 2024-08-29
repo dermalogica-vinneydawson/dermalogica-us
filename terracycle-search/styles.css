@@ -4,7 +4,6 @@
     --font-color-primary: #454D54;
     --color-white: #FFFFFF;
     --color-gray-300: #D0D5DD;
-    --color-gray-500: #667085;
     --color-brand: #5B6670;
     --gradient-brand: linear-gradient(180deg, #5B6670 0%, #454D54 100%);
     --border-radius: 0.3rem;
@@ -126,7 +125,7 @@ body {
     font-size: var(--font-size-base);
     font-weight: 700;
     line-height: 1.75rem;
-    color: var(--color-gray-500);
+    color: var(--color-brand);
     appearance: none;
     background: transparent;
     cursor: pointer;
