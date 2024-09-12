@@ -1,0 +1,19 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <title>Product Quiz</title>
+    <link rel="stylesheet" href="{{ url_for('serve_assets', filename='product-quiz.css') }}">
+</head>
+<body>
+    {% include 'product-quiz-button.html' %}
+    {% include 'product-quiz.html' %}
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/animejs/3.2.1/anime.min.js"></script>
+    <script src="{{ url_for('serve_assets', filename='product-quiz.js') }}"></script>
+    <script>
+        // Pass the button text to the JavaScript
+        window.productQuizButtonText = "{{ button_text }}";
+    </script>
+</body>
+</html>

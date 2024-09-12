@@ -1,0 +1,53 @@
+<!-- product-quiz.liquid -->
+
+<div id="product-quiz-modal">
+  <div class="modal-content">
+    <button id="close-modal" class="close-modal">
+      <svg width="24" height="24" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+        <path d="M18 6L6 18" stroke="#5B6670" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+        <path d="M6 6L18 18" stroke="#5B6670" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+      </svg>
+    </button>
+    <div id="quiz-content"></div>
+  </div>
+</div>
+
+{% schema %}
+{
+  "name": "Product Quiz",
+  "settings": [
+    {
+      "type": "color",
+      "id": "quiz_modal_bg_color",
+      "label": "Modal Background Color",
+      "default": "#ffffff"
+    },
+    {
+      "type": "color",
+      "id": "quiz_button_bg_color",
+      "label": "Button Background Color",
+      "default": "#5E93DB"
+    },
+    {
+      "type": "color",
+      "id": "quiz_button_text_color",
+      "label": "Button Text Color",
+      "default": "#ffffff"
+    },
+    {
+      "type": "color",
+      "id": "quiz_button_hover_bg_color",
+      "label": "Button Hover Background Color",
+      "default": "#4A7FC0"
+    }
+  ]
+}
+{% endschema %}
+
+{% stylesheet %}
+  {% include 'product-quiz.css' %}
+{% endstylesheet %}
+
+{% javascript %}
+  {% include 'product-quiz.js' %}
+{% endjavascript %}

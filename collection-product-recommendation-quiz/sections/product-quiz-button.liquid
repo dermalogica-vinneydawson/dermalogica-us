@@ -1,0 +1,29 @@
+<!-- product-quiz-button.liquid -->
+
+<div class="product-quiz-container">
+  <button id="find-perfect-product" class="product-quiz-button">
+    {{ section.settings.button_text }}
+  </button>
+</div>
+
+{% render 'product-quiz' %}
+
+{% schema %}
+{
+  "name": "Product Quiz Button",
+  "settings": [
+    {
+      "type": "text",
+      "id": "button_text",
+      "label": "Button Text",
+      "default": "Find Your Product"
+    }
+  ],
+  "presets": [
+    {
+      "name": "Product Quiz Button",
+      "category": "Custom Content"
+    }
+  ]
+}
+{% endschema %}
