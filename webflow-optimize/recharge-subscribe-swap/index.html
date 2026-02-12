@@ -1,0 +1,38 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>ReCharge Subscribe Swap Demo</title>
+  <!-- Include the swap script -->
+  <script src="swap-recharge-options.js"></script>
+</head>
+<body>
+  <h1>ReCharge Subscribe Swap Demo</h1>
+  <p>This page demonstrates how to include the script that swaps the order of ReCharge subscription options.</p>
+  
+  <h2>Implementation Instructions:</h2>
+  <ol>
+    <li>Add the <code>swap-recharge-options.js</code> script to your Webflow site's custom code section or include it directly on the page.</li>
+    <li>The script will automatically detect and swap the ReCharge subscription options when the page loads.</li>
+    <li>The script includes fallback methods to handle different loading scenarios.</li>
+  </ol>
+  
+  <h2>What the Script Does:</h2>
+  <p>The script swaps the order of the radio options in the ReCharge widget, placing the subscription option first and the one-time purchase option second.</p>
+  
+  <div class="code-example">
+    <h3>Before:</h3>
+    <pre>
+      One-time purchase
+      Subscribe & earn points
+    </pre>
+    
+    <h3>After:</h3>
+    <pre>
+      Subscribe & earn points
+      One-time purchase
+    </pre>
+  </div>
+</body>
+</html> 

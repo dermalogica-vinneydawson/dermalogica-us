@@ -1,0 +1,34 @@
+---
+description: This rule helps AI understand our Webflow optimization conventions for an e-commerce site dermalogica.com. It defines standards for component development, performance optimization, and consistent user experience across product listings, category pages, and promotional elements. Particularly useful when working on improving site speed, conversion rates, and maintaining design consistency.
+globs: *.js, *.css, *.html, src/webflow-optimize/**/*.*, collections/*.json
+---
+# Webflow Optimization Project Rules
+
+## Project Structure
+- All optimization rules should be placed in their respective component files
+- Component files should follow the naming convention: `component-purpose-type.ext`
+- Reusable utilities should be extracted into a shared folder
+
+## Coding Standards
+- Use camelCase for variable and function names
+- Prefer functional programming patterns where possible
+- Add JSDoc comments for all exported functions
+- Optimize for performance and load time as primary goals
+
+## Webflow Specifics
+- Follow Webflow's best practices for DOM manipulation
+- Minimize custom JavaScript when native Webflow features can be used
+- When working with collections, use Webflow's collection API
+- For e-commerce components, ensure mobile responsiveness
+
+## Performance Guidelines
+- Images should be optimized and lazy-loaded
+- Minimize DOM operations in high-traffic pages
+- Use debounce for scroll and resize events
+- Keep third-party dependencies to a minimum
+
+## Project-Specific Rules
+- For product pages (pdp), ensure all pricing calculations are consistent
+- Collection filters should maintain state across page loads
+- Value savings components should highlight the discount percentage
+- Popular categories should be dynamically updated based on traffic data

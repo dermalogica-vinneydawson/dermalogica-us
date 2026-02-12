@@ -1,0 +1,478 @@
+#i-facet-container aside, 
+#i-facet-container .filtertrigger {
+  display: none !important;
+}
+
+#i-facet-container .i-horizontal-facet-filters {
+  position: sticky;
+  top: 134px; /* Adjust the offset as needed */
+  z-index: 10; /* Ensure it appears above other elements */
+  display: flex !important;
+  justify-content: flex-start; /* Change from space-between to flex-start for better scrolling */
+  background-color: #fff;
+  border-top: 1px solid #EAECF0;
+  padding: 14.5px 0px;
+  white-space: nowrap;
+  overflow-x: auto;
+  overflow-y: visible;
+  gap: 16px;
+  -webkit-overflow-scrolling: touch; /* Smooth scrolling on iOS */
+  scroll-snap-type: x proximity; /* Enable scroll snapping */
+}
+
+@media (max-width: 988px) {
+  #i-facet-container .i-horizontal-facet-filters {
+    top: 63px; 
+  }
+}
+
+@media (max-width: 767px) {
+  /* Add padding to the container to ensure content doesn't touch edges */
+  #i-facet-container {
+    padding-left: 15px;
+    padding-right: 0;
+  }
+  
+  #i-facet-container .i-horizontal-facet-filters {
+    margin-bottom: 6px;
+    scrollbar-width: none;
+    padding: 10px 0; /* Remove horizontal padding */
+    padding-left: 15px !important; /* Force 15px left padding */
+    padding-right: 15px; /* Add right padding for consistency */
+    flex-wrap: nowrap !important; /* Force nowrap to prevent stacking */
+    overflow-x: auto;
+    margin-left: 0; /* Fix left margin to respect page margins */
+    margin-right: 0; /* Fix right margin to respect page margins */
+    width: 100%; /* Use 100% width instead of calc with negative margins */
+    align-items: center; /* Ensure vertical alignment */
+    gap: 8px; /* Reduce gap on mobile for better fit */
+  }
+  
+  /* Add extra padding to the first element to ensure it's not at the edge */
+  #i-facet-container .i-sort-by-wrapper {
+    margin-left: 0; /* Reset any left margin */
+  }
+  
+  #i-facet-container .i-horizontal-facet-filters::-webkit-scrollbar {
+    display: none;
+  }
+  
+  /* Restore the dropdown button styling */
+  #i-facet-container .i-new-facet-filter-controls__dropdown-button {
+    white-space: nowrap;
+    flex-shrink: 0;
+    width: auto; /* Auto width */
+    justify-content: center; /* Center content */
+    padding: 8px 10px; /* Slightly reduce padding on mobile */
+  }
+  
+  /* Fix any issues with the filter controls container */
+  #i-facet-container .i-new-facet-filter-controls {
+    order: 1;
+    width: auto;
+    justify-content: flex-start;
+    flex-shrink: 0;
+    display: flex !important; /* Force display flex */
+    flex-wrap: nowrap !important; /* Force nowrap */
+  }
+  
+  /* Ensure the remove filters are properly displayed */
+  #i-facet-container .i-remove-filters {
+    order: 2;
+    flex-shrink: 0;
+    margin-left: 8px; /* Add spacing after the filter controls */
+    display: flex !important; /* Force display flex */
+  }
+  
+  /* Hide the filter button mobile to prevent stacking */
+  #i-facet-container .i-new-facet-filter-controls .i-filter-button-mobile {
+    display: none !important;
+  }
+}
+
+@media (min-width: 768px) {
+  #i-facet-container .i-horizontal-facet-filters {
+    border-bottom: 1px solid #EAECF0;
+  }
+}
+
+/* Sort by wrapper positioning */
+#i-facet-container .i-sort-by-wrapper {
+  order: 3; /* Default: last position on desktop */
+  display: flex;
+  align-items: center;
+  background-color: #fff;
+  border: 1px solid #d0d5dd;
+  padding: 6px 8px; /* Further reduced padding */
+  border-radius: 4px;
+  font-weight: 600;
+  font-size: 13px; /* Reduced from 14px */
+  line-height: 20px;
+  color: #5B6670;
+  cursor: pointer;
+  gap: 4px; /* Reduced gap from 8px to 4px */
+  height: 36px; /* Ensure consistent height */
+  min-width: fit-content; /* Prevent text wrapping */
+  flex-shrink: 0; /* Prevent shrinking in flex container */
+  scroll-snap-align: start; /* Snap to the start of each element */
+}
+
+#i-facet-container .i-sort-by-wrapper svg {
+  width: 16px; /* Reduced from 20px */
+  height: 16px; /* Reduced from 20px */
+  flex-shrink: 0;
+}
+
+@media (max-width: 1024px) {
+  #i-facet-container .i-sort-by-wrapper {
+    order: 0; /* First position when horizontal scrolling is needed */
+  }
+}
+
+@media (max-width: 767px) {
+  #i-facet-container .i-sort-by-wrapper {
+    order: 0; /* Keep at first position on mobile */
+    width: auto; /* Change from 100% to auto to prevent full width */
+    margin-bottom: 0; /* Remove bottom margin */
+    justify-content: flex-start; /* Align content to the left */
+    flex-shrink: 0; /* Prevent shrinking */
+    min-width: auto; /* Allow it to be smaller on mobile */
+    padding: 6px 8px; /* Further reduce padding on mobile */
+  }
+  
+  /* Make the text smaller on mobile if needed */
+  #i-facet-container .i-sort-by-wrapper span,
+  #i-facet-container .i-sort-by-wrapper select {
+    font-size: 13px; /* Slightly smaller font on mobile */
+  }
+}
+
+/* Style for the sort by text */
+#i-facet-container .i-sort-by-wrapper span {
+  font-weight: 600;
+  font-size: 13px; /* Reduced from 14px */
+  color: #5B6670;
+  margin-right: 0; /* Remove margin as we're using gap */
+}
+
+/* Style for the select element */
+#i-facet-container .i-sort-by-wrapper select {
+  border: none;
+  background-color: transparent;
+  font-weight: 600;
+  font-size: 13px; /* Reduced from 14px */
+  color: #5B6670;
+  padding-right: 0; /* Remove padding as we're using gap */
+  cursor: pointer;
+  -webkit-appearance: none;
+  -moz-appearance: none;
+  appearance: none;
+  background-image: none;
+  margin: 0; /* Remove any default margins */
+  width: auto; /* Set width to auto instead of default 100% */
+  max-width: 80px; /* Reduced from 100px to 80px to make it more compact */
+}
+
+#i-facet-container .i-sort-by-wrapper select:focus {
+  outline: none;
+}
+
+@media (max-width: 767px) {
+  #i-facet-container .i-sort-by-wrapper select {
+    flex-grow: 0; /* Change from 1 to 0 to prevent stretching */
+    text-align: right;
+    max-width: 70px; /* Reduced from 80px to 70px on mobile */
+    width: auto; /* Auto width */
+  }
+  
+  /* Make the sort by wrapper more compact on mobile */
+  #i-facet-container .i-sort-by-wrapper {
+    max-width: fit-content; /* Ensure it doesn't grow too wide */
+    width: auto; /* Auto width */
+  }
+}
+
+/* Style for the select icon */
+#i-facet-container .i-sort-by-wrapper .select-icon {
+  display: flex;
+  align-items: center;
+  margin-left: 0; /* Remove margin as we're using gap */
+}
+
+/* Filter controls */
+#i-facet-container .i-new-facet-filter-controls {
+  display: flex;
+  gap: 16px;
+  order: 1;
+  flex-grow: 0; /* Change from 1 to 0 to prevent stretching */
+  flex-shrink: 0; /* Prevent shrinking */
+}
+
+@media (max-width: 1024px) {
+  #i-facet-container .i-new-facet-filter-controls {
+    order: 1; /* Move after sort by when horizontal scrolling is needed */
+  }
+}
+
+@media (max-width: 767px) {
+  /* Ensure the filter controls are properly displayed in a row */
+  #i-facet-container .i-new-facet-filter-controls {
+    display: inline-flex; /* Use inline-flex for better horizontal alignment */
+    white-space: nowrap;
+  }
+  
+  /* Adjust the dropdown buttons to have consistent width */
+  #i-facet-container .i-new-facet-filter-controls__dropdown-button {
+    white-space: nowrap;
+    flex-shrink: 0;
+  }
+  
+  /* Ensure the sort by wrapper has proper spacing */
+  #i-facet-container .i-sort-by-wrapper {
+    margin-right: 8px; /* Add a bit of spacing after the sort by element */
+  }
+}
+
+/* Filter button mobile */
+#i-facet-container .i-new-facet-filter-controls .i-filter-button-mobile {
+  display: none;
+}
+
+@media (max-width: 767px) {
+  #i-facet-container .i-new-facet-filter-controls .i-filter-button-mobile {
+    display: none !important; /* Force hide to prevent stacking */
+  }
+}
+
+#i-facet-container .i-new-facet-filter-controls .i-filter-button-mobile .i-filter-toggle-button {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  background-color: #fff;
+  border: 1px solid #d0d5dd;
+  padding: 8px 16px;
+  border-radius: 4px;
+  font-weight: 600;
+  font-size: 14px;
+  line-height: 20px;
+  color: #5B6670;
+  width: 100%;
+  justify-content: center;
+}
+
+#i-facet-container .i-new-facet-filter-controls .i-filter-button-mobile .i-filter-toggle-button.i-active {
+  background-color: #F9FAFB;
+  border-color: #98A2B3;
+}
+
+#i-facet-container .i-new-facet-filter-controls .i-filter-button-mobile .i-filter-toggle-button svg {
+  width: 18px;
+  height: 12px;
+}
+
+/* Filter dropdown container */
+#i-facet-container .i-new-facet-filter-controls .i-filter-dropdown-container {
+  display: flex;
+  gap: 16px;
+}
+
+@media (max-width: 767px) {
+  #i-facet-container .i-new-facet-filter-controls .i-filter-dropdown-container {
+    display: flex !important; /* Force display flex */
+    width: auto; /* Change from 100% to auto */
+    flex-direction: row; /* Change from column to row */
+    gap: 8px;
+    padding: 0;
+    background-color: transparent;
+    border-radius: 0;
+    margin-bottom: 0;
+    flex-wrap: nowrap; /* Prevent wrapping */
+  }
+  
+  #i-facet-container .i-new-facet-filter-controls .i-filter-dropdown-container.i-show-mobile-filters {
+    display: flex;
+  }
+}
+
+/* Dropdown styles */
+#i-facet-container .i-new-facet-filter-controls__dropdown {
+  position: relative;
+}
+
+#i-facet-container .i-new-facet-filter-controls__dropdown-button {
+  display: flex;
+  gap: 8px;
+  cursor: pointer;
+  background-color: #fff;
+  border: 1px solid #d0d5dd;
+  padding: 8px 14px;
+  border-radius: 4px;
+  font-weight: 600;
+  font-size: 14px;
+  line-height: 20px;
+  color: #5B6670;
+  align-items: center;
+}
+
+@media (max-width: 767px) {
+  #i-facet-container .i-new-facet-filter-controls__dropdown-button {
+    white-space: nowrap;
+    flex-shrink: 0;
+  }
+}
+
+#i-facet-container .i-new-facet-filter-controls__dropdown-button svg {
+  width: 20px;
+  height: 20px;
+}
+
+#i-facet-container .i-new-facet-filter-controls__dropdown-menu {
+  display: none;
+  flex-direction: column;
+  position: absolute;
+  top: 45px;
+  left: 0;
+  background-color: #fff;
+  border: 1px solid #F2F4F7;
+  border-radius: 8px;
+  box-shadow: 0px 12px 16px -4px rgba(16, 24, 40, 0.08);
+  padding: 16px;
+  z-index: 20;
+  width: max-content;
+  overflow: visible;
+  min-width: 220px;
+}
+
+@media (max-width: 767px) {
+  #i-facet-container .i-new-facet-filter-controls__dropdown-menu {
+    position: relative;
+    top: 8px;
+    left: 0;
+    width: 100%;
+    box-shadow: none;
+    border: 1px solid #EAECF0;
+  }
+}
+
+#i-facet-container .i-new-facet-filter-controls__dropdown.i-active .i-new-facet-filter-controls__dropdown-menu {
+  display: flex;
+}
+
+#i-facet-container .i-new-facet-filter-controls__dropdown label {
+  align-items: center;
+  font-weight: 400;
+  line-height: 18px;
+  cursor: pointer;
+  margin-bottom: 12px;
+  display: flex;
+}
+
+#i-facet-container .i-new-facet-filter-controls__dropdown label:last-child {
+  margin-bottom: 0;
+}
+
+#i-facet-container .i-new-facet-filter-controls__dropdown label .icon-checkmark {
+  left: .27rem;
+  top: 1.6rem;
+}
+
+#i-facet-container .i-new-facet-filter-controls__dropdown label span {
+  color: #505862;
+  font-size: 14px;
+  margin-left: 8px;
+}
+
+/* Remove filters */
+#i-facet-container .i-remove-filters {
+  order: 2;
+  display: flex;
+  align-items: center;
+  margin-right: auto;
+  flex-wrap: nowrap; /* Change to nowrap for horizontal scrolling */
+  gap: 8px;
+  flex-shrink: 0; /* Prevent shrinking */
+  padding-right: 16px; /* Add padding to ensure last item is visible */
+}
+
+@media (max-width: 1024px) {
+  #i-facet-container .i-remove-filters {
+    order: 2; /* Change from 3 to 2 to maintain order */
+    margin-right: 0; /* Remove auto margin */
+  }
+}
+
+@media (max-width: 767px) {
+  #i-facet-container .i-remove-filters {
+    white-space: nowrap;
+    overflow-x: auto;
+    scrollbar-width: none;
+    overflow-y: visible;
+    border-bottom: none; /* Remove bottom border */
+    margin-bottom: 0; /* Remove bottom margin */
+    padding-bottom: 0; /* Remove bottom padding */
+    width: auto; /* Change from 100% to auto */
+    order: 2;
+    flex-shrink: 0; /* Prevent shrinking */
+  }
+  
+  #i-facet-container .i-remove-filters::-webkit-scrollbar {
+    display: none;
+  }
+}
+
+#i-facet-container .i-remove-filters a.active-facets__button {
+  margin-bottom: 0;
+  margin-right: 0;
+}
+
+@media (max-width: 767px) {
+  #i-facet-container .i-remove-filters a.active-facets__button {
+    padding: 0 0 6px 0px;
+  }
+}
+
+#i-facet-container .i-remove-filters a.active-facets__button .i-facet-remove {
+  text-transform: lowercase;
+  font-size: 12px;
+  background-color: #F9FAFB;
+  border-radius: 6px;
+  letter-spacing: normal;
+  border: 1px solid #D0D5DD;
+  padding: 4px 8px;
+  display: flex;
+  align-items: center;
+  color: #344054;
+  font-weight: 500;
+}
+
+#i-facet-container .i-remove-filters a.active-facets__button .i-facet-remove svg {
+  margin-left: 5px;
+}
+
+#i-facet-container .i-remove-filters a.active-facets__button:hover .i-facet-remove {
+  background-color: #EAECF0;
+  border: 1px solid #98A2B3;
+}
+
+/* Backdrop */
+.i-dropdown-backdrop {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  z-index: 5;
+  display: none;
+}
+
+.i-dropdown-backdrop.i-active {
+  display: block;
+}
+
+/* Add scroll snap points to each filter element */
+#i-facet-container .i-sort-by-wrapper,
+#i-facet-container .i-new-facet-filter-controls__dropdown,
+#i-facet-container .i-remove-filters a.active-facets__button {
+  scroll-snap-align: start; /* Snap to the start of each element */
+}
+  

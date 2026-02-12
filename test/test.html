@@ -1,0 +1,107 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Responsive Texture Background</title>
+  <style>
+    /* Base Reset */
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+    }
+
+    body {
+      font-family: Arial, sans-serif;
+      background-color: #f6f7f8;
+    }
+
+    /* Hero Section with Fullscreen Background */
+    .hero {
+      position: relative;
+      width: 100%;
+      min-height: 100vh;
+      display: flex;
+      flex-direction: column;
+      justify-content: center;
+      align-items: center;
+      text-align: center;
+      padding: 40px 20px;
+
+      /* Background image */
+      background-image: url('/test/Background\ pattern.png');
+      background-size: cover;
+      background-position: center;
+      background-repeat: no-repeat;
+    }
+
+    .hero-content {
+      z-index: 1; /* Ensures content stays above the background */
+    }
+
+    .hero h1 {
+      font-size: 2rem;
+      margin-bottom: 10px;
+      color: white;
+    }
+
+    .hero p {
+      margin-bottom: 20px;
+      color: rgba(255, 255, 255, 0.8);
+    }
+
+    .hero-buttons {
+      display: flex;
+      gap: 15px;
+      margin-bottom: 30px;
+    }
+
+    .hero-buttons button {
+      padding: 10px 20px;
+      border: none;
+      cursor: pointer;
+      font-size: 1rem;
+      background-color: #4a4e58;
+      color: #fff;
+      transition: background-color 0.3s;
+    }
+
+    .hero-buttons button:hover {
+      background-color: #3b3e46;
+    }
+
+    /* Media Query for Larger Screens */
+    @media (min-width: 768px) {
+      .hero {
+        flex-direction: row;
+        justify-content: space-between;
+        text-align: left;
+        padding: 80px;
+      }
+
+      .hero h1 {
+        font-size: 2.5rem;
+      }
+
+      .hero-buttons {
+        justify-content: flex-start;
+      }
+    }
+  </style>
+</head>
+<body>
+
+  <section class="hero">
+    <div class="hero-content">
+      <h1>Get your favorite products delivered right to your doorstep.</h1>
+      <p>Never run out—set your frequency and enjoy stress-free skincare. Enjoy free shipping, double the rewards points and a bonus gift with every recurring order.</p>
+      <div class="hero-buttons">
+        <button>See How It Works</button>
+        <button>Start Your Subscription</button>
+      </div>
+    </div>
+  </section>
+
+</body>
+</html>

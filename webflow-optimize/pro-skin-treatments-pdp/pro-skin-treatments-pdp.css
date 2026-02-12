@@ -1,0 +1,56 @@
+#recommended-pro-treatment {
+    .atc_variant_button {
+      padding-left: 12px;
+      padding-right: 12px;
+    }
+  
+    .complementary_product__title:hover {
+      text-decoration: none;
+    }
+  
+    .wf-find-skin-therapist-button {
+      cursor: pointer;
+        color: #fff;
+        display: flex;
+        height: 36px;
+        min-width: 150px;
+        width: min-content;
+        padding: 8px 16px;
+        flex-direction: row;
+        align-items: center;
+        align-self: stretch;
+        justify-content: center;
+        border: 1px solid #5B6670;
+        background: #5B6670;
+        text-align: center;
+        font-family: Helvetica;
+        font-size: 14px;
+        font-weight: 700;
+        line-height: 20px;
+        letter-spacing: 1.4px;
+  
+        &:hover {
+          background: #fff;
+          color: #5B6670;
+        }
+        
+        @media (max-width: 749px) {
+          white-space: nowrap;
+          padding-left: 12px !important;
+          padding-right: 12px !important;
+        }
+        
+        @media (max-width: 394px) {
+          white-space: nowrap;
+          padding-left: 6px !important;
+          padding-right: 6px !important;
+        }
+    }
+  }
+  
+  @media (max-width: 749px) {
+    .complementary_products_heading {
+      display: block !important;
+    }
+  }
+  

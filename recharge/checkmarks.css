@@ -1,0 +1,19 @@
+.recharge__features {
+    display: grid !important;
+    grid-template-columns: 1fr 1fr 1fr !important; /* Default: 3 columns for desktop */
+    gap: inherit !important; /* Keep the original spacing */
+}
+
+/* For screens between 768px and 1098px */
+@media (max-width: 1098px) {
+  .recharge__features {
+    grid-template-columns: 1fr 1fr !important; /* Switch to 2 columns starting at 1098px */
+  }
+}
+
+/* For mobile view (below 768px) */
+@media (max-width: 768px) {
+  .recharge__features {
+    grid-template-columns: 1fr 1fr !important; /* Keep 2 columns for small screens (mobile) */
+  }
+}

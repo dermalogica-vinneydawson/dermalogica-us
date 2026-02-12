@@ -1,0 +1,80 @@
+[
+    {
+        "Product Title":"special cleansing gel",
+        "Variant ID":36070283247768,
+        "Value":"$139.26",
+        "Percentage Savings":null
+    },
+    {
+        "Product Title":"precleanse cleansing oil",
+        "Variant ID":41726040932504,
+        "Value":"$96.08",
+        "Percentage Savings":null
+    },
+    {
+        "Product Title":"dynamic skin recovery spf50 moisturizer",
+        "Variant ID":42432981893272,
+        "Value":"$158",
+        "Percentage Savings":null
+    },
+    {
+        "Product Title":"skin smoothing cream moisturizer",
+        "Variant ID":42642308464792,
+        "Value":"$144",
+        "Percentage Savings":"31%"
+    },
+    {
+        "Product Title":"intensive moisture balance moisturizer",
+        "Variant ID":42642311119000,
+        "Value":"$144",
+        "Percentage Savings":"31%"
+    },
+    {
+        "Product Title":"active moist moisturizer",
+        "Variant ID":42642312691864,
+        "Value":"$144",
+        "Percentage Savings":"31%"
+    },
+    {
+        "Product Title":"ultracalming cleanser",
+        "Variant ID":36070254968984,
+        "Value":"$88.56",
+        "Percentage Savings":null
+    },
+    {
+        "Product Title":"biolumin-c vitamin c serum",
+        "Variant ID":36070282199192,
+        "Value":"$192",
+        "Percentage Savings":null
+    },
+    {
+        "Product Title":"super rich repair moisturizer",
+        "Variant ID":40366074822808,
+        "Value":null,
+        "Percentage Savings":null
+    },
+    {
+        "Product Title":"multivitamin power firm eye cream",
+        "Variant ID":42715738505368,
+        "Value":"$138",
+        "Percentage Savings":"28%"
+    },
+    {
+        "Product Title":"circular hydration serum with hyaluronic acid",
+        "Variant ID":45345141522584,
+        "Value":null,
+        "Percentage Savings":null
+    },
+    {
+        "Product Title":"daily glycolic cleanser",
+        "Variant ID":40915138936984,
+        "Value":"$74.50",
+        "Percentage Savings":null
+    },
+    {
+        "Product Title":"smart response serum",
+        "Variant ID":42715744010392,
+        "Value":"$296",
+        "Percentage Savings":"22%"
+    }
+]
