@@ -57,13 +57,13 @@
 
   <!-- ============================  HEADER  ============================ -->
   <header class="sticky top-0 z-50 bg-[--background] border-b border-[--border] shadow-sm">
-    <div class="max-w-[1280px] mx-auto flex items-center justify-between px-[--space-6] py-[--space-3]">
+    <div class="max-w-[1280px] mx-auto flex items-center justify-between px-4 md:px-[--space-6] py-[--space-3]">
       <!-- Logo -->
       <a href="#" class="flex items-center gap-[--space-2]" aria-label="Dermalogica home">
-        <svg width="160" height="20" viewBox="0 0 160 20" fill="none" aria-hidden="true">
-          <text x="0" y="16" font-family="'Helvetica LT Pro', sans-serif" font-size="16" font-weight="700"
-                fill="var(--primary)" letter-spacing="0.12em">DERMALOGICA</text>
-        </svg>
+        <img src="https://cdn.shopify.com/s/files/1/0422/8857/8713/files/dermalogica-logo.svg?v=1658756270" 
+             alt="Dermalogica" 
+             class="h-5 w-auto"
+             loading="eager" />
       </a>
 
       <!-- Desktop Nav -->
@@ -81,15 +81,41 @@
           <div class="w-[32px] h-[32px] rounded-full bg-[--primary] flex items-center justify-center text-xs font-bold text-[--primary-foreground]">C</div>
           <span class="text-sm font-normal text-[--foreground]">Courtney</span>
         </div>
-        <!-- Cart icon -->
-        <button class="relative p-[--space-1]" aria-label="Shopping bag">
-          <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="var(--primary)" stroke-width="1.5">
-            <path d="M6 2L3 6v14a2 2 0 002 2h14a2 2 0 002-2V6l-3-4z"/>
-            <line x1="3" y1="6" x2="21" y2="6"/>
-            <path d="M16 10a4 4 0 01-8 0"/>
-          </svg>
-          <span id="cart-count" class="hidden absolute -top-1 -right-1 w-[18px] h-[18px] rounded-full bg-[--primary] text-[10px] font-bold text-[--primary-foreground] flex items-center justify-center">0</span>
-        </button>
+        <!-- Cart icon with mini-cart -->
+        <div class="relative">
+          <button id="cart-toggle" class="relative p-[--space-1]" aria-label="Shopping bag" aria-expanded="false">
+            <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="var(--primary)" stroke-width="1.5">
+              <path d="M6 2L3 6v14a2 2 0 002 2h14a2 2 0 002-2V6l-3-4z"/>
+              <line x1="3" y1="6" x2="21" y2="6"/>
+              <path d="M16 10a4 4 0 01-8 0"/>
+            </svg>
+            <span id="cart-count" class="hidden absolute -top-1 -right-1 w-[18px] h-[18px] rounded-full bg-[--primary] text-[10px] font-bold text-[--primary-foreground] flex items-center justify-center">0</span>
+          </button>
+          
+          <!-- Mini-cart dropdown -->
+          <div id="mini-cart" class="absolute right-0 top-full mt-[--space-2] w-[320px] bg-[--card] border border-[--border] rounded-lg shadow-lg z-50 hidden">
+            <div class="p-[--space-4] border-b border-[--border]">
+              <div class="flex items-center justify-between">
+                <h3 class="text-sm font-bold text-[--foreground]">Cart</h3>
+                <span id="mini-cart-count" class="text-xs font-light text-[--muted-foreground]">0 items</span>
+              </div>
+            </div>
+            <div id="mini-cart-items" class="max-h-[400px] overflow-y-auto">
+              <div class="p-[--space-6] text-center">
+                <p class="text-sm font-light text-[--muted-foreground]">Your cart is empty</p>
+              </div>
+            </div>
+            <div id="mini-cart-footer" class="p-[--space-4] border-t border-[--border] hidden">
+              <div class="flex items-center justify-between mb-[--space-3]">
+                <span class="text-sm font-bold text-[--foreground]">Total</span>
+                <span id="mini-cart-total" class="text-base font-bold text-[--foreground]">$0.00</span>
+              </div>
+              <a href="#" class="block w-full px-[--space-4] py-[--space-3] bg-[--primary] text-[--primary-foreground] rounded text-sm font-bold uppercase tracking-[0.08em] text-center hover:bg-[--primary]/90 transition-colors">
+                View Cart
+              </a>
+            </div>
+          </div>
+        </div>
         <!-- Mobile menu -->
         <button class="md:hidden p-[--space-1]" aria-label="Menu" id="mobile-menu-btn">
           <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="var(--primary)" stroke-width="1.5">
@@ -100,7 +126,7 @@
     </div>
 
     <!-- Mobile nav drawer -->
-    <nav id="mobile-nav" class="md:hidden hidden border-t border-[--border] bg-[--background] px-[--space-6] py-[--space-4] flex flex-col gap-[--space-4]" aria-label="Mobile navigation">
+    <nav id="mobile-nav" class="md:hidden hidden border-t border-[--border] bg-[--background] px-4 py-[--space-4] flex flex-col gap-[--space-4]" aria-label="Mobile navigation">
       <a href="#" class="text-sm font-normal text-[--muted-foreground]">Shop</a>
       <a href="#" class="text-sm font-normal text-[--muted-foreground]">Skin Concerns</a>
       <a href="#" class="text-sm font-normal text-[--muted-foreground]">Professional</a>
@@ -109,881 +135,286 @@
   </header>
 
   <!-- ============================  HERO  ============================ -->
-  <section class="py-[--space-12] md:py-[--space-16] text-center px-[--space-6]">
-    <p class="text-xs font-normal tracking-[0.12em] uppercase text-[--muted-foreground] mb-[--space-2]">Personalized Skincare</p>
-    <h1 class="text-2xl md:text-3xl font-bold text-[--heading] mb-[--space-3] leading-tight">
-      Your Personalized Routine, Courtney
-    </h1>
-    <p class="text-sm md:text-base font-light text-[--muted-foreground] max-w-[560px] mx-auto">
-      Based on your skin analysis, we've curated routines tailored to your unique skin profile. Choose the level that fits your lifestyle.
-    </p>
+  <section class="py-[--space-4] md:py-[--space-5] px-4 md:px-[--space-6] border-b border-[--border]">
+    <div class="max-w-[1280px] mx-auto flex flex-col sm:flex-row items-center justify-between gap-[--space-4]">
+      <h1 class="text-base md:text-lg font-bold text-[--heading] leading-tight">
+        Courtney's Personalized Routine
+      </h1>
+      
+      <!-- Action Buttons -->
+      <div class="flex flex-col sm:flex-row items-center gap-[--space-3]">
+        <button id="save-results-btn" class="inline-flex items-center gap-[--space-2] px-[--space-5] py-[--space-2] bg-[--card] border border-[--border] rounded text-sm font-bold text-[--foreground] hover:bg-[--card-header] hover:border-[--primary] transition-all duration-[250ms]">
+          <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+            <path d="M4 4h16c1.1 0 2 .9 2 2v12c0 1.1-.9 2-2 2H4c-1.1 0-2-.9-2-2V6c0-1.1.9-2 2-2z"/>
+            <polyline points="22,6 12,13 2,6"/>
+          </svg>
+          <span>Save Results via Email</span>
+        </button>
+        <button id="retake-quiz-btn" class="inline-flex items-center gap-[--space-2] px-[--space-5] py-[--space-2] bg-[--card] border border-[--border] rounded text-sm font-bold text-[--foreground] hover:bg-[--card-header] hover:border-[--primary] transition-all duration-[250ms]">
+          <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+            <polyline points="23 4 23 10 17 10"/>
+            <polyline points="1 20 1 14 7 14"/>
+            <path d="M3.51 9a9 9 0 0 1 14.85-3.36L23 10M1 14l4.64 4.36A9 9 0 0 0 20.49 15"/>
+          </svg>
+          <span>Retake Quiz</span>
+        </button>
+      </div>
+    </div>
   </section>
 
+  <!-- ──────────  ROUTINE TABS (STICKY)  ────────── -->
+  <div id="sticky-tabs-container" class="sticky z-40 bg-[--background] border-b border-[--border] shadow-sm backdrop-blur-sm bg-opacity-95">
+      <section class="max-w-[1280px] mx-auto px-4 md:px-[--space-6] py-[--space-2] md:py-[--space-4]" aria-label="Skincare routines">
+        <!-- Mobile: Custom Dropdown selects -->
+        <div class="md:hidden flex flex-col gap-[--space-2]">
+          <!-- Timing Toggle Dropdown (mobile only, only shown if both AM and PM are available) -->
+          <div id="timing-toggle-mobile" class="hidden">
+            <div class="custom-dropdown relative">
+              <button id="timing-dropdown-btn" class="w-full px-[--space-3] py-[--space-2] border border-[--border] rounded text-sm font-bold bg-[--card] text-[--foreground] flex items-center justify-between hover:bg-[--card-header] transition-colors" aria-expanded="false" aria-haspopup="listbox">
+                <span id="timing-dropdown-label">AM Routine</span>
+                <svg class="w-4 h-4 transition-transform" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                  <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7"/>
+                </svg>
+              </button>
+              <ul id="timing-dropdown-menu" class="custom-dropdown-menu hidden absolute top-full left-0 right-0 mt-1 bg-[--card] border border-[--border] rounded shadow-lg z-50">
+                <li>
+                  <button class="timing-dropdown-option w-full px-[--space-3] py-[--space-2] text-left text-sm font-bold text-[--foreground] hover:bg-[--card-header] transition-colors" data-value="AM">
+                    AM Routine
+                  </button>
+                </li>
+                <li>
+                  <button class="timing-dropdown-option w-full px-[--space-3] py-[--space-2] text-left text-sm font-bold text-[--foreground] hover:bg-[--card-header] transition-colors" data-value="PM">
+                    PM Routine
+                  </button>
+                </li>
+              </ul>
+            </div>
+          </div>
+          
+          <!-- Tier Selection Dropdown (mobile only) -->
+          <div class="custom-dropdown relative">
+            <button id="tier-dropdown-btn" class="w-full px-[--space-3] py-[--space-2] border border-[--border] rounded text-sm font-bold bg-[--card] text-[--foreground] flex items-center justify-between hover:bg-[--card-header] transition-colors" aria-expanded="false" aria-haspopup="listbox">
+              <span id="tier-dropdown-label">Essential (3 Products)</span>
+              <svg class="w-4 h-4 transition-transform" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7"/>
+              </svg>
+            </button>
+            <ul id="tier-dropdown-menu" class="custom-dropdown-menu hidden absolute top-full left-0 right-0 mt-1 bg-[--card] border border-[--border] rounded shadow-lg z-50">
+              <li>
+                <button class="tier-dropdown-option w-full px-[--space-3] py-[--space-2] text-left text-sm font-bold text-[--foreground] hover:bg-[--card-header] transition-colors" data-value="essential">
+                  Essential (3 Products)
+                </button>
+              </li>
+              <li>
+                <button class="tier-dropdown-option w-full px-[--space-3] py-[--space-2] text-left text-sm font-bold text-[--foreground] hover:bg-[--card-header] transition-colors" data-value="enhanced">
+                  Enhanced (5 Products)
+                </button>
+              </li>
+              <li>
+                <button class="tier-dropdown-option w-full px-[--space-3] py-[--space-2] text-left text-sm font-bold text-[--foreground] hover:bg-[--card-header] transition-colors" data-value="comprehensive">
+                  Comprehensive (7 Products)
+                </button>
+              </li>
+            </ul>
+          </div>
+        </div>
+        
+        <!-- Desktop: Button toggles and tabs -->
+        <div class="hidden md:block">
+          <!-- Timing Toggle (only shown if both AM and PM are available) -->
+          <div id="timing-toggle-container" class="flex items-center justify-center gap-[--space-2] mb-[--space-4] hidden">
+            <button class="timing-toggle-btn active" data-timing="AM">
+              <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 3v1m0 16v1m9-9h-1M4 12H3m15.364 6.364l-.707-.707M6.343 6.343l-.707-.707m12.728 0l-.707.707M6.343 17.657l-.707.707M16 12a4 4 0 11-8 0 4 4 0 018 0z"/>
+              </svg>
+              <span>AM Routine</span>
+            </button>
+            <button class="timing-toggle-btn" data-timing="PM">
+              <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M20.354 15.354A9 9 0 018.646 3.646 9.003 9.003 0 0012 21a9.003 9.003 0 008.354-5.646z"/>
+              </svg>
+              <span>PM Routine</span>
+            </button>
+          </div>
+          
+          <!-- Tab strip -->
+          <div class="flex flex-col sm:flex-row gap-[--space-3]" role="tablist" aria-label="Routine levels">
+            <button role="tab" aria-selected="true" aria-controls="panel-essential" id="tab-essential"
+                    class="routine-tab routine-tab--active flex-1 flex items-center justify-center gap-[--space-2] px-[--space-5] py-[--space-3] rounded-lg text-sm font-bold transition-all duration-[250ms]">
+              <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z"/>
+              </svg>
+              <span>Essential</span>
+              <span class="routine-tab-count">3</span>
+            </button>
+            <button role="tab" aria-selected="false" aria-controls="panel-enhanced" id="tab-enhanced"
+                    class="routine-tab flex-1 flex items-center justify-center gap-[--space-2] px-[--space-5] py-[--space-3] rounded-lg text-sm font-bold transition-all duration-[250ms]">
+              <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 10V3L4 14h7v7l9-11h-7z"/>
+              </svg>
+              <span>Enhanced</span>
+              <span class="routine-tab-count">5</span>
+            </button>
+            <button role="tab" aria-selected="false" aria-controls="panel-comprehensive" id="tab-comprehensive"
+                    class="routine-tab flex-1 flex items-center justify-center gap-[--space-2] px-[--space-5] py-[--space-3] rounded-lg text-sm font-bold transition-all duration-[250ms]">
+              <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 3v4M3 5h4M6 17v4m-2-2h4m5-16l2.286 6.857L21 12l-5.714 2.143L13 21l-2.286-6.857L5 12l5.714-2.143L13 3z"/>
+              </svg>
+              <span>Comprehensive</span>
+              <span class="routine-tab-count">7</span>
+            </button>
+          </div>
+        </div>
+      </section>
+    </div>
+
   <!-- ============================  MAIN CONTENT  ============================ -->
-  <main class="max-w-[1280px] mx-auto px-[--space-6] pb-[--space-20]">
+  <main class="max-w-[1280px] mx-auto px-4 md:px-[--space-6] pb-[--space-20]">
 
     <!-- ──────────  SKIN ANALYSIS SUMMARY  ────────── -->
-    <section class="mb-[--space-10] bg-[--card] rounded border border-[--border] shadow-sm overflow-hidden" aria-label="Skin analysis summary">
-      <div class="bg-[--card-header] px-[--space-6] py-[--space-4] border-b border-[--border]">
+    <section class="mt-[--space-8] mb-[--space-10] bg-[--card] rounded border border-[--border] shadow-sm overflow-hidden" aria-label="Skin analysis summary">
+      <button id="skin-analysis-toggle" class="w-full bg-[--card-header] px-4 md:px-[--space-6] py-[--space-4] border-b border-[--border] flex items-center justify-between hover:bg-[--card-header]/80 transition-colors" aria-expanded="true" aria-controls="skin-analysis-content">
         <h2 class="text-lg font-bold text-[--heading]">Your Skin Analysis</h2>
-      </div>
-      <div class="px-[--space-6] py-[--space-6]">
-        <!-- Top row: type + concerns -->
-        <div class="grid grid-cols-1 md:grid-cols-2 gap-[--space-6] mb-[--space-6]">
-          <!-- Skin Type -->
-          <div>
-            <h3 class="text-xs font-bold uppercase tracking-[0.08em] text-[--muted-foreground] mb-[--space-2]">Skin Type</h3>
-            <p class="text-base font-normal text-[--foreground]">Combination — Oily T-zone with normal to dry cheeks</p>
-          </div>
-          <!-- Concerns -->
-          <div>
-            <h3 class="text-xs font-bold uppercase tracking-[0.08em] text-[--muted-foreground] mb-[--space-2]">Concerns</h3>
-            <div class="flex flex-wrap gap-[--space-2]">
-              <span class="inline-flex items-center px-[--space-3] py-[--space-1] rounded-full bg-[--badge-bg] text-xs font-normal text-[--badge-text]">Uneven Tone</span>
-              <span class="inline-flex items-center px-[--space-3] py-[--space-1] rounded-full bg-[--badge-bg] text-xs font-normal text-[--badge-text]">Fine Lines</span>
-              <span class="inline-flex items-center px-[--space-3] py-[--space-1] rounded-full bg-[--badge-bg] text-xs font-normal text-[--badge-text]">Breakouts</span>
-              <span class="inline-flex items-center px-[--space-3] py-[--space-1] rounded-full bg-[--badge-bg] text-xs font-normal text-[--badge-text]">Dehydration</span>
-            </div>
-          </div>
-        </div>
-        <!-- Full-width Goals -->
-        <div class="border-t border-[--border] pt-[--space-6]">
-          <h3 class="text-xs font-bold uppercase tracking-[0.08em] text-[--muted-foreground] mb-[--space-2]">Goals</h3>
-          <div class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-4 gap-[--space-4]">
-            <div class="flex items-start gap-[--space-2]">
-              <svg class="mt-0.5 flex-shrink-0" width="16" height="16" viewBox="0 0 16 16" fill="none">
-                <circle cx="8" cy="8" r="7" stroke="var(--success)" stroke-width="1.5"/>
-                <path d="M5 8l2 2 4-4" stroke="var(--success)" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/>
-              </svg>
-              <span class="text-sm font-light text-[--foreground]">Brighten &amp; even skin tone</span>
-            </div>
-            <div class="flex items-start gap-[--space-2]">
-              <svg class="mt-0.5 flex-shrink-0" width="16" height="16" viewBox="0 0 16 16" fill="none">
-                <circle cx="8" cy="8" r="7" stroke="var(--success)" stroke-width="1.5"/>
-                <path d="M5 8l2 2 4-4" stroke="var(--success)" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/>
-              </svg>
-              <span class="text-sm font-light text-[--foreground]">Reduce fine lines &amp; wrinkles</span>
-            </div>
-            <div class="flex items-start gap-[--space-2]">
-              <svg class="mt-0.5 flex-shrink-0" width="16" height="16" viewBox="0 0 16 16" fill="none">
-                <circle cx="8" cy="8" r="7" stroke="var(--success)" stroke-width="1.5"/>
-                <path d="M5 8l2 2 4-4" stroke="var(--success)" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/>
-              </svg>
-              <span class="text-sm font-light text-[--foreground]">Control breakouts</span>
-            </div>
-            <div class="flex items-start gap-[--space-2]">
-              <svg class="mt-0.5 flex-shrink-0" width="16" height="16" viewBox="0 0 16 16" fill="none">
-                <circle cx="8" cy="8" r="7" stroke="var(--success)" stroke-width="1.5"/>
-                <path d="M5 8l2 2 4-4" stroke="var(--success)" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/>
-              </svg>
-              <span class="text-sm font-light text-[--foreground]">Boost hydration levels</span>
-            </div>
-          </div>
-        </div>
+        <svg id="skin-analysis-chevron" class="w-5 h-5 text-[--muted-foreground] transition-transform duration-200" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+          <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7"/>
+        </svg>
+      </button>
+      <div id="skin-analysis-content" class="px-4 md:px-[--space-6] py-[--space-6] transition-all duration-300 ease-in-out overflow-hidden">
+        <!-- Content will be dynamically loaded here -->
       </div>
     </section>
 
-    <!-- ──────────  ROUTINE TABS  ────────── -->
-    <section class="mb-[--space-16]" aria-label="Skincare routines">
-      <!-- Tab strip -->
-      <div class="flex flex-col sm:flex-row gap-[--space-2] mb-[--space-8]" role="tablist" aria-label="Routine levels">
-        <button role="tab" aria-selected="true" aria-controls="panel-essential" id="tab-essential"
-                class="routine-tab routine-tab--active flex-1 flex items-center justify-center gap-[--space-2] px-[--space-6] py-[--space-3] rounded text-sm font-bold transition-all duration-[250ms]">
-          <span>Essential</span>
-          <span class="routine-tab-count">4 Products</span>
-        </button>
-        <button role="tab" aria-selected="false" aria-controls="panel-enhanced" id="tab-enhanced"
-                class="routine-tab flex-1 flex items-center justify-center gap-[--space-2] px-[--space-6] py-[--space-3] rounded text-sm font-bold transition-all duration-[250ms]">
-          <span>Enhanced</span>
-          <span class="routine-tab-count">6 Products</span>
-        </button>
-        <button role="tab" aria-selected="false" aria-controls="panel-comprehensive" id="tab-comprehensive"
-                class="routine-tab flex-1 flex items-center justify-center gap-[--space-2] px-[--space-6] py-[--space-3] rounded text-sm font-bold transition-all duration-[250ms]">
-          <span>Comprehensive</span>
-          <span class="routine-tab-count">8 Products</span>
-        </button>
-      </div>
-
+    <!-- ──────────  ROUTINE PANELS  ────────── -->
+    <section class="max-w-[1280px] mx-auto md:px-[--space-6] py-[--space-8]">
       <!-- ═══════  ESSENTIAL PANEL  ═══════ -->
       <div role="tabpanel" id="panel-essential" aria-labelledby="tab-essential" class="routine-panel">
-
-        <!-- STEP: Cleanse -->
-        <div class="routine-step mb-[--space-8]">
-          <div class="flex items-center gap-[--space-3] mb-[--space-2]">
-            <div class="step-number">1</div>
-            <h3 class="text-lg font-bold text-[--heading]">Cleanse</h3>
-            <button class="tooltip-trigger" aria-label="About the Cleanse step" data-tooltip="Cleansing removes impurities, excess oil and makeup to prep skin for treatment products.">
-              <svg width="16" height="16" viewBox="0 0 16 16" fill="none"><circle cx="8" cy="8" r="7" stroke="var(--muted-foreground)" stroke-width="1.2"/><text x="8" y="11.5" text-anchor="middle" font-size="10" font-weight="700" fill="var(--muted-foreground)">i</text></svg>
-            </button>
-          </div>
-          <!-- Separator + product count badge -->
-          <div class="relative mb-[--space-4]">
-            <div class="border-t border-[--border]"></div>
-            <span class="product-count-badge">1 Product</span>
-          </div>
-          <!-- Product cards -->
-          <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-[--space-4]">
-            <!-- Card -->
-            <div class="product-card">
-              <div class="product-card-img">
-                <img src="https://www.dermalogica.com/cdn/shop/files/special-cleansing-gel_600x600.jpg?v=1700067037" alt="Special Cleansing Gel" loading="lazy" />
-              </div>
-              <div class="product-card-body">
-                <div class="flex items-start justify-between gap-[--space-2]">
-                  <h4 class="text-sm font-bold text-[--foreground] leading-tight">Special Cleansing Gel</h4>
-                  <button class="tooltip-trigger flex-shrink-0" aria-label="Product info" data-tooltip="A soap-free, foaming gel cleanser that lathers away toxins without disturbing the skin's natural moisture balance.">
-                    <svg width="14" height="14" viewBox="0 0 16 16" fill="none"><circle cx="8" cy="8" r="7" stroke="var(--muted-foreground)" stroke-width="1.2"/><text x="8" y="11.5" text-anchor="middle" font-size="10" font-weight="700" fill="var(--muted-foreground)">i</text></svg>
-                  </button>
-                </div>
-                <p class="text-xs font-light text-[--muted-foreground] mt-[--space-1] line-clamp-2">Soap-free foaming gel cleanser removes impurities without disturbing skin's natural moisture balance.</p>
-                <div class="mt-auto pt-[--space-3] flex items-center justify-between">
-                  <span class="text-sm font-bold text-[--foreground]">$46.00</span>
-                  <button class="add-to-bag-btn" data-product="special-cleansing-gel" data-price="46.00">Add to Bag</button>
-                </div>
-              </div>
-            </div>
-          </div>
-        </div>
-
-        <!-- STEP: Treat -->
-        <div class="routine-step mb-[--space-8]">
-          <div class="flex items-center gap-[--space-3] mb-[--space-2]">
-            <div class="step-number">2</div>
-            <h3 class="text-lg font-bold text-[--heading]">Treat</h3>
-            <button class="tooltip-trigger" aria-label="About the Treat step" data-tooltip="Targeted serums and treatments address specific skin concerns like fine lines, dark spots, and breakouts.">
-              <svg width="16" height="16" viewBox="0 0 16 16" fill="none"><circle cx="8" cy="8" r="7" stroke="var(--muted-foreground)" stroke-width="1.2"/><text x="8" y="11.5" text-anchor="middle" font-size="10" font-weight="700" fill="var(--muted-foreground)">i</text></svg>
-            </button>
-          </div>
-          <div class="relative mb-[--space-4]">
-            <div class="border-t border-[--border]"></div>
-            <span class="product-count-badge">1 Product</span>
-          </div>
-          <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-[--space-4]">
-            <div class="product-card">
-              <div class="product-card-img">
-                <img src="https://www.dermalogica.com/cdn/shop/files/biolumin-c-serum_600x600.jpg?v=1700067037" alt="BioLumin-C Serum" loading="lazy" />
-              </div>
-              <div class="product-card-body">
-                <div class="flex items-start justify-between gap-[--space-2]">
-                  <h4 class="text-sm font-bold text-[--foreground] leading-tight">BioLumin-C Serum</h4>
-                  <button class="tooltip-trigger flex-shrink-0" aria-label="Product info" data-tooltip="A highly bioavailable Vitamin C serum that delivers dramatically brighter, firmer skin.">
-                    <svg width="14" height="14" viewBox="0 0 16 16" fill="none"><circle cx="8" cy="8" r="7" stroke="var(--muted-foreground)" stroke-width="1.2"/><text x="8" y="11.5" text-anchor="middle" font-size="10" font-weight="700" fill="var(--muted-foreground)">i</text></svg>
-                  </button>
-                </div>
-                <p class="text-xs font-light text-[--muted-foreground] mt-[--space-1] line-clamp-2">Highly bioavailable Vitamin C serum delivers dramatically brighter, firmer skin.</p>
-                <div class="mt-auto pt-[--space-3] flex items-center justify-between">
-                  <span class="text-sm font-bold text-[--foreground]">$96.00</span>
-                  <button class="add-to-bag-btn" data-product="biolumin-c-serum" data-price="96.00">Add to Bag</button>
-                </div>
-              </div>
-            </div>
-          </div>
-        </div>
-
-        <!-- STEP: Moisturize -->
-        <div class="routine-step mb-[--space-8]">
-          <div class="flex items-center gap-[--space-3] mb-[--space-2]">
-            <div class="step-number">3</div>
-            <h3 class="text-lg font-bold text-[--heading]">Moisturize</h3>
-            <button class="tooltip-trigger" aria-label="About the Moisturize step" data-tooltip="Moisturizers lock in hydration and strengthen the skin's protective barrier to keep skin supple and healthy.">
-              <svg width="16" height="16" viewBox="0 0 16 16" fill="none"><circle cx="8" cy="8" r="7" stroke="var(--muted-foreground)" stroke-width="1.2"/><text x="8" y="11.5" text-anchor="middle" font-size="10" font-weight="700" fill="var(--muted-foreground)">i</text></svg>
-            </button>
-          </div>
-          <div class="relative mb-[--space-4]">
-            <div class="border-t border-[--border]"></div>
-            <span class="product-count-badge">1 Product</span>
-          </div>
-          <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-[--space-4]">
-            <div class="product-card">
-              <div class="product-card-img">
-                <img src="https://www.dermalogica.com/cdn/shop/files/skin-smoothing-cream_600x600.jpg?v=1700067037" alt="Skin Smoothing Cream" loading="lazy" />
-              </div>
-              <div class="product-card-body">
-                <div class="flex items-start justify-between gap-[--space-2]">
-                  <h4 class="text-sm font-bold text-[--foreground] leading-tight">Skin Smoothing Cream</h4>
-                  <button class="tooltip-trigger flex-shrink-0" aria-label="Product info" data-tooltip="Medium-weight moisturizer with Active HydraMesh Technology continuously hydrates skin for 48 hours.">
-                    <svg width="14" height="14" viewBox="0 0 16 16" fill="none"><circle cx="8" cy="8" r="7" stroke="var(--muted-foreground)" stroke-width="1.2"/><text x="8" y="11.5" text-anchor="middle" font-size="10" font-weight="700" fill="var(--muted-foreground)">i</text></svg>
-                  </button>
-                </div>
-                <p class="text-xs font-light text-[--muted-foreground] mt-[--space-1] line-clamp-2">Medium-weight moisturizer with Active HydraMesh Technology for 48-hour continuous hydration.</p>
-                <div class="mt-auto pt-[--space-3] flex items-center justify-between">
-                  <span class="text-sm font-bold text-[--foreground]">$65.00</span>
-                  <button class="add-to-bag-btn" data-product="skin-smoothing-cream" data-price="65.00">Add to Bag</button>
-                </div>
-              </div>
-            </div>
-          </div>
-        </div>
-
-        <!-- STEP: Protect -->
-        <div class="routine-step mb-[--space-8]">
-          <div class="flex items-center gap-[--space-3] mb-[--space-2]">
-            <div class="step-number">4</div>
-            <h3 class="text-lg font-bold text-[--heading]">Protect</h3>
-            <button class="tooltip-trigger" aria-label="About the Protect step" data-tooltip="SPF is the most important step in any routine. UV defense prevents premature aging, dark spots and skin damage.">
-              <svg width="16" height="16" viewBox="0 0 16 16" fill="none"><circle cx="8" cy="8" r="7" stroke="var(--muted-foreground)" stroke-width="1.2"/><text x="8" y="11.5" text-anchor="middle" font-size="10" font-weight="700" fill="var(--muted-foreground)">i</text></svg>
-            </button>
-          </div>
-          <div class="relative mb-[--space-4]">
-            <div class="border-t border-[--border]"></div>
-            <span class="product-count-badge">1 Product</span>
-          </div>
-          <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-[--space-4]">
-            <div class="product-card">
-              <div class="product-card-img">
-                <img src="https://www.dermalogica.com/cdn/shop/files/prisma-protect-spf30_600x600.jpg?v=1700067037" alt="Prisma Protect SPF 30" loading="lazy" />
-              </div>
-              <div class="product-card-body">
-                <div class="flex items-start justify-between gap-[--space-2]">
-                  <h4 class="text-sm font-bold text-[--foreground] leading-tight">Prisma Protect SPF 30</h4>
-                  <button class="tooltip-trigger flex-shrink-0" aria-label="Product info" data-tooltip="Light-activated moisturizer with SPF 30 defends against UV and blue light while boosting luminosity.">
-                    <svg width="14" height="14" viewBox="0 0 16 16" fill="none"><circle cx="8" cy="8" r="7" stroke="var(--muted-foreground)" stroke-width="1.2"/><text x="8" y="11.5" text-anchor="middle" font-size="10" font-weight="700" fill="var(--muted-foreground)">i</text></svg>
-                  </button>
-                </div>
-                <p class="text-xs font-light text-[--muted-foreground] mt-[--space-1] line-clamp-2">Light-activated moisturizer with SPF 30 defends against UV and blue light while boosting luminosity.</p>
-                <div class="mt-auto pt-[--space-3] flex items-center justify-between">
-                  <span class="text-sm font-bold text-[--foreground]">$79.00</span>
-                  <button class="add-to-bag-btn" data-product="prisma-protect-spf30" data-price="79.00">Add to Bag</button>
-                </div>
-              </div>
-            </div>
-          </div>
-        </div>
-
-        <!-- Add All to Bag CTA -->
-        <div class="flex flex-col sm:flex-row items-center justify-between gap-[--space-4] p-[--space-6] bg-[--card-header] rounded border border-[--border]">
-          <div>
-            <p class="text-base font-bold text-[--foreground]">Essential Routine — 4 Products</p>
-            <p class="text-sm font-light text-[--muted-foreground]">Total: <span class="font-bold text-[--foreground]">$286.00</span></p>
-          </div>
-          <button class="add-all-btn" data-routine="essential">Add All to Bag</button>
-        </div>
+        <!-- Products will be dynamically loaded here -->
       </div>
 
       <!-- ═══════  ENHANCED PANEL  ═══════ -->
       <div role="tabpanel" id="panel-enhanced" aria-labelledby="tab-enhanced" class="routine-panel hidden">
-
-        <!-- STEP: Double Cleanse -->
-        <div class="routine-step mb-[--space-8]">
-          <div class="flex items-center gap-[--space-3] mb-[--space-2]">
-            <div class="step-number">1</div>
-            <h3 class="text-lg font-bold text-[--heading]">Double Cleanse</h3>
-            <button class="tooltip-trigger" aria-label="About double cleansing" data-tooltip="Double cleansing uses an oil-based cleanser to dissolve makeup and SPF, followed by a water-based cleanser for a deep clean.">
-              <svg width="16" height="16" viewBox="0 0 16 16" fill="none"><circle cx="8" cy="8" r="7" stroke="var(--muted-foreground)" stroke-width="1.2"/><text x="8" y="11.5" text-anchor="middle" font-size="10" font-weight="700" fill="var(--muted-foreground)">i</text></svg>
-            </button>
-          </div>
-          <div class="relative mb-[--space-4]">
-            <div class="border-t border-[--border]"></div>
-            <span class="product-count-badge">2 Products</span>
-          </div>
-          <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-[--space-4]">
-            <div class="product-card">
-              <div class="product-card-img">
-                <img src="https://www.dermalogica.com/cdn/shop/files/precleanse_600x600.jpg?v=1700067037" alt="PreCleanse" loading="lazy" />
-              </div>
-              <div class="product-card-body">
-                <div class="flex items-start justify-between gap-[--space-2]">
-                  <h4 class="text-sm font-bold text-[--foreground] leading-tight">PreCleanse</h4>
-                  <button class="tooltip-trigger flex-shrink-0" aria-label="Product info" data-tooltip="Deep-cleaning oil that melts away layers of excess sebum, sunscreen, waterproof makeup and environmental pollutants.">
-                    <svg width="14" height="14" viewBox="0 0 16 16" fill="none"><circle cx="8" cy="8" r="7" stroke="var(--muted-foreground)" stroke-width="1.2"/><text x="8" y="11.5" text-anchor="middle" font-size="10" font-weight="700" fill="var(--muted-foreground)">i</text></svg>
-                  </button>
-                </div>
-                <p class="text-xs font-light text-[--muted-foreground] mt-[--space-1] line-clamp-2">Deep-cleaning oil melts away layers of excess sebum, sunscreen, and waterproof makeup.</p>
-                <div class="mt-auto pt-[--space-3] flex items-center justify-between">
-                  <span class="text-sm font-bold text-[--foreground]">$49.00</span>
-                  <button class="add-to-bag-btn" data-product="precleanse" data-price="49.00">Add to Bag</button>
-                </div>
-              </div>
-            </div>
-            <div class="product-card">
-              <div class="product-card-img">
-                <img src="https://www.dermalogica.com/cdn/shop/files/special-cleansing-gel_600x600.jpg?v=1700067037" alt="Special Cleansing Gel" loading="lazy" />
-              </div>
-              <div class="product-card-body">
-                <div class="flex items-start justify-between gap-[--space-2]">
-                  <h4 class="text-sm font-bold text-[--foreground] leading-tight">Special Cleansing Gel</h4>
-                  <button class="tooltip-trigger flex-shrink-0" aria-label="Product info" data-tooltip="A soap-free, foaming gel cleanser that lathers away toxins without disturbing the skin's natural moisture balance.">
-                    <svg width="14" height="14" viewBox="0 0 16 16" fill="none"><circle cx="8" cy="8" r="7" stroke="var(--muted-foreground)" stroke-width="1.2"/><text x="8" y="11.5" text-anchor="middle" font-size="10" font-weight="700" fill="var(--muted-foreground)">i</text></svg>
-                  </button>
-                </div>
-                <p class="text-xs font-light text-[--muted-foreground] mt-[--space-1] line-clamp-2">Soap-free foaming gel cleanser removes impurities without disturbing skin's natural moisture balance.</p>
-                <div class="mt-auto pt-[--space-3] flex items-center justify-between">
-                  <span class="text-sm font-bold text-[--foreground]">$46.00</span>
-                  <button class="add-to-bag-btn" data-product="special-cleansing-gel" data-price="46.00">Add to Bag</button>
-                </div>
-              </div>
-            </div>
-          </div>
-        </div>
-
-        <!-- STEP: Exfoliate -->
-        <div class="routine-step mb-[--space-8]">
-          <div class="flex items-center gap-[--space-3] mb-[--space-2]">
-            <div class="step-number">2</div>
-            <h3 class="text-lg font-bold text-[--heading]">Exfoliate</h3>
-            <button class="tooltip-trigger" aria-label="About the Exfoliate step" data-tooltip="Exfoliation removes dead cells that clog pores and dull skin, revealing a brighter, smoother complexion.">
-              <svg width="16" height="16" viewBox="0 0 16 16" fill="none"><circle cx="8" cy="8" r="7" stroke="var(--muted-foreground)" stroke-width="1.2"/><text x="8" y="11.5" text-anchor="middle" font-size="10" font-weight="700" fill="var(--muted-foreground)">i</text></svg>
-            </button>
-          </div>
-          <div class="relative mb-[--space-4]">
-            <div class="border-t border-[--border]"></div>
-            <span class="product-count-badge">1 Product</span>
-          </div>
-          <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-[--space-4]">
-            <div class="product-card">
-              <div class="product-card-img">
-                <img src="https://www.dermalogica.com/cdn/shop/files/daily-microfoliant_600x600.jpg?v=1700067037" alt="Daily Microfoliant" loading="lazy" />
-              </div>
-              <div class="product-card-body">
-                <div class="flex items-start justify-between gap-[--space-2]">
-                  <h4 class="text-sm font-bold text-[--foreground] leading-tight">Daily Microfoliant</h4>
-                  <button class="tooltip-trigger flex-shrink-0" aria-label="Product info" data-tooltip="Rice-based enzyme powder activates upon contact with water to micro-exfoliate dulling debris for brighter, smoother skin.">
-                    <svg width="14" height="14" viewBox="0 0 16 16" fill="none"><circle cx="8" cy="8" r="7" stroke="var(--muted-foreground)" stroke-width="1.2"/><text x="8" y="11.5" text-anchor="middle" font-size="10" font-weight="700" fill="var(--muted-foreground)">i</text></svg>
-                  </button>
-                </div>
-                <p class="text-xs font-light text-[--muted-foreground] mt-[--space-1] line-clamp-2">Rice-based enzyme powder micro-exfoliates dulling debris for brighter, smoother skin.</p>
-                <div class="mt-auto pt-[--space-3] flex items-center justify-between">
-                  <span class="text-sm font-bold text-[--foreground]">$67.00</span>
-                  <button class="add-to-bag-btn" data-product="daily-microfoliant" data-price="67.00">Add to Bag</button>
-                </div>
-              </div>
-            </div>
-          </div>
-        </div>
-
-        <!-- STEP: Treat -->
-        <div class="routine-step mb-[--space-8]">
-          <div class="flex items-center gap-[--space-3] mb-[--space-2]">
-            <div class="step-number">3</div>
-            <h3 class="text-lg font-bold text-[--heading]">Treat</h3>
-            <button class="tooltip-trigger" aria-label="About the Treat step" data-tooltip="Targeted serums and treatments address specific skin concerns like fine lines, dark spots, and breakouts.">
-              <svg width="16" height="16" viewBox="0 0 16 16" fill="none"><circle cx="8" cy="8" r="7" stroke="var(--muted-foreground)" stroke-width="1.2"/><text x="8" y="11.5" text-anchor="middle" font-size="10" font-weight="700" fill="var(--muted-foreground)">i</text></svg>
-            </button>
-          </div>
-          <div class="relative mb-[--space-4]">
-            <div class="border-t border-[--border]"></div>
-            <span class="product-count-badge">1 Product</span>
-          </div>
-          <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-[--space-4]">
-            <div class="product-card">
-              <div class="product-card-img">
-                <img src="https://www.dermalogica.com/cdn/shop/files/biolumin-c-serum_600x600.jpg?v=1700067037" alt="BioLumin-C Serum" loading="lazy" />
-              </div>
-              <div class="product-card-body">
-                <div class="flex items-start justify-between gap-[--space-2]">
-                  <h4 class="text-sm font-bold text-[--foreground] leading-tight">BioLumin-C Serum</h4>
-                  <button class="tooltip-trigger flex-shrink-0" aria-label="Product info" data-tooltip="A highly bioavailable Vitamin C serum that delivers dramatically brighter, firmer skin.">
-                    <svg width="14" height="14" viewBox="0 0 16 16" fill="none"><circle cx="8" cy="8" r="7" stroke="var(--muted-foreground)" stroke-width="1.2"/><text x="8" y="11.5" text-anchor="middle" font-size="10" font-weight="700" fill="var(--muted-foreground)">i</text></svg>
-                  </button>
-                </div>
-                <p class="text-xs font-light text-[--muted-foreground] mt-[--space-1] line-clamp-2">Highly bioavailable Vitamin C serum delivers dramatically brighter, firmer skin.</p>
-                <div class="mt-auto pt-[--space-3] flex items-center justify-between">
-                  <span class="text-sm font-bold text-[--foreground]">$96.00</span>
-                  <button class="add-to-bag-btn" data-product="biolumin-c-serum" data-price="96.00">Add to Bag</button>
-                </div>
-              </div>
-            </div>
-          </div>
-        </div>
-
-        <!-- STEP: Moisturize -->
-        <div class="routine-step mb-[--space-8]">
-          <div class="flex items-center gap-[--space-3] mb-[--space-2]">
-            <div class="step-number">4</div>
-            <h3 class="text-lg font-bold text-[--heading]">Moisturize</h3>
-            <button class="tooltip-trigger" aria-label="About the Moisturize step" data-tooltip="Moisturizers lock in hydration and strengthen the skin's protective barrier to keep skin supple and healthy.">
-              <svg width="16" height="16" viewBox="0 0 16 16" fill="none"><circle cx="8" cy="8" r="7" stroke="var(--muted-foreground)" stroke-width="1.2"/><text x="8" y="11.5" text-anchor="middle" font-size="10" font-weight="700" fill="var(--muted-foreground)">i</text></svg>
-            </button>
-          </div>
-          <div class="relative mb-[--space-4]">
-            <div class="border-t border-[--border]"></div>
-            <span class="product-count-badge">1 Product</span>
-          </div>
-          <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-[--space-4]">
-            <div class="product-card">
-              <div class="product-card-img">
-                <img src="https://www.dermalogica.com/cdn/shop/files/skin-smoothing-cream_600x600.jpg?v=1700067037" alt="Skin Smoothing Cream" loading="lazy" />
-              </div>
-              <div class="product-card-body">
-                <div class="flex items-start justify-between gap-[--space-2]">
-                  <h4 class="text-sm font-bold text-[--foreground] leading-tight">Skin Smoothing Cream</h4>
-                  <button class="tooltip-trigger flex-shrink-0" aria-label="Product info" data-tooltip="Medium-weight moisturizer with Active HydraMesh Technology continuously hydrates skin for 48 hours.">
-                    <svg width="14" height="14" viewBox="0 0 16 16" fill="none"><circle cx="8" cy="8" r="7" stroke="var(--muted-foreground)" stroke-width="1.2"/><text x="8" y="11.5" text-anchor="middle" font-size="10" font-weight="700" fill="var(--muted-foreground)">i</text></svg>
-                  </button>
-                </div>
-                <p class="text-xs font-light text-[--muted-foreground] mt-[--space-1] line-clamp-2">Medium-weight moisturizer with Active HydraMesh Technology for 48-hour continuous hydration.</p>
-                <div class="mt-auto pt-[--space-3] flex items-center justify-between">
-                  <span class="text-sm font-bold text-[--foreground]">$65.00</span>
-                  <button class="add-to-bag-btn" data-product="skin-smoothing-cream" data-price="65.00">Add to Bag</button>
-                </div>
-              </div>
-            </div>
-          </div>
-        </div>
-
-        <!-- STEP: Protect -->
-        <div class="routine-step mb-[--space-8]">
-          <div class="flex items-center gap-[--space-3] mb-[--space-2]">
-            <div class="step-number">5</div>
-            <h3 class="text-lg font-bold text-[--heading]">Protect</h3>
-            <button class="tooltip-trigger" aria-label="About the Protect step" data-tooltip="SPF is the most important step in any routine. UV defense prevents premature aging, dark spots and skin damage.">
-              <svg width="16" height="16" viewBox="0 0 16 16" fill="none"><circle cx="8" cy="8" r="7" stroke="var(--muted-foreground)" stroke-width="1.2"/><text x="8" y="11.5" text-anchor="middle" font-size="10" font-weight="700" fill="var(--muted-foreground)">i</text></svg>
-            </button>
-          </div>
-          <div class="relative mb-[--space-4]">
-            <div class="border-t border-[--border]"></div>
-            <span class="product-count-badge">1 Product</span>
-          </div>
-          <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-[--space-4]">
-            <div class="product-card">
-              <div class="product-card-img">
-                <img src="https://www.dermalogica.com/cdn/shop/files/prisma-protect-spf30_600x600.jpg?v=1700067037" alt="Prisma Protect SPF 30" loading="lazy" />
-              </div>
-              <div class="product-card-body">
-                <div class="flex items-start justify-between gap-[--space-2]">
-                  <h4 class="text-sm font-bold text-[--foreground] leading-tight">Prisma Protect SPF 30</h4>
-                  <button class="tooltip-trigger flex-shrink-0" aria-label="Product info" data-tooltip="Light-activated moisturizer with SPF 30 defends against UV and blue light while boosting luminosity.">
-                    <svg width="14" height="14" viewBox="0 0 16 16" fill="none"><circle cx="8" cy="8" r="7" stroke="var(--muted-foreground)" stroke-width="1.2"/><text x="8" y="11.5" text-anchor="middle" font-size="10" font-weight="700" fill="var(--muted-foreground)">i</text></svg>
-                  </button>
-                </div>
-                <p class="text-xs font-light text-[--muted-foreground] mt-[--space-1] line-clamp-2">Light-activated moisturizer with SPF 30 defends against UV and blue light while boosting luminosity.</p>
-                <div class="mt-auto pt-[--space-3] flex items-center justify-between">
-                  <span class="text-sm font-bold text-[--foreground]">$79.00</span>
-                  <button class="add-to-bag-btn" data-product="prisma-protect-spf30" data-price="79.00">Add to Bag</button>
-                </div>
-              </div>
-            </div>
-          </div>
-        </div>
-
-        <!-- Add All to Bag CTA -->
-        <div class="flex flex-col sm:flex-row items-center justify-between gap-[--space-4] p-[--space-6] bg-[--card-header] rounded border border-[--border]">
-          <div>
-            <p class="text-base font-bold text-[--foreground]">Enhanced Routine — 6 Products</p>
-            <p class="text-sm font-light text-[--muted-foreground]">Total: <span class="font-bold text-[--foreground]">$402.00</span></p>
-          </div>
-          <button class="add-all-btn" data-routine="enhanced">Add All to Bag</button>
-        </div>
+        <!-- Products will be dynamically loaded here -->
       </div>
 
       <!-- ═══════  COMPREHENSIVE PANEL  ═══════ -->
       <div role="tabpanel" id="panel-comprehensive" aria-labelledby="tab-comprehensive" class="routine-panel hidden">
-
-        <!-- STEP: Double Cleanse -->
-        <div class="routine-step mb-[--space-8]">
-          <div class="flex items-center gap-[--space-3] mb-[--space-2]">
-            <div class="step-number">1</div>
-            <h3 class="text-lg font-bold text-[--heading]">Double Cleanse</h3>
-            <button class="tooltip-trigger" aria-label="About double cleansing" data-tooltip="Double cleansing uses an oil-based cleanser to dissolve makeup and SPF, followed by a water-based cleanser for a deep clean.">
-              <svg width="16" height="16" viewBox="0 0 16 16" fill="none"><circle cx="8" cy="8" r="7" stroke="var(--muted-foreground)" stroke-width="1.2"/><text x="8" y="11.5" text-anchor="middle" font-size="10" font-weight="700" fill="var(--muted-foreground)">i</text></svg>
-            </button>
-          </div>
-          <div class="relative mb-[--space-4]">
-            <div class="border-t border-[--border]"></div>
-            <span class="product-count-badge">2 Products</span>
-          </div>
-          <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-[--space-4]">
-            <div class="product-card">
-              <div class="product-card-img">
-                <img src="https://www.dermalogica.com/cdn/shop/files/precleanse_600x600.jpg?v=1700067037" alt="PreCleanse" loading="lazy" />
-              </div>
-              <div class="product-card-body">
-                <div class="flex items-start justify-between gap-[--space-2]">
-                  <h4 class="text-sm font-bold text-[--foreground] leading-tight">PreCleanse</h4>
-                  <button class="tooltip-trigger flex-shrink-0" aria-label="Product info" data-tooltip="Deep-cleaning oil that melts away layers of excess sebum, sunscreen, waterproof makeup and environmental pollutants.">
-                    <svg width="14" height="14" viewBox="0 0 16 16" fill="none"><circle cx="8" cy="8" r="7" stroke="var(--muted-foreground)" stroke-width="1.2"/><text x="8" y="11.5" text-anchor="middle" font-size="10" font-weight="700" fill="var(--muted-foreground)">i</text></svg>
-                  </button>
-                </div>
-                <p class="text-xs font-light text-[--muted-foreground] mt-[--space-1] line-clamp-2">Deep-cleaning oil melts away layers of excess sebum, sunscreen, and waterproof makeup.</p>
-                <div class="mt-auto pt-[--space-3] flex items-center justify-between">
-                  <span class="text-sm font-bold text-[--foreground]">$49.00</span>
-                  <button class="add-to-bag-btn" data-product="precleanse" data-price="49.00">Add to Bag</button>
-                </div>
-              </div>
-            </div>
-            <div class="product-card">
-              <div class="product-card-img">
-                <img src="https://www.dermalogica.com/cdn/shop/files/special-cleansing-gel_600x600.jpg?v=1700067037" alt="Special Cleansing Gel" loading="lazy" />
-              </div>
-              <div class="product-card-body">
-                <div class="flex items-start justify-between gap-[--space-2]">
-                  <h4 class="text-sm font-bold text-[--foreground] leading-tight">Special Cleansing Gel</h4>
-                  <button class="tooltip-trigger flex-shrink-0" aria-label="Product info" data-tooltip="A soap-free, foaming gel cleanser that lathers away toxins without disturbing the skin's natural moisture balance.">
-                    <svg width="14" height="14" viewBox="0 0 16 16" fill="none"><circle cx="8" cy="8" r="7" stroke="var(--muted-foreground)" stroke-width="1.2"/><text x="8" y="11.5" text-anchor="middle" font-size="10" font-weight="700" fill="var(--muted-foreground)">i</text></svg>
-                  </button>
-                </div>
-                <p class="text-xs font-light text-[--muted-foreground] mt-[--space-1] line-clamp-2">Soap-free foaming gel cleanser removes impurities without disturbing skin's natural moisture balance.</p>
-                <div class="mt-auto pt-[--space-3] flex items-center justify-between">
-                  <span class="text-sm font-bold text-[--foreground]">$46.00</span>
-                  <button class="add-to-bag-btn" data-product="special-cleansing-gel" data-price="46.00">Add to Bag</button>
-                </div>
-              </div>
-            </div>
-          </div>
-        </div>
-
-        <!-- STEP: Exfoliate -->
-        <div class="routine-step mb-[--space-8]">
-          <div class="flex items-center gap-[--space-3] mb-[--space-2]">
-            <div class="step-number">2</div>
-            <h3 class="text-lg font-bold text-[--heading]">Exfoliate</h3>
-            <button class="tooltip-trigger" aria-label="About the Exfoliate step" data-tooltip="Exfoliation removes dead cells that clog pores and dull skin, revealing a brighter, smoother complexion.">
-              <svg width="16" height="16" viewBox="0 0 16 16" fill="none"><circle cx="8" cy="8" r="7" stroke="var(--muted-foreground)" stroke-width="1.2"/><text x="8" y="11.5" text-anchor="middle" font-size="10" font-weight="700" fill="var(--muted-foreground)">i</text></svg>
-            </button>
-          </div>
-          <div class="relative mb-[--space-4]">
-            <div class="border-t border-[--border]"></div>
-            <span class="product-count-badge">1 Product</span>
-          </div>
-          <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-[--space-4]">
-            <div class="product-card">
-              <div class="product-card-img">
-                <img src="https://www.dermalogica.com/cdn/shop/files/daily-microfoliant_600x600.jpg?v=1700067037" alt="Daily Microfoliant" loading="lazy" />
-              </div>
-              <div class="product-card-body">
-                <div class="flex items-start justify-between gap-[--space-2]">
-                  <h4 class="text-sm font-bold text-[--foreground] leading-tight">Daily Microfoliant</h4>
-                  <button class="tooltip-trigger flex-shrink-0" aria-label="Product info" data-tooltip="Rice-based enzyme powder activates upon contact with water to micro-exfoliate dulling debris for brighter, smoother skin.">
-                    <svg width="14" height="14" viewBox="0 0 16 16" fill="none"><circle cx="8" cy="8" r="7" stroke="var(--muted-foreground)" stroke-width="1.2"/><text x="8" y="11.5" text-anchor="middle" font-size="10" font-weight="700" fill="var(--muted-foreground)">i</text></svg>
-                  </button>
-                </div>
-                <p class="text-xs font-light text-[--muted-foreground] mt-[--space-1] line-clamp-2">Rice-based enzyme powder micro-exfoliates dulling debris for brighter, smoother skin.</p>
-                <div class="mt-auto pt-[--space-3] flex items-center justify-between">
-                  <span class="text-sm font-bold text-[--foreground]">$67.00</span>
-                  <button class="add-to-bag-btn" data-product="daily-microfoliant" data-price="67.00">Add to Bag</button>
-                </div>
-              </div>
-            </div>
-          </div>
-        </div>
-
-        <!-- STEP: Tone -->
-        <div class="routine-step mb-[--space-8]">
-          <div class="flex items-center gap-[--space-3] mb-[--space-2]">
-            <div class="step-number">3</div>
-            <h3 class="text-lg font-bold text-[--heading]">Tone</h3>
-            <button class="tooltip-trigger" aria-label="About the Tone step" data-tooltip="Toning rebalances skin pH after cleansing and preps the skin to absorb treatment products more effectively.">
-              <svg width="16" height="16" viewBox="0 0 16 16" fill="none"><circle cx="8" cy="8" r="7" stroke="var(--muted-foreground)" stroke-width="1.2"/><text x="8" y="11.5" text-anchor="middle" font-size="10" font-weight="700" fill="var(--muted-foreground)">i</text></svg>
-            </button>
-          </div>
-          <div class="relative mb-[--space-4]">
-            <div class="border-t border-[--border]"></div>
-            <span class="product-count-badge">1 Product</span>
-          </div>
-          <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-[--space-4]">
-            <div class="product-card">
-              <div class="product-card-img">
-                <img src="https://www.dermalogica.com/cdn/shop/files/multi-active-toner_600x600.jpg?v=1700067037" alt="Multi-Active Toner" loading="lazy" />
-              </div>
-              <div class="product-card-body">
-                <div class="flex items-start justify-between gap-[--space-2]">
-                  <h4 class="text-sm font-bold text-[--foreground] leading-tight">Multi-Active Toner</h4>
-                  <button class="tooltip-trigger flex-shrink-0" aria-label="Product info" data-tooltip="Lightweight misting toner refreshes and hydrates the skin while smoothing and lightly firming.">
-                    <svg width="14" height="14" viewBox="0 0 16 16" fill="none"><circle cx="8" cy="8" r="7" stroke="var(--muted-foreground)" stroke-width="1.2"/><text x="8" y="11.5" text-anchor="middle" font-size="10" font-weight="700" fill="var(--muted-foreground)">i</text></svg>
-                  </button>
-                </div>
-                <p class="text-xs font-light text-[--muted-foreground] mt-[--space-1] line-clamp-2">Lightweight misting toner refreshes, hydrates, and smooths skin while lightly firming.</p>
-                <div class="mt-auto pt-[--space-3] flex items-center justify-between">
-                  <span class="text-sm font-bold text-[--foreground]">$43.00</span>
-                  <button class="add-to-bag-btn" data-product="multi-active-toner" data-price="43.00">Add to Bag</button>
-                </div>
-              </div>
-            </div>
-          </div>
-        </div>
-
-        <!-- STEP: Treat -->
-        <div class="routine-step mb-[--space-8]">
-          <div class="flex items-center gap-[--space-3] mb-[--space-2]">
-            <div class="step-number">4</div>
-            <h3 class="text-lg font-bold text-[--heading]">Treat</h3>
-            <button class="tooltip-trigger" aria-label="About the Treat step" data-tooltip="Targeted serums and treatments address specific skin concerns like fine lines, dark spots, and breakouts.">
-              <svg width="16" height="16" viewBox="0 0 16 16" fill="none"><circle cx="8" cy="8" r="7" stroke="var(--muted-foreground)" stroke-width="1.2"/><text x="8" y="11.5" text-anchor="middle" font-size="10" font-weight="700" fill="var(--muted-foreground)">i</text></svg>
-            </button>
-          </div>
-          <div class="relative mb-[--space-4]">
-            <div class="border-t border-[--border]"></div>
-            <span class="product-count-badge">2 Products</span>
-          </div>
-          <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-[--space-4]">
-            <div class="product-card">
-              <div class="product-card-img">
-                <img src="https://www.dermalogica.com/cdn/shop/files/biolumin-c-serum_600x600.jpg?v=1700067037" alt="BioLumin-C Serum" loading="lazy" />
-              </div>
-              <div class="product-card-body">
-                <div class="flex items-start justify-between gap-[--space-2]">
-                  <h4 class="text-sm font-bold text-[--foreground] leading-tight">BioLumin-C Serum</h4>
-                  <button class="tooltip-trigger flex-shrink-0" aria-label="Product info" data-tooltip="A highly bioavailable Vitamin C serum that delivers dramatically brighter, firmer skin.">
-                    <svg width="14" height="14" viewBox="0 0 16 16" fill="none"><circle cx="8" cy="8" r="7" stroke="var(--muted-foreground)" stroke-width="1.2"/><text x="8" y="11.5" text-anchor="middle" font-size="10" font-weight="700" fill="var(--muted-foreground)">i</text></svg>
-                  </button>
-                </div>
-                <p class="text-xs font-light text-[--muted-foreground] mt-[--space-1] line-clamp-2">Highly bioavailable Vitamin C serum delivers dramatically brighter, firmer skin.</p>
-                <div class="mt-auto pt-[--space-3] flex items-center justify-between">
-                  <span class="text-sm font-bold text-[--foreground]">$96.00</span>
-                  <button class="add-to-bag-btn" data-product="biolumin-c-serum" data-price="96.00">Add to Bag</button>
-                </div>
-              </div>
-            </div>
-            <div class="product-card">
-              <div class="product-card-img">
-                <img src="https://www.dermalogica.com/cdn/shop/files/smart-response-serum_600x600.jpg?v=1700067037" alt="Smart Response Serum" loading="lazy" />
-              </div>
-              <div class="product-card-body">
-                <div class="flex items-start justify-between gap-[--space-2]">
-                  <h4 class="text-sm font-bold text-[--foreground] leading-tight">Smart Response Serum</h4>
-                  <button class="tooltip-trigger flex-shrink-0" aria-label="Product info" data-tooltip="Intelligent serum adapts to your skin's unique needs using Ultra-Smart Drone Peptide technology.">
-                    <svg width="14" height="14" viewBox="0 0 16 16" fill="none"><circle cx="8" cy="8" r="7" stroke="var(--muted-foreground)" stroke-width="1.2"/><text x="8" y="11.5" text-anchor="middle" font-size="10" font-weight="700" fill="var(--muted-foreground)">i</text></svg>
-                  </button>
-                </div>
-                <p class="text-xs font-light text-[--muted-foreground] mt-[--space-1] line-clamp-2">Intelligent serum adapts to your skin's unique needs using Ultra-Smart Drone Peptide technology.</p>
-                <div class="mt-auto pt-[--space-3] flex items-center justify-between">
-                  <span class="text-sm font-bold text-[--foreground]">$115.00</span>
-                  <button class="add-to-bag-btn" data-product="smart-response-serum" data-price="115.00">Add to Bag</button>
-                </div>
-              </div>
-            </div>
-          </div>
-        </div>
-
-        <!-- STEP: Eye Care -->
-        <div class="routine-step mb-[--space-8]">
-          <div class="flex items-center gap-[--space-3] mb-[--space-2]">
-            <div class="step-number">5</div>
-            <h3 class="text-lg font-bold text-[--heading]">Eye Care</h3>
-            <button class="tooltip-trigger" aria-label="About the Eye Care step" data-tooltip="The delicate eye area needs specialized formulas to target dark circles, puffiness, and crow's feet.">
-              <svg width="16" height="16" viewBox="0 0 16 16" fill="none"><circle cx="8" cy="8" r="7" stroke="var(--muted-foreground)" stroke-width="1.2"/><text x="8" y="11.5" text-anchor="middle" font-size="10" font-weight="700" fill="var(--muted-foreground)">i</text></svg>
-            </button>
-          </div>
-          <div class="relative mb-[--space-4]">
-            <div class="border-t border-[--border]"></div>
-            <span class="product-count-badge">1 Product</span>
-          </div>
-          <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-[--space-4]">
-            <div class="product-card">
-              <div class="product-card-img">
-                <img src="https://www.dermalogica.com/cdn/shop/files/biolumin-c-eye-serum_600x600.jpg?v=1700067037" alt="BioLumin-C Eye Serum" loading="lazy" />
-              </div>
-              <div class="product-card-body">
-                <div class="flex items-start justify-between gap-[--space-2]">
-                  <h4 class="text-sm font-bold text-[--foreground] leading-tight">BioLumin-C Eye Serum</h4>
-                  <button class="tooltip-trigger flex-shrink-0" aria-label="Product info" data-tooltip="Vitamin C eye serum targets dark circles, puffiness and fine lines around the delicate eye area.">
-                    <svg width="14" height="14" viewBox="0 0 16 16" fill="none"><circle cx="8" cy="8" r="7" stroke="var(--muted-foreground)" stroke-width="1.2"/><text x="8" y="11.5" text-anchor="middle" font-size="10" font-weight="700" fill="var(--muted-foreground)">i</text></svg>
-                  </button>
-                </div>
-                <p class="text-xs font-light text-[--muted-foreground] mt-[--space-1] line-clamp-2">Vitamin C eye serum targets dark circles, puffiness and fine lines around the delicate eye area.</p>
-                <div class="mt-auto pt-[--space-3] flex items-center justify-between">
-                  <span class="text-sm font-bold text-[--foreground]">$72.00</span>
-                  <button class="add-to-bag-btn" data-product="biolumin-c-eye-serum" data-price="72.00">Add to Bag</button>
-                </div>
-              </div>
-            </div>
-          </div>
-        </div>
-
-        <!-- STEP: Moisturize -->
-        <div class="routine-step mb-[--space-8]">
-          <div class="flex items-center gap-[--space-3] mb-[--space-2]">
-            <div class="step-number">6</div>
-            <h3 class="text-lg font-bold text-[--heading]">Moisturize</h3>
-            <button class="tooltip-trigger" aria-label="About the Moisturize step" data-tooltip="Moisturizers lock in hydration and strengthen the skin's protective barrier to keep skin supple and healthy.">
-              <svg width="16" height="16" viewBox="0 0 16 16" fill="none"><circle cx="8" cy="8" r="7" stroke="var(--muted-foreground)" stroke-width="1.2"/><text x="8" y="11.5" text-anchor="middle" font-size="10" font-weight="700" fill="var(--muted-foreground)">i</text></svg>
-            </button>
-          </div>
-          <div class="relative mb-[--space-4]">
-            <div class="border-t border-[--border]"></div>
-            <span class="product-count-badge">1 Product</span>
-          </div>
-          <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-[--space-4]">
-            <div class="product-card">
-              <div class="product-card-img">
-                <img src="https://www.dermalogica.com/cdn/shop/files/skin-smoothing-cream_600x600.jpg?v=1700067037" alt="Skin Smoothing Cream" loading="lazy" />
-              </div>
-              <div class="product-card-body">
-                <div class="flex items-start justify-between gap-[--space-2]">
-                  <h4 class="text-sm font-bold text-[--foreground] leading-tight">Skin Smoothing Cream</h4>
-                  <button class="tooltip-trigger flex-shrink-0" aria-label="Product info" data-tooltip="Medium-weight moisturizer with Active HydraMesh Technology continuously hydrates skin for 48 hours.">
-                    <svg width="14" height="14" viewBox="0 0 16 16" fill="none"><circle cx="8" cy="8" r="7" stroke="var(--muted-foreground)" stroke-width="1.2"/><text x="8" y="11.5" text-anchor="middle" font-size="10" font-weight="700" fill="var(--muted-foreground)">i</text></svg>
-                  </button>
-                </div>
-                <p class="text-xs font-light text-[--muted-foreground] mt-[--space-1] line-clamp-2">Medium-weight moisturizer with Active HydraMesh Technology for 48-hour continuous hydration.</p>
-                <div class="mt-auto pt-[--space-3] flex items-center justify-between">
-                  <span class="text-sm font-bold text-[--foreground]">$65.00</span>
-                  <button class="add-to-bag-btn" data-product="skin-smoothing-cream" data-price="65.00">Add to Bag</button>
-                </div>
-              </div>
-            </div>
-          </div>
-        </div>
-
-        <!-- STEP: Protect -->
-        <div class="routine-step mb-[--space-8]">
-          <div class="flex items-center gap-[--space-3] mb-[--space-2]">
-            <div class="step-number">7</div>
-            <h3 class="text-lg font-bold text-[--heading]">Protect</h3>
-            <button class="tooltip-trigger" aria-label="About the Protect step" data-tooltip="SPF is the most important step in any routine. UV defense prevents premature aging, dark spots and skin damage.">
-              <svg width="16" height="16" viewBox="0 0 16 16" fill="none"><circle cx="8" cy="8" r="7" stroke="var(--muted-foreground)" stroke-width="1.2"/><text x="8" y="11.5" text-anchor="middle" font-size="10" font-weight="700" fill="var(--muted-foreground)">i</text></svg>
-            </button>
-          </div>
-          <div class="relative mb-[--space-4]">
-            <div class="border-t border-[--border]"></div>
-            <span class="product-count-badge">1 Product</span>
-          </div>
-          <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-[--space-4]">
-            <div class="product-card">
-              <div class="product-card-img">
-                <img src="https://www.dermalogica.com/cdn/shop/files/prisma-protect-spf30_600x600.jpg?v=1700067037" alt="Prisma Protect SPF 30" loading="lazy" />
-              </div>
-              <div class="product-card-body">
-                <div class="flex items-start justify-between gap-[--space-2]">
-                  <h4 class="text-sm font-bold text-[--foreground] leading-tight">Prisma Protect SPF 30</h4>
-                  <button class="tooltip-trigger flex-shrink-0" aria-label="Product info" data-tooltip="Light-activated moisturizer with SPF 30 defends against UV and blue light while boosting luminosity.">
-                    <svg width="14" height="14" viewBox="0 0 16 16" fill="none"><circle cx="8" cy="8" r="7" stroke="var(--muted-foreground)" stroke-width="1.2"/><text x="8" y="11.5" text-anchor="middle" font-size="10" font-weight="700" fill="var(--muted-foreground)">i</text></svg>
-                  </button>
-                </div>
-                <p class="text-xs font-light text-[--muted-foreground] mt-[--space-1] line-clamp-2">Light-activated moisturizer with SPF 30 defends against UV and blue light while boosting luminosity.</p>
-                <div class="mt-auto pt-[--space-3] flex items-center justify-between">
-                  <span class="text-sm font-bold text-[--foreground]">$79.00</span>
-                  <button class="add-to-bag-btn" data-product="prisma-protect-spf30" data-price="79.00">Add to Bag</button>
-                </div>
-              </div>
-            </div>
-          </div>
-        </div>
-
-        <!-- Add All to Bag CTA -->
-        <div class="flex flex-col sm:flex-row items-center justify-between gap-[--space-4] p-[--space-6] bg-[--card-header] rounded border border-[--border]">
-          <div>
-            <p class="text-base font-bold text-[--foreground]">Comprehensive Routine — 8 Products</p>
-            <p class="text-sm font-light text-[--muted-foreground]">Total: <span class="font-bold text-[--foreground]">$652.00</span></p>
-          </div>
-          <button class="add-all-btn" data-routine="comprehensive">Add All to Bag</button>
-        </div>
+        <!-- Products will be dynamically loaded here -->
       </div>
     </section>
 
-    <!-- ──────────  UPGRADE YOUR ROUTINE  ────────── -->
-    <section class="mb-[--space-16]" aria-label="Upgrade your routine">
-      <div class="flex items-center gap-[--space-3] mb-[--space-2]">
-        <h2 class="text-xl font-bold text-[--heading]">Upgrade Your Routine</h2>
-      </div>
-      <p class="text-sm font-light text-[--muted-foreground] mb-[--space-6]">Boost your results with these targeted add-ons recommended for your skin profile.</p>
+    <!-- ──────────  YOU MAY ALSO LIKE SECTIONS (DYNAMIC)  ────────── -->
+    <!-- Essential Additional Products Section -->
+    <section id="upgrade-essential" class="max-w-[1280px] mx-auto md:px-[--space-6] mb-[--space-16]" aria-label="You may also like">
+      <!-- Will be populated dynamically -->
+    </section>
 
-      <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-[--space-4]">
-        <!-- Upgrade card 1 -->
-        <div class="product-card">
-          <div class="product-card-img">
-            <img src="https://www.dermalogica.com/cdn/shop/files/retinol-clearing-oil_600x600.jpg?v=1700067037" alt="Retinol Clearing Oil" loading="lazy" />
-          </div>
-          <div class="product-card-body">
-            <h4 class="text-sm font-bold text-[--foreground] leading-tight">Retinol Clearing Oil</h4>
-            <p class="text-xs font-light text-[--muted-foreground] mt-[--space-1] line-clamp-2">Active retinoid combined with salicylic acid clears breakouts while reducing visible signs of skin aging.</p>
-            <div class="mt-auto pt-[--space-3] flex items-center justify-between">
-              <span class="text-sm font-bold text-[--foreground]">$92.00</span>
-              <button class="add-to-bag-btn" data-product="retinol-clearing-oil" data-price="92.00">Add to Bag</button>
-            </div>
-          </div>
-        </div>
+    <!-- Enhanced Additional Products Section -->
+    <section id="upgrade-enhanced" class="max-w-[1280px] mx-auto md:px-[--space-6] mb-[--space-16]" aria-label="You may also like">
+      <!-- Will be populated dynamically -->
+    </section>
 
-        <!-- Upgrade card 2 -->
-        <div class="product-card">
-          <div class="product-card-img">
-            <img src="https://www.dermalogica.com/cdn/shop/files/phyto-nature-firming-serum_600x600.jpg?v=1700067037" alt="Phyto Nature Firming Serum" loading="lazy" />
-          </div>
-          <div class="product-card-body">
-            <h4 class="text-sm font-bold text-[--foreground] leading-tight">Phyto Nature Firming Serum</h4>
-            <p class="text-xs font-light text-[--muted-foreground] mt-[--space-1] line-clamp-2">Plant-powered serum with natural retinol alternative firms, nourishes and evens skin tone.</p>
-            <div class="mt-auto pt-[--space-3] flex items-center justify-between">
-              <span class="text-sm font-bold text-[--foreground]">$130.00</span>
-              <button class="add-to-bag-btn" data-product="phyto-nature-firming-serum" data-price="130.00">Add to Bag</button>
-            </div>
-          </div>
-        </div>
-
-        <!-- Upgrade card 3 -->
-        <div class="product-card">
-          <div class="product-card-img">
-            <img src="https://www.dermalogica.com/cdn/shop/files/stabilizing-repair-cream_600x600.jpg?v=1700067037" alt="Stabilizing Repair Cream" loading="lazy" />
-          </div>
-          <div class="product-card-body">
-            <h4 class="text-sm font-bold text-[--foreground] leading-tight">Stabilizing Repair Cream</h4>
-            <p class="text-xs font-light text-[--muted-foreground] mt-[--space-1] line-clamp-2">Intensive moisturizer helps strengthen compromised skin barrier and calm stressed or reactive skin.</p>
-            <div class="mt-auto pt-[--space-3] flex items-center justify-between">
-              <span class="text-sm font-bold text-[--foreground]">$68.00</span>
-              <button class="add-to-bag-btn" data-product="stabilizing-repair-cream" data-price="68.00">Add to Bag</button>
-            </div>
-          </div>
-        </div>
-
-        <!-- Upgrade card 4 -->
-        <div class="product-card">
-          <div class="product-card-img">
-            <img src="https://www.dermalogica.com/cdn/shop/files/dynamic-skin-recovery-spf50_600x600.jpg?v=1700067037" alt="Dynamic Skin Recovery SPF 50" loading="lazy" />
-          </div>
-          <div class="product-card-body">
-            <h4 class="text-sm font-bold text-[--foreground] leading-tight">Dynamic Skin Recovery SPF 50</h4>
-            <p class="text-xs font-light text-[--muted-foreground] mt-[--space-1] line-clamp-2">Firming, anti-aging moisturizer with broad-spectrum SPF 50 for medium-weight UV defense and treatment.</p>
-            <div class="mt-auto pt-[--space-3] flex items-center justify-between">
-              <span class="text-sm font-bold text-[--foreground]">$89.00</span>
-              <button class="add-to-bag-btn" data-product="dynamic-skin-recovery-spf50" data-price="89.00">Add to Bag</button>
-            </div>
-          </div>
-        </div>
-      </div>
+    <!-- Comprehensive has no upgrade section (it's the final tier) -->
+    <section id="upgrade-comprehensive" style="display: none;">
     </section>
 
     <!-- ──────────  PROFESSIONAL TREATMENTS  ────────── -->
-    <section class="mb-[--space-16]" aria-label="Professional treatments">
-      <h2 class="text-xl font-bold text-[--heading] mb-[--space-2]">Recommended Professional Treatments</h2>
-      <p class="text-sm font-light text-[--muted-foreground] mb-[--space-6]">Maximize your results with in-salon treatments from a Dermalogica skin therapist.</p>
+    <section class="max-w-[1280px] mx-auto md:px-[--space-6] mb-[--space-16]" aria-label="Professional treatments">
+      <div class="mb-[--space-6]">
+        <h2 class="text-xl font-bold text-[--heading] mb-[--space-2]">Recommended Professional Treatments</h2>
+        <p class="text-sm font-light text-[--muted-foreground]">Maximize your results with in-salon treatments from a Dermalogica skin therapist.</p>
+      </div>
 
       <div class="grid grid-cols-1 md:grid-cols-2 gap-[--space-4]">
         <!-- Treatment card 1 -->
         <div class="bg-[--card] rounded border border-[--border] shadow-sm overflow-hidden flex flex-col sm:flex-row">
-          <div class="sm:w-[200px] h-[160px] sm:h-auto bg-[--card-header] flex items-center justify-center flex-shrink-0">
-            <svg width="48" height="48" viewBox="0 0 48 48" fill="none">
-              <circle cx="24" cy="24" r="20" stroke="var(--primary)" stroke-width="1.5" fill="none"/>
-              <path d="M24 14v10l6 6" stroke="var(--primary)" stroke-width="1.5" stroke-linecap="round"/>
-            </svg>
+          <div class="sm:w-[200px] sm:h-[200px] w-full aspect-square bg-[--card-header] flex items-center justify-center flex-shrink-0 overflow-hidden">
+            <img src="https://www.dermalogica.com/cdn/shop/files/PRO-TREATMENTS-PAGE_PRO-SKIN.jpg?v=1762198051&width=1680" 
+                 alt="Pro Skin Treatment" 
+                 class="w-full h-full object-cover"
+                 loading="lazy" />
           </div>
           <div class="p-[--space-6] flex flex-col">
-            <h3 class="text-base font-bold text-[--foreground] mb-[--space-1]">ProSkin 60</h3>
-            <p class="text-xs font-light text-[--muted-foreground] mb-[--space-3]">A customized 60-minute professional treatment combining Face Mapping skin analysis with tailored techniques addressing your specific concerns.</p>
-            <a href="#" class="text-xs font-bold text-[--primary] uppercase tracking-[0.08em] hover:underline mt-auto">Find a Therapist</a>
+            <h3 class="text-base font-bold text-[--foreground] mb-[--space-1]">pro skin treatment</h3>
+            <p class="text-xs font-light text-[--muted-foreground] mb-[--space-3]">Get the best skin you've ever had with our customizable skin treatment with treatment modality enhancement options.</p>
+            <div class="flex items-center gap-[--space-2] mb-[--space-3]">
+              <span class="inline-flex items-center gap-[--space-1] text-xs text-[--muted-foreground]">
+                <svg width="14" height="14" viewBox="0 0 16 16" fill="none">
+                  <circle cx="8" cy="8" r="7" stroke="currentColor" stroke-width="1.2"/>
+                  <path d="M8 4v4l3 3" stroke="currentColor" stroke-width="1.2" stroke-linecap="round"/>
+                </svg>
+                <span>30 or 60 minutes</span>
+              </span>
+            </div>
+            <a href="#" class="text-xs font-bold text-[--primary] uppercase tracking-[0.08em] hover:underline mt-auto">Find a Professional</a>
           </div>
         </div>
 
         <!-- Treatment card 2 -->
         <div class="bg-[--card] rounded border border-[--border] shadow-sm overflow-hidden flex flex-col sm:flex-row">
-          <div class="sm:w-[200px] h-[160px] sm:h-auto bg-[--card-header] flex items-center justify-center flex-shrink-0">
-            <svg width="48" height="48" viewBox="0 0 48 48" fill="none">
-              <circle cx="24" cy="24" r="20" stroke="var(--primary)" stroke-width="1.5" fill="none"/>
-              <path d="M18 20c0-3.3 2.7-6 6-6s6 2.7 6 6c0 6-6 10-6 14 0-4-6-8-6-14z" stroke="var(--primary)" stroke-width="1.5" fill="none"/>
-            </svg>
+          <div class="sm:w-[200px] sm:h-[200px] w-full aspect-square bg-[--card-header] flex items-center justify-center flex-shrink-0 overflow-hidden">
+            <img src="https://www.dermalogica.com/cdn/shop/files/PRO-TREATMENTS-PAGE_PRO-BRIGHT.jpg?v=1762198045&width=1680" 
+                 alt="Pro Bright Skin Treatment" 
+                 class="w-full h-full object-cover"
+                 loading="lazy" />
           </div>
           <div class="p-[--space-6] flex flex-col">
-            <h3 class="text-base font-bold text-[--foreground] mb-[--space-1]">BioLumin-C Peel</h3>
-            <p class="text-xs font-light text-[--muted-foreground] mb-[--space-3]">A professional-grade Vitamin C treatment that targets dullness, uneven tone, and loss of firmness for visible brightening results.</p>
-            <a href="#" class="text-xs font-bold text-[--primary] uppercase tracking-[0.08em] hover:underline mt-auto">Find a Therapist</a>
+            <h3 class="text-base font-bold text-[--foreground] mb-[--space-1]">pro bright skin treatment</h3>
+            <p class="text-xs font-light text-[--muted-foreground] mb-[--space-3]">A 3-step skin treatment that boosts absorption of brightening actives – addressing dark spots and reducing uneven pigmentation to reveal brighter skin.</p>
+            <div class="flex items-center gap-[--space-2] mb-[--space-3]">
+              <span class="inline-flex items-center gap-[--space-1] text-xs text-[--muted-foreground]">
+                <svg width="14" height="14" viewBox="0 0 16 16" fill="none">
+                  <circle cx="8" cy="8" r="7" stroke="currentColor" stroke-width="1.2"/>
+                  <path d="M8 4v4l3 3" stroke="currentColor" stroke-width="1.2" stroke-linecap="round"/>
+                </svg>
+                <span>30 or 60 minutes</span>
+              </span>
+            </div>
+            <a href="#" class="text-xs font-bold text-[--primary] uppercase tracking-[0.08em] hover:underline mt-auto">Find a Professional</a>
+          </div>
+        </div>
+      </div>
+
+      <!-- Virtual Professional Chat - Secondary Action -->
+      <div class="mt-[--space-6]">
+        <div class="bg-[--card-header] rounded-lg border border-[--border] p-[--space-5] flex flex-col sm:flex-row items-center gap-[--space-4]">
+          <div class="flex-shrink-0">
+            <div class="w-12 h-12 rounded-full bg-[--primary] flex items-center justify-center">
+              <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" class="text-[--primary-foreground]">
+                <path stroke-linecap="round" stroke-linejoin="round" d="M8 12h.01M12 12h.01M16 12h.01M21 12c0 4.418-4.03 8-9 8a9.863 9.863 0 01-4.255-.949L3 20l1.395-3.72C3.512 15.042 3 13.574 3 12c0-4.418 4.03-8 9-8s9 3.582 9 8z"/>
+              </svg>
+            </div>
+          </div>
+          <div class="flex-1 text-center sm:text-left">
+            <h3 class="text-sm font-bold text-[--foreground] mb-[--space-1]">Have questions about your routine?</h3>
+            <p class="text-xs font-light text-[--muted-foreground]">Chat with a virtual professional skin therapist for personalized guidance.</p>
+          </div>
+          <div class="flex-shrink-0">
+            <button class="px-[--space-5] py-[--space-2] bg-[--card] border border-[--border] rounded text-xs font-bold text-[--foreground] uppercase tracking-[0.08em] hover:bg-[--card-header] hover:border-[--primary] transition-all duration-[250ms]">
+              Start Chat
+            </button>
           </div>
         </div>
       </div>
     </section>
 
     <!-- ──────────  FEATURED ARTICLE  ────────── -->
-    <section class="mb-[--space-16]" aria-label="Featured article">
+    <section class="max-w-[1280px] mx-auto md:px-[--space-6] mb-[--space-16]" aria-label="Featured article">
+      <div class="mb-[--space-6]">
+        <h2 class="text-xl font-bold text-[--heading] mb-[--space-2]">Featured Article</h2>
+        <p class="text-sm font-light text-[--muted-foreground]">Discover expert skincare tips and insights to enhance your routine.</p>
+      </div>
+      
       <div class="bg-[--card] rounded border border-[--border] shadow-sm overflow-hidden flex flex-col md:flex-row">
-        <div class="md:w-[45%] h-[200px] md:h-auto bg-[--card-header] flex items-center justify-center flex-shrink-0">
-          <svg width="64" height="64" viewBox="0 0 64 64" fill="none">
-            <rect x="8" y="12" width="48" height="40" rx="4" stroke="var(--primary)" stroke-width="1.5" fill="none"/>
-            <line x1="16" y1="24" x2="48" y2="24" stroke="var(--primary)" stroke-width="1.5"/>
-            <line x1="16" y1="32" x2="40" y2="32" stroke="var(--primary)" stroke-width="1.5"/>
-            <line x1="16" y1="40" x2="36" y2="40" stroke="var(--primary)" stroke-width="1.5"/>
-          </svg>
+        <div class="md:w-[45%] w-full aspect-square md:aspect-auto md:h-auto bg-[--card-header] flex items-center justify-center flex-shrink-0 overflow-hidden">
+          <img src="https://www.dermalogica.com/cdn/shop/articles/2024_4x5_biolumin-c-heat-aging-protector-spf50_5_1e4d256a-b3d6-449c-8c78-cd68a45dce18_1800x764_crop_center.png?v=1746132622" 
+               alt="The benefits of pairing vitamin c with sunscreen" 
+               class="w-full h-full object-cover"
+               loading="lazy" />
         </div>
         <div class="p-[--space-8] flex flex-col justify-center">
           <p class="text-xs font-normal uppercase tracking-[0.12em] text-[--muted-foreground] mb-[--space-2]">Skin Tips</p>
-          <h2 class="text-lg font-bold text-[--heading] mb-[--space-3]">How to Build a Skincare Routine That Works</h2>
-          <p class="text-sm font-light text-[--muted-foreground] mb-[--space-4]">Learn the fundamentals of layering products in the correct order, why ingredient synergy matters, and how to adjust your routine with the seasons.</p>
+          <h2 class="text-lg font-bold text-[--heading] mb-[--space-3]">the benefits of pairing vitamin c with sunscreen</h2>
+          <p class="text-sm font-light text-[--muted-foreground] mb-[--space-4]">Pairing Vitamin C with sunscreen is one of the most powerful ways to boost your skin's defense against sun damage and signs of early skin aging.</p>
           <a href="#" class="text-xs font-bold text-[--primary] uppercase tracking-[0.08em] hover:underline">Read Article</a>
         </div>
       </div>
@@ -993,7 +424,7 @@
 
   <!-- ============================  FOOTER  ============================ -->
   <footer class="border-t border-[--border] bg-[--background]">
-    <div class="max-w-[1280px] mx-auto px-[--space-6] py-[--space-10]">
+    <div class="max-w-[1280px] mx-auto px-4 md:px-[--space-6] py-[--space-10]">
       <div class="grid grid-cols-2 md:grid-cols-4 gap-[--space-8] mb-[--space-8]">
         <div>
           <h4 class="text-xs font-bold uppercase tracking-[0.08em] text-[--heading] mb-[--space-3]">Shop</h4>
@@ -1016,7 +447,7 @@
         <div>
           <h4 class="text-xs font-bold uppercase tracking-[0.08em] text-[--heading] mb-[--space-3]">Professional</h4>
           <ul class="flex flex-col gap-[--space-2]">
-            <li><a href="#" class="text-xs font-light text-[--muted-foreground] hover:text-[--foreground]">Find a Therapist</a></li>
+            <li><a href="#" class="text-xs font-light text-[--muted-foreground] hover:text-[--foreground]">Find a Professional</a></li>
             <li><a href="#" class="text-xs font-light text-[--muted-foreground] hover:text-[--foreground]">Pro Login</a></li>
             <li><a href="#" class="text-xs font-light text-[--muted-foreground] hover:text-[--foreground]">Education</a></li>
           </ul>
@@ -1041,6 +472,97 @@
     </div>
   </footer>
 
+  <!-- ============================  MODALS  ============================ -->
+  
+  <!-- Email Save Modal -->
+  <div id="email-modal" class="fixed inset-0 z-[100] hidden items-center justify-center bg-black/50 backdrop-blur-sm">
+    <div class="modal-overlay absolute inset-0" data-modal-close="email-modal"></div>
+    <div class="relative bg-[--card] rounded-lg border border-[--border] shadow-lg max-w-md w-full mx-[--space-6] max-h-[90vh] overflow-y-auto">
+      <div class="p-[--space-6]">
+        <div class="flex items-center justify-between mb-[--space-4]">
+          <h2 class="text-xl font-bold text-[--heading]">Save Your Routine</h2>
+          <button class="modal-close text-[--muted-foreground] hover:text-[--foreground] transition-colors" data-modal-close="email-modal" aria-label="Close">
+            <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+              <line x1="18" y1="6" x2="6" y2="18"/>
+              <line x1="6" y1="6" x2="18" y2="18"/>
+            </svg>
+          </button>
+        </div>
+        <p class="text-sm font-light text-[--muted-foreground] mb-[--space-5]">
+          Enter your email address to receive your personalized routine recommendations.
+        </p>
+        <form id="email-form" class="space-y-[--space-4]">
+          <div>
+            <label for="email-input" class="block text-xs font-bold uppercase tracking-[0.08em] text-[--muted-foreground] mb-[--space-2]">
+              Email Address
+            </label>
+            <input 
+              type="email" 
+              id="email-input" 
+              name="email"
+              required
+              placeholder="your.email@example.com"
+              class="w-full px-[--space-4] py-[--space-3] border border-[--border] rounded bg-[--background] text-[--foreground] text-sm focus:outline-none focus:ring-2 focus:ring-[--primary] focus:border-[--primary] transition-all"
+            />
+            <p id="email-error" class="mt-[--space-2] text-xs text-red-600 hidden"></p>
+          </div>
+          <div class="flex gap-[--space-3] pt-[--space-2]">
+            <button 
+              type="button" 
+              class="flex-1 px-[--space-5] py-[--space-3] border border-[--border] rounded text-sm font-bold text-[--foreground] hover:bg-[--card-header] transition-colors"
+              data-modal-close="email-modal"
+            >
+              Cancel
+            </button>
+            <button 
+              type="submit" 
+              class="flex-1 px-[--space-5] py-[--space-3] bg-[--primary] text-[--primary-foreground] rounded text-sm font-bold uppercase tracking-[0.08em] hover:bg-[--primary]/90 transition-colors"
+            >
+              Send Email
+            </button>
+          </div>
+        </form>
+      </div>
+    </div>
+  </div>
+
+  <!-- Retake Quiz Confirmation Modal -->
+  <div id="retake-modal" class="fixed inset-0 z-[100] hidden items-center justify-center bg-black/50 backdrop-blur-sm">
+    <div class="modal-overlay absolute inset-0" data-modal-close="retake-modal"></div>
+    <div class="relative bg-[--card] rounded-lg border border-[--border] shadow-lg max-w-md w-full mx-[--space-6]">
+      <div class="p-[--space-6]">
+        <div class="flex items-center justify-between mb-[--space-4]">
+          <h2 class="text-xl font-bold text-[--heading]">Retake Quiz</h2>
+          <button class="modal-close text-[--muted-foreground] hover:text-[--foreground] transition-colors" data-modal-close="retake-modal" aria-label="Close">
+            <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+              <line x1="18" y1="6" x2="6" y2="18"/>
+              <line x1="6" y1="6" x2="18" y2="18"/>
+            </svg>
+          </button>
+        </div>
+        <p class="text-sm font-light text-[--muted-foreground] mb-[--space-5]">
+          Are you sure you want to retake the quiz? Your current personalized routine results will be lost.
+        </p>
+        <div class="flex gap-[--space-3] pt-[--space-2]">
+          <button 
+            type="button" 
+            class="flex-1 px-[--space-5] py-[--space-3] border border-[--border] rounded text-sm font-bold text-[--foreground] hover:bg-[--card-header] transition-colors"
+            data-modal-close="retake-modal"
+          >
+            Cancel
+          </button>
+          <button 
+            type="button" 
+            id="confirm-retake-btn"
+            class="flex-1 px-[--space-5] py-[--space-3] bg-[--primary] text-[--primary-foreground] rounded text-sm font-bold uppercase tracking-[0.08em] hover:bg-[--primary]/90 transition-colors"
+          >
+            Retake Quiz
+          </button>
+        </div>
+      </div>
+    </div>
+  </div>
+
   <!-- ============================  TOAST NOTIFICATION  ============================ -->
   <div id="toast" class="fixed bottom-[--space-6] right-[--space-6] z-[100] hidden">
     <div class="bg-[--foreground] text-[--background] px-[--space-6] py-[--space-3] rounded shadow-lg text-sm font-normal flex items-center gap-[--space-3]">
@@ -1050,6 +572,7 @@
   </div>
 
   <!-- Scripts -->
+  <script src="product-data.js"></script>
   <script src="app.js"></script>
 </body>
 </html>

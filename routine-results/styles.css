@@ -3,41 +3,296 @@
    All colors reference CSS variables from globals.css.
    ============================================================ */
 
+/* ────────────  STICKY TABS CONTAINER  ──────────── */
+
+.sticky {
+  position: sticky;
+  position: -webkit-sticky;
+}
+
+/* Ensure header is always sticky on mobile */
+header {
+  position: -webkit-sticky !important;
+  position: sticky !important;
+  top: 0 !important;
+  z-index: 50 !important;
+}
+
+/* Ensure body and html don't interfere with sticky positioning */
+html,
+body {
+  overflow-x: hidden;
+}
+
+/* Mobile-specific fixed header - more reliable than sticky on mobile */
+@media (max-width: 767px) {
+  header {
+    position: fixed !important;
+    top: 0 !important;
+    left: 0 !important;
+    right: 0 !important;
+    width: 100% !important;
+    z-index: 50 !important;
+  }
+  
+  /* Add padding to body to account for fixed header - will be overridden by JS */
+  body {
+    padding-top: 56px;
+  }
+  
+  /* Sticky tabs z-index */
+  #sticky-tabs-container {
+    z-index: 40 !important;
+  }
+}
+
+#sticky-tabs-container {
+  position: sticky;
+  position: -webkit-sticky;
+  top: 0; /* Default, will be overridden by JavaScript */
+  z-index: 40;
+  width: 100%;
+  left: 0;
+  right: 0;
+  transition: box-shadow var(--transition-normal), background-color var(--transition-normal);
+}
+
+#sticky-tabs-container:not(:hover) {
+  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.05);
+}
+
+/* Custom Dropdowns in sticky tabs */
+.custom-dropdown {
+  position: relative;
+}
+
+/* Dropdown button styling - looks like a select input */
+#tier-dropdown-btn,
+#timing-dropdown-btn {
+  background-color: var(--background);
+  border: 1px solid var(--border);
+  border-radius: var(--radius);
+  cursor: pointer;
+  transition: all var(--transition-normal);
+  font-weight: var(--font-weight-bold);
+  color: var(--foreground);
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  width: 100%;
+  text-align: left;
+}
+
+#tier-dropdown-btn:hover,
+#timing-dropdown-btn:hover {
+  background-color: var(--card);
+  border-color: var(--primary);
+}
+
+#tier-dropdown-btn svg,
+#timing-dropdown-btn svg {
+  flex-shrink: 0;
+  margin-left: var(--space-2);
+  color: var(--muted-foreground);
+}
+
+#tier-dropdown-btn:focus,
+#timing-dropdown-btn:focus {
+  outline: none;
+  border-color: var(--primary);
+  box-shadow: 0 0 0 2px rgba(var(--primary-rgb), 0.1);
+}
+
+/* Dropdown menu - appears below button like a native select */
+.custom-dropdown-menu {
+  position: absolute;
+  top: 100%;
+  left: 0;
+  right: 0;
+  margin-top: 4px;
+  background-color: var(--card);
+  border: 1px solid var(--border);
+  border-radius: var(--radius);
+  box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1), 0 2px 4px -1px rgba(0, 0, 0, 0.06);
+  z-index: 50;
+  max-height: 200px;
+  overflow-y: auto;
+  overflow-x: hidden;
+  animation: dropdownFadeIn 0.15s ease-out;
+}
+
+@keyframes dropdownFadeIn {
+  from {
+    opacity: 0;
+    transform: translateY(-4px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+.custom-dropdown-menu li {
+  list-style: none;
+}
+
+.custom-dropdown-menu li:first-child button {
+  border-top-left-radius: var(--radius);
+  border-top-right-radius: var(--radius);
+}
+
+.custom-dropdown-menu li:last-child button {
+  border-bottom-left-radius: var(--radius);
+  border-bottom-right-radius: var(--radius);
+}
+
+.custom-dropdown-menu li:not(:last-child) button {
+  border-bottom: 1px solid var(--border);
+}
+
+.custom-dropdown-menu button {
+  width: 100%;
+  padding: var(--space-3) var(--space-3);
+  text-align: left;
+  background-color: transparent;
+  border: none;
+  cursor: pointer;
+  transition: background-color var(--transition-normal);
+  font-weight: var(--font-weight-bold);
+  font-size: var(--font-size-sm);
+  color: var(--foreground);
+  display: block;
+}
+
+.custom-dropdown-menu button:hover,
+.custom-dropdown-menu button:focus {
+  background-color: var(--card-header);
+  outline: none;
+}
+
+.custom-dropdown-menu button:active {
+  background-color: var(--card-header);
+}
+
+/* Active/selected state for dropdown options */
+.custom-dropdown-menu button[aria-selected="true"],
+.custom-dropdown-menu button.selected {
+  background-color: var(--card-header);
+  color: var(--primary);
+}
+
+/* Add smooth scroll padding to account for sticky header */
+html {
+  scroll-padding-top: 100px;
+}
+
+/* ────────────  TIMING TOGGLE  ──────────── */
+
+.timing-toggle-btn {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: var(--space-2);
+  padding: var(--space-2) var(--space-5);
+  border-radius: var(--radius);
+  background-color: var(--card);
+  color: var(--muted-foreground);
+  border: 1px solid var(--border);
+  font-size: var(--font-size-sm);
+  font-weight: var(--font-weight-bold);
+  letter-spacing: var(--letter-spacing);
+  text-transform: uppercase;
+  transition: all var(--transition-fast);
+  cursor: pointer;
+}
+.timing-toggle-btn:hover {
+  background-color: var(--card-header);
+  border-color: var(--primary);
+  color: var(--foreground);
+}
+.timing-toggle-btn.active {
+  background-color: var(--primary);
+  color: var(--primary-foreground);
+  border-color: var(--primary);
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+}
+.timing-toggle-btn svg {
+  flex-shrink: 0;
+}
+
 /* ────────────  ROUTINE TABS  ──────────── */
 
 .routine-tab {
   background-color: var(--tab-inactive-bg);
   color: var(--tab-inactive-text);
-  border: 1px solid var(--border);
+  border: 1.5px solid var(--border);
   border-radius: var(--radius);
   font-weight: var(--font-weight-bold);
   font-size: var(--font-size-sm);
   letter-spacing: var(--letter-spacing);
+  position: relative;
+  overflow: hidden;
+}
+.routine-tab::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  height: 3px;
+  background-color: transparent;
+  transition: background-color var(--transition-fast);
 }
 .routine-tab:hover {
   background-color: var(--card-header);
+  border-color: var(--primary);
+  transform: translateY(-1px);
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.08);
 }
 .routine-tab--active,
 .routine-tab--active:hover {
   background-color: var(--tab-active-bg);
   color: var(--tab-active-text);
   border-color: var(--tab-active-bg);
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.12);
+  transform: translateY(0);
+}
+.routine-tab--active::before {
+  background-color: var(--primary);
+}
+.routine-tab svg {
+  flex-shrink: 0;
+  transition: transform var(--transition-fast);
+}
+.routine-tab:hover svg {
+  transform: scale(1.1);
+}
+.routine-tab--active svg {
+  transform: scale(1.1);
 }
 
 .routine-tab-count {
   display: inline-flex;
   align-items: center;
   justify-content: center;
+  min-width: 24px;
+  height: 24px;
   padding: 0 var(--space-2);
-  height: 20px;
   border-radius: var(--radius-full);
   font-size: var(--font-size-xs);
-  font-weight: var(--font-weight-normal);
-  background-color: rgba(255, 255, 255, 0.2);
+  font-weight: var(--font-weight-bold);
+  background-color: rgba(255, 255, 255, 0.25);
+  backdrop-filter: blur(4px);
+  transition: all var(--transition-fast);
 }
 .routine-tab:not(.routine-tab--active) .routine-tab-count {
   background-color: var(--badge-bg);
   color: var(--badge-text);
+  opacity: 0.8;
+}
+.routine-tab--active .routine-tab-count {
+  background-color: rgba(255, 255, 255, 0.3);
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
 }
 
 /* ────────────  STEP NUMBER  ──────────── */
@@ -81,6 +336,9 @@
   box-shadow: var(--shadow-sm);
   overflow: hidden;
   transition: box-shadow var(--transition-normal), transform var(--transition-normal);
+  /* Fixed height to prevent layout shift */
+  height: 100%;
+  min-height: 420px;
 }
 .product-card:hover {
   box-shadow: var(--shadow-md);
@@ -88,6 +346,7 @@
 }
 
 .product-card-img {
+  position: relative;
   width: 100%;
   aspect-ratio: 1 / 1;
   background-color: var(--card-header);
@@ -96,6 +355,7 @@
   justify-content: center;
   overflow: hidden;
 }
+
 .product-card-img img {
   width: 100%;
   height: 100%;
@@ -106,11 +366,49 @@
   transform: scale(1.03);
 }
 
+/* ────────────  PRODUCT STEP BANNER  ──────────── */
+
+.product-step-banner {
+  width: 100%;
+  background-color: var(--primary);
+  color: var(--primary-foreground);
+  padding: 8px var(--space-4);
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  font-size: 11px;
+  font-weight: 700;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  flex-shrink: 0;
+  box-sizing: border-box;
+  border-radius: var(--radius) var(--radius) 0 0;
+}
+
+.product-step-banner-text {
+  display: flex;
+  align-items: center;
+}
+
+.product-step-banner-timing {
+  display: inline-flex;
+  align-items: center;
+  padding: 2px 8px;
+  background-color: var(--background);
+  color: var(--foreground);
+  border-radius: 2px;
+  font-size: 10px;
+  margin-left: var(--space-2);
+}
+
 .product-card-body {
   display: flex;
   flex-direction: column;
   flex: 1;
   padding: var(--space-4);
+  position: relative;
+  /* Ensure consistent spacing */
+  min-height: 180px;
 }
 
 /* ────────────  BUTTONS  ──────────── */
@@ -119,6 +417,7 @@
   display: inline-flex;
   align-items: center;
   justify-content: center;
+  gap: var(--space-1);
   padding: var(--space-2) var(--space-4);
   border-radius: var(--radius);
   background-color: var(--primary);
@@ -127,24 +426,74 @@
   font-weight: var(--font-weight-bold);
   letter-spacing: var(--letter-spacing-wide);
   text-transform: uppercase;
-  transition: background-color var(--transition-fast), transform var(--transition-fast);
+  transition: all var(--transition-fast);
   white-space: nowrap;
+  border: none;
+  cursor: pointer;
 }
-.add-to-bag-btn:hover {
+.add-to-bag-btn:hover:not(:disabled):not(.loading):not(.added):not(.in-cart) {
   background-color: var(--foreground);
 }
-.add-to-bag-btn:active {
+.add-to-bag-btn:active:not(:disabled) {
   transform: scale(0.97);
+}
+.add-to-bag-btn:disabled {
+  opacity: 0.7;
+  cursor: not-allowed;
+}
+.add-to-bag-btn.loading {
+  background-color: var(--muted);
+  color: var(--muted-foreground);
+  cursor: wait;
 }
 .add-to-bag-btn.added {
   background-color: var(--success);
+  color: var(--background);
   pointer-events: none;
+}
+.add-to-bag-btn.in-cart {
+  background-color: var(--card-header);
+  color: var(--foreground);
+  border: 1.5px solid var(--primary);
+}
+.add-to-bag-btn.in-cart:hover {
+  background-color: var(--card-header);
+  border-color: var(--foreground);
+}
+.add-to-bag-btn .cart-quantity {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  min-width: 20px;
+  height: 20px;
+  padding: 0 var(--space-1);
+  background-color: var(--primary);
+  color: var(--primary-foreground);
+  border-radius: var(--radius-full);
+  font-size: 10px;
+  font-weight: var(--font-weight-bold);
+  margin-left: var(--space-1);
+}
+
+/* Loading spinner */
+.loading-spinner {
+  display: inline-block;
+  width: 12px;
+  height: 12px;
+  border: 2px solid currentColor;
+  border-top-color: transparent;
+  border-radius: 50%;
+  animation: spin 0.6s linear infinite;
+}
+@keyframes spin {
+  to { transform: rotate(360deg); }
 }
 
 .add-all-btn {
   display: inline-flex;
   align-items: center;
   justify-content: center;
+  gap: var(--space-1);
   padding: var(--space-3) var(--space-8);
   border-radius: var(--radius);
   background-color: var(--primary);
@@ -153,14 +502,161 @@
   font-weight: var(--font-weight-bold);
   letter-spacing: var(--letter-spacing-wide);
   text-transform: uppercase;
-  transition: background-color var(--transition-fast), transform var(--transition-fast);
+  transition: all var(--transition-fast);
   white-space: nowrap;
+  border: none;
+  cursor: pointer;
 }
-.add-all-btn:hover {
+.add-all-btn:hover:not(:disabled):not(.loading):not(.added) {
   background-color: var(--foreground);
 }
-.add-all-btn:active {
+.add-all-btn:active:not(:disabled) {
   transform: scale(0.97);
+}
+.add-all-btn:disabled {
+  opacity: 0.7;
+  cursor: not-allowed;
+}
+.add-all-btn.loading {
+  background-color: var(--muted);
+  color: var(--muted-foreground);
+  cursor: wait;
+}
+.add-all-btn.added {
+  background-color: var(--success);
+  color: var(--background);
+  pointer-events: none;
+}
+
+/* ────────────  MINI CART  ──────────── */
+
+#mini-cart {
+  animation: slideDown 0.2s ease-out;
+}
+
+@keyframes slideDown {
+  from {
+    opacity: 0;
+    transform: translateY(-10px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+#mini-cart-items {
+  scrollbar-width: thin;
+  scrollbar-color: var(--border) transparent;
+}
+
+#mini-cart-items::-webkit-scrollbar {
+  width: 6px;
+}
+
+#mini-cart-items::-webkit-scrollbar-track {
+  background: transparent;
+}
+
+#mini-cart-items::-webkit-scrollbar-thumb {
+  background-color: var(--border);
+  border-radius: var(--radius-full);
+}
+
+.remove-from-cart-btn {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: var(--space-1);
+  border-radius: var(--radius);
+  transition: background-color var(--transition-fast);
+}
+
+.remove-from-cart-btn:hover {
+  background-color: var(--card-header);
+}
+
+/* ────────────  PRODUCT SIZE SELECTOR (DROPDOWN)  ──────────── */
+
+.product-size-select {
+  width: 100%;
+  padding: var(--space-2) var(--space-3);
+  border: 1.5px solid var(--border);
+  border-radius: var(--radius);
+  background-color: var(--card);
+  color: var(--foreground);
+  font-size: var(--font-size-xs);
+  font-weight: var(--font-weight-bold);
+  cursor: pointer;
+  transition: all var(--transition-fast);
+  appearance: none;
+  background-image: url("data:image/svg+xml,%3Csvg width='12' height='8' viewBox='0 0 12 8' fill='none' xmlns='http://www.w3.org/2000/svg'%3E%3Cpath d='M1 1L6 6L11 1' stroke='%235b6670' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'/%3E%3C/svg%3E");
+  background-repeat: no-repeat;
+  background-position: right var(--space-3) center;
+  padding-right: calc(var(--space-3) * 2 + 12px);
+}
+
+.product-size-select:hover {
+  border-color: var(--primary);
+  background-color: var(--card-header);
+}
+
+.product-size-select:focus {
+  outline: 2px solid var(--primary);
+  outline-offset: 2px;
+  border-color: var(--primary);
+}
+
+.product-size-select option {
+  padding: var(--space-2);
+  background-color: var(--card);
+  color: var(--foreground);
+}
+
+/* Price transition */
+.product-price {
+  transition: opacity var(--transition-fast);
+}
+
+/* ────────────  REMOVE FROM CART BUTTON  ──────────── */
+
+.remove-from-cart-btn {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 32px;
+  height: 32px;
+  padding: 0;
+  border: 1.5px solid var(--border);
+  border-radius: var(--radius);
+  background-color: var(--card);
+  color: var(--muted-foreground);
+  cursor: pointer;
+  transition: all var(--transition-fast);
+  flex-shrink: 0;
+}
+
+.remove-from-cart-btn:hover {
+  border-color: var(--destructive);
+  background-color: var(--destructive);
+  color: var(--destructive-foreground);
+}
+
+.remove-from-cart-btn:focus {
+  outline: 2px solid var(--destructive);
+  outline-offset: 2px;
+}
+
+.remove-from-cart-btn.hidden {
+  display: none;
+}
+
+@media (max-width: 640px) {
+  #mini-cart {
+    width: calc(100vw - var(--space-6));
+    max-width: 320px;
+    right: 0;
+  }
 }
 
 /* ────────────  TOOLTIP  ──────────── */
@@ -224,6 +720,17 @@
   transform: none;
 }
 
+/* Tooltip overflow fix for minimal cards */
+.bg-\[--card\] .tooltip-bubble {
+  z-index: 100;
+  max-width: 240px;
+}
+
+/* Ensure tooltip can escape overflow for cards that need it */
+[data-product-slug].bg-\[--card\] {
+  position: relative;
+}
+
 /* ────────────  TOAST  ──────────── */
 
 #toast.show {
@@ -262,11 +769,49 @@
   to   { opacity: 1; transform: translateY(0); }
 }
 
+/* Upgrade section transitions */
+section[id^="upgrade-"] {
+  transition: opacity 0.3s ease, transform 0.3s ease;
+  margin-top: var(--space-8);
+}
+section[id^="upgrade-"][style*="display: none"] {
+  opacity: 0;
+  transform: translateY(-10px);
+}
+section[id^="upgrade-"][style*="display: block"] {
+  opacity: 1;
+  transform: translateY(0);
+}
+
+/* Upgrade section styling - more subtle/addon-like */
+section[id^="upgrade-"] .bg-\[--card\] {
+  box-shadow: var(--shadow-sm);
+  border-color: var(--border);
+}
+
+section[id^="upgrade-"] h3 {
+  font-size: var(--font-size-base);
+  margin-bottom: var(--space-1);
+}
+
+section[id^="upgrade-"] p {
+  font-size: var(--font-size-xs);
+  color: var(--muted-foreground);
+}
+
 /* ────────────  RESPONSIVE  ──────────── */
 
 @media (max-width: 768px) {
   .product-card-img {
-    aspect-ratio: 4 / 3;
+    aspect-ratio: 1 / 1;
+  }
+  .product-step-banner {
+    padding: 6px var(--space-3);
+    font-size: 10px;
+  }
+  .product-step-banner-timing {
+    font-size: 9px;
+    padding: 2px 6px;
   }
 }
 
@@ -275,12 +820,82 @@
     font-size: var(--font-size-xs);
     padding: var(--space-2) var(--space-3);
   }
+  .routine-tab svg {
+    width: 18px;
+    height: 18px;
+  }
   .routine-tab-count {
     font-size: 10px;
-    height: 18px;
+    height: 20px;
+    min-width: 20px;
     padding: 0 var(--space-1);
+  }
+  .timing-toggle-btn {
+    padding: var(--space-2) var(--space-4);
+    font-size: var(--font-size-xs);
+  }
+  .timing-toggle-btn svg {
+    width: 16px;
+    height: 16px;
   }
   .add-all-btn {
     width: 100%;
   }
+}
+
+/* ────────────  MODALS  ──────────── */
+
+#email-modal,
+#retake-modal {
+  display: flex;
+  animation: fadeIn 0.2s ease-out;
+}
+
+#email-modal.hidden,
+#retake-modal.hidden {
+  display: none;
+}
+
+@keyframes fadeIn {
+  from {
+    opacity: 0;
+  }
+  to {
+    opacity: 1;
+  }
+}
+
+#email-modal > div:not(.modal-overlay),
+#retake-modal > div:not(.modal-overlay) {
+  animation: slideUp 0.3s ease-out;
+}
+
+@keyframes slideUp {
+  from {
+    opacity: 0;
+    transform: translateY(20px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+.modal-overlay {
+  cursor: pointer;
+}
+
+.modal-close {
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+#email-input:invalid:not(:placeholder-shown) {
+  border-color: rgba(239, 68, 68, 0.5);
+}
+
+#email-input:valid:not(:placeholder-shown) {
+  border-color: var(--success);
 }

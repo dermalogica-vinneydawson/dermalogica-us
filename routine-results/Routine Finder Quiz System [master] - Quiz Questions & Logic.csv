@@ -1,0 +1,28 @@
+Question ID,Question,Answer Option,Primary Use,Logic / Mapping (summary)
+Q1_AGE,How old are you?,Under 18,Franchise eligibility,"Clear Start is eligible. If acne/breakouts is selected in Q3, route to Clear Start."
+Q1_AGE,How old are you?,18–24,Franchise eligibility,"Clear Start is eligible. If acne/breakouts is selected in Q3, route to Clear Start."
+Q1_AGE,How old are you?,25–34,Franchise eligibility,Clear Start is NOT eligible. Use Q3 concern mapping.
+Q1_AGE,How old are you?,35–44,Franchise eligibility,Clear Start is NOT eligible. Use Q3 concern mapping.
+Q1_AGE,How old are you?,45–54,Franchise eligibility,Clear Start is NOT eligible. Use Q3 concern mapping.
+Q1_AGE,How old are you?,55+,Franchise eligibility,Clear Start is NOT eligible. Use Q3 concern mapping.
+Q2_TIMING,When do you usually do your skincare routine?,Mostly in the morning,Results display (AM/PM),Show AM routine only; hide PM routine; enforce once-daily steps within AM.
+Q2_TIMING,When do you usually do your skincare routine?,Mostly at night,Results display (AM/PM),Show PM routine only; hide AM routine; omit SPF steps.
+Q2_TIMING,When do you usually do your skincare routine?,Morning and night,Results display (AM/PM),Show both; enforce once-daily logic (exfoliant appears once; default placement AM unless PM-only product).
+Q3_CONCERN,What is your top skin concern right now?,Breakouts / acne,Franchise selection,Under 24 → Clear Start (age-gated). 24+ → Active Clearing.
+Q3_CONCERN,What is your top skin concern right now?,Sensitivity / redness,Franchise selection,UltraCalming.
+Q3_CONCERN,What is your top skin concern right now?,Dullness / uneven tone,Franchise selection,BioLumin-C.
+Q3_CONCERN,What is your top skin concern right now?,Dark spots / hyperpigmentation,Franchise selection,PowerBright.
+Q3_CONCERN,What is your top skin concern right now?,Fine lines / wrinkles,Franchise selection,Dynamic Skin.
+Q3_CONCERN,What is your top skin concern right now?,Loss of firmness / elasticity,Franchise selection,Phyto Nature.
+Q3_CONCERN,What is your top skin concern right now?,Stressed skin / environmental damage,Franchise selection,MultiVitamin Power.
+Q3_CONCERN,What is your top skin concern right now?,Dryness / dehydration,Franchise selection,Daily Skin Health (default / maintenance).
+Q3_CONCERN,What is your top skin concern right now?,Oiliness & clogged pores,Franchise selection,Daily Skin Health (default / maintenance).
+Q3_CONCERN,What is your top skin concern right now?,Just want to maintain healthy skin,Franchise selection,Daily Skin Health (default / maintenance).
+Q4_TIER,Which best describes how you like to care for your skin?,I want a simple routine that’s easy to stick to,Default tier,Default to Essential tier (all tiers remain visible).
+Q4_TIER,Which best describes how you like to care for your skin?,I’m comfortable with a few extra steps if they make a difference,Default tier,Default to Enhanced tier (all tiers remain visible).
+Q4_TIER,Which best describes how you like to care for your skin?,I enjoy a full routine and want the most advanced results,Default tier,Default to Comprehensive tier (all tiers remain visible).
+Q5_SENSITIVITY,How does your skin usually react to new products?,Very sensitive / easily irritated,Guardrail messaging,Use gentler guidance; reinforce once-daily exfoliation; consider UltraCalming as secondary if needed.
+Q5_SENSITIVITY,How does your skin usually react to new products?,Sometimes sensitive,Guardrail messaging,Standard guidance; avoid doubling exfoliation for combo users.
+Q5_SENSITIVITY,How does your skin usually react to new products?,Rarely sensitive,Guardrail messaging,Standard guidance.
+Q5_SENSITIVITY,How does your skin usually react to new products?,Very sensitive / easily irritated,Guardrail logic,"If Q3 != Sensitivity / redness, keep the franchise from Q3 but apply the 'Sensitive Swap' column in the Routine Matrix where populated."
+AGE_ROUTING,How results are prioritized,Age-first franchise weighting,Routing logic,"Age establishes the primary eligible franchise set using fixed bands (Under 18, 19–24, 25–34, 35–44, 45+). Clear Start is exclusive to Under 18. Top concern (Q3) confirms or redirects within the age-appropriate set. Sensitivity (Q5) may redirect to UltraCalming or apply Sensitive Swaps."
