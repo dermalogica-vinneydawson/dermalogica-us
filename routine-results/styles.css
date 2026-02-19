@@ -18,10 +18,13 @@ header {
   z-index: 50 !important;
 }
 
-/* Ensure body and html don't interfere with sticky positioning */
+/* Ensure body and html don't interfere with sticky positioning.
+   overflow-x: clip clips horizontal overflow without creating a scroll container,
+   so position: sticky on descendants (e.g. #sticky-tabs-container) still works.
+   (overflow-x: hidden would break sticky.) */
 html,
 body {
-  overflow-x: hidden;
+  overflow-x: clip;
 }
 
 /* Mobile-specific fixed header - more reliable than sticky on mobile */
@@ -49,16 +52,89 @@ body {
 #sticky-tabs-container {
   position: sticky;
   position: -webkit-sticky;
-  top: 0; /* Default, will be overridden by JavaScript */
+  top: 0; /* Default; JS sets to main nav height so tabs sit just below header */
+  margin-top: 0;
   z-index: 40;
   width: 100%;
   left: 0;
   right: 0;
+  background-color: var(--background); /* Solid so content doesn't bleed through when scrolling */
   transition: box-shadow var(--transition-normal), background-color var(--transition-normal);
 }
 
 #sticky-tabs-container:not(:hover) {
   box-shadow: 0 1px 3px rgba(0, 0, 0, 0.05);
+}
+
+/* Sticky bar control groups: stacked label-above-control layout */
+.sticky-tabs-group {
+  display: inline-flex;
+  flex-direction: column;
+  align-items: center;
+  padding: 0 var(--space-2);
+  gap: 4px;
+}
+/* Hide the Time of day group when AM/PM toggle is hidden */
+.sticky-tabs-group:has(#timing-toggle-container.hidden) {
+  display: none;
+}
+/* Preserve horizontal row layout for mobile groups */
+#mobile-controls-row > .sticky-tabs-group {
+  flex-direction: row;
+  align-items: center;
+  gap: 0;
+  min-height: 36px;
+  padding: 0 var(--space-2);
+}
+.sticky-tabs-label {
+  font-size: 10px;
+  font-weight: 400;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  color: var(--muted-foreground);
+  line-height: 1;
+  white-space: nowrap;
+  padding: 0;
+  flex-shrink: 0;
+  background: none;
+  border: none;
+  pointer-events: none;
+  cursor: default;
+  user-select: none;
+  -webkit-user-select: none;
+  align-self: flex-start;
+  text-align: left;
+}
+.sticky-tabs-label:hover {
+  color: var(--muted-foreground);
+  background: none;
+}
+.sticky-tabs-group-divider {
+  width: 1px;
+  align-self: stretch;
+  min-height: 18px;
+  margin: 6px 0;
+  background-color: var(--border);
+  flex-shrink: 0;
+  pointer-events: none;
+}
+.sticky-tabs-group-controls {
+  padding: 0;
+  display: flex;
+  align-items: center;
+}
+.sticky-tabs-group-controls.sticky-tabs-tabstrip {
+  padding-left: 0;
+}
+
+/* Hide scrollbar on sticky tabs inner scroll (single-line bar) */
+.scrollbar-hide {
+  -webkit-overflow-scrolling: touch;
+  scrollbar-width: none;
+  -ms-overflow-style: none;
+}
+.scrollbar-hide::-webkit-scrollbar {
+  display: none;
 }
 
 /* Custom Dropdowns in sticky tabs */
@@ -207,31 +283,111 @@ html {
 }
 .timing-toggle-btn:hover {
   background-color: var(--card-header);
-  border-color: var(--primary);
+  border-color: var(--border);
   color: var(--foreground);
 }
 .timing-toggle-btn.active {
   background-color: var(--primary);
   color: var(--primary-foreground);
-  border-color: var(--primary);
-  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+  border: 1px solid var(--primary);
 }
 .timing-toggle-btn svg {
   flex-shrink: 0;
 }
 
+/* Sliding pill toggle (AM/PM) in sticky bar — track + zones + thumb */
+.timing-toggle-track-wrap {
+  display: inline-flex;
+  align-items: center;
+}
+.timing-toggle-track {
+  display: inline-flex;
+  position: relative;
+  align-items: center;
+  width: 120px;
+  height: 28px;
+  background-color: var(--card-header);
+  border-radius: var(--radius-full);
+  border: 1px solid var(--border);
+}
+.timing-toggle-track .timing-toggle-btn.timing-toggle-zone {
+  flex: 1;
+  min-width: 0;
+  height: 100%;
+  padding: 0;
+  margin: 0;
+  gap: 4px;
+  background: none;
+  border: none;
+  border-radius: 0;
+  color: var(--muted-foreground);
+  font-size: 11px;
+  font-weight: var(--font-weight-normal);
+  letter-spacing: 0.02em;
+  cursor: pointer;
+  z-index: 1;
+  position: relative;
+  transition: color var(--transition-fast);
+}
+.timing-toggle-track .timing-toggle-btn.timing-toggle-zone:hover {
+  color: var(--foreground);
+  background: none;
+  border: none;
+}
+.timing-toggle-track .timing-toggle-btn.timing-toggle-zone.active {
+  color: transparent;
+  background: none;
+  border: none;
+  cursor: default;
+}
+.timing-toggle-thumb {
+  position: absolute;
+  left: 2px;
+  top: 2px;
+  bottom: 2px;
+  width: calc(50% - 4px);
+  background-color: var(--primary);
+  border-radius: 9999px;
+  transition: transform 0.2s ease;
+  z-index: 2;
+  pointer-events: none;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 4px;
+  padding-left: 10px;
+  padding-right: 10px;
+  color: #ffffff;
+  font-size: 11px;
+  font-weight: 700;
+}
+.timing-toggle-track:has(.timing-toggle-btn[data-timing="PM"].active) .timing-toggle-thumb {
+  transform: translateX(calc(100% + 4px));
+}
+
 /* ────────────  ROUTINE TABS  ──────────── */
 
 .routine-tab {
+  display: inline-flex !important;
+  align-items: center !important;
+  justify-content: center !important;
+  gap: var(--space-2) !important;
+  height: 34px !important;
+  padding: 0 var(--space-3) !important;
+  padding-top: 0 !important;
+  padding-bottom: 0 !important;
+  margin-top: 0 !important;
+  line-height: 1 !important;
   background-color: var(--tab-inactive-bg);
   color: var(--tab-inactive-text);
-  border: 1.5px solid var(--border);
+  border: 1px solid var(--border);
   border-radius: var(--radius);
-  font-weight: var(--font-weight-bold);
+  font-weight: var(--font-weight-normal);
   font-size: var(--font-size-sm);
   letter-spacing: var(--letter-spacing);
   position: relative;
   overflow: hidden;
+  box-sizing: border-box !important;
 }
 .routine-tab::before {
   content: '';
@@ -239,60 +395,106 @@ html {
   top: 0;
   left: 0;
   right: 0;
-  height: 3px;
   background-color: transparent;
   transition: background-color var(--transition-fast);
 }
 .routine-tab:hover {
   background-color: var(--card-header);
-  border-color: var(--primary);
-  transform: translateY(-1px);
-  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.08);
+  border-color: var(--border);
 }
 .routine-tab--active,
 .routine-tab--active:hover {
   background-color: var(--tab-active-bg);
   color: var(--tab-active-text);
-  border-color: var(--tab-active-bg);
-  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.12);
-  transform: translateY(0);
+  border: 1px solid var(--tab-active-bg);
+  border-radius: var(--radius);
+  height: 34px !important;
+  padding: 0 var(--space-3) !important;
+  padding-top: 0 !important;
+  padding-bottom: 0 !important;
+  margin-top: 0 !important;
+  line-height: 1 !important;
+  gap: var(--space-2) !important;
+  display: inline-flex !important;
+  align-items: center !important;
+  justify-content: center !important;
+  box-sizing: border-box !important;
+  font-weight: var(--font-weight-bold) !important;
 }
 .routine-tab--active::before {
-  background-color: var(--primary);
+  background-color: var(--primary-foreground);
 }
 .routine-tab svg {
   flex-shrink: 0;
   transition: transform var(--transition-fast);
 }
-.routine-tab:hover svg {
-  transform: scale(1.1);
-}
 .routine-tab--active svg {
-  transform: scale(1.1);
+  transform: none;
 }
 
 .routine-tab-count {
   display: inline-flex;
   align-items: center;
   justify-content: center;
-  min-width: 24px;
-  height: 24px;
-  padding: 0 var(--space-2);
+  min-width: 18px;
+  height: 18px;
+  padding: 0 8px;
   border-radius: var(--radius-full);
-  font-size: var(--font-size-xs);
-  font-weight: var(--font-weight-bold);
+  font-size: 9px;
+  font-weight: var(--font-weight-normal);
+  line-height: 1;
   background-color: rgba(255, 255, 255, 0.25);
-  backdrop-filter: blur(4px);
   transition: all var(--transition-fast);
+  flex-shrink: 0;
 }
 .routine-tab:not(.routine-tab--active) .routine-tab-count {
   background-color: var(--badge-bg);
   color: var(--badge-text);
-  opacity: 0.8;
+  opacity: 0.85;
 }
 .routine-tab--active .routine-tab-count {
-  background-color: rgba(255, 255, 255, 0.3);
-  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+  background-color: rgba(255, 255, 255, 0.25);
+}
+
+/* ────────────  TIER LEVEL INDICATOR ICONS  ──────────── */
+
+/* Default: all three bars are muted outlines in every context */
+.tier-bar-1, .tier-bar-2, .tier-bar-3 {
+  fill: none;
+  opacity: 0.35;
+}
+
+/* Essential active — fill bar 1 only */
+#tab-essential.routine-tab--active .tier-bar-1,
+.mobile-tier-option[data-tier="essential"][aria-selected="true"] .tier-bar-1,
+#mobile-tier-trigger[data-tier="essential"] .tier-bar-1 {
+  fill: currentColor;
+  opacity: 1;
+}
+
+/* Enhanced active — fill bars 1 and 2 */
+#tab-enhanced.routine-tab--active .tier-bar-1,
+#tab-enhanced.routine-tab--active .tier-bar-2,
+.mobile-tier-option[data-tier="enhanced"][aria-selected="true"] .tier-bar-1,
+.mobile-tier-option[data-tier="enhanced"][aria-selected="true"] .tier-bar-2,
+#mobile-tier-trigger[data-tier="enhanced"] .tier-bar-1,
+#mobile-tier-trigger[data-tier="enhanced"] .tier-bar-2 {
+  fill: currentColor;
+  opacity: 1;
+}
+
+/* Comprehensive active — fill all three bars */
+#tab-comprehensive.routine-tab--active .tier-bar-1,
+#tab-comprehensive.routine-tab--active .tier-bar-2,
+#tab-comprehensive.routine-tab--active .tier-bar-3,
+.mobile-tier-option[data-tier="comprehensive"][aria-selected="true"] .tier-bar-1,
+.mobile-tier-option[data-tier="comprehensive"][aria-selected="true"] .tier-bar-2,
+.mobile-tier-option[data-tier="comprehensive"][aria-selected="true"] .tier-bar-3,
+#mobile-tier-trigger[data-tier="comprehensive"] .tier-bar-1,
+#mobile-tier-trigger[data-tier="comprehensive"] .tier-bar-2,
+#mobile-tier-trigger[data-tier="comprehensive"] .tier-bar-3 {
+  fill: currentColor;
+  opacity: 1;
 }
 
 /* ────────────  STEP NUMBER  ──────────── */
@@ -328,6 +530,7 @@ html {
 /* ────────────  PRODUCT CARD  ──────────── */
 
 .product-card {
+  position: relative;
   display: flex;
   flex-direction: column;
   background-color: var(--card);
@@ -393,6 +596,7 @@ html {
 .product-step-banner-timing {
   display: inline-flex;
   align-items: center;
+  gap: 4px;
   padding: 2px 8px;
   background-color: var(--background);
   color: var(--foreground);
@@ -409,6 +613,20 @@ html {
   position: relative;
   /* Ensure consistent spacing */
   min-height: 180px;
+}
+
+/* Info icon in product card body: top-right with spacing */
+.product-card-body .tooltip-trigger.product-card-info-btn {
+  position: absolute;
+  top: 8px;
+  right: 8px;
+}
+
+/* Upgrade card content: position context and info icon (Enhance Your Routine) */
+.upgrade-card-content .tooltip-trigger.product-card-info-btn {
+  position: absolute;
+  top: 8px;
+  right: 8px;
 }
 
 /* ────────────  BUTTONS  ──────────── */
@@ -795,7 +1013,7 @@ section[id^="upgrade-"] h3 {
 }
 
 section[id^="upgrade-"] p {
-  font-size: var(--font-size-xs);
+  font-size: 14px;
   color: var(--muted-foreground);
 }
 
@@ -818,17 +1036,20 @@ section[id^="upgrade-"] p {
 @media (max-width: 480px) {
   .routine-tab {
     font-size: var(--font-size-xs);
-    padding: var(--space-2) var(--space-3);
+    padding: 0 var(--space-3) !important;
+    padding-top: 0 !important;
+    padding-bottom: 0 !important;
+    height: 34px !important;
   }
   .routine-tab svg {
-    width: 18px;
-    height: 18px;
+    width: 16px;
+    height: 16px;
   }
   .routine-tab-count {
     font-size: 10px;
-    height: 20px;
-    min-width: 20px;
-    padding: 0 var(--space-1);
+    height: 18px;
+    min-width: 18px;
+    padding: 0 8px;
   }
   .timing-toggle-btn {
     padding: var(--space-2) var(--space-4);
@@ -840,6 +1061,231 @@ section[id^="upgrade-"] p {
   }
   .add-all-btn {
     width: 100%;
+  }
+}
+
+/* ────────────  MOBILE CUSTOM TIER DROPDOWN COMPONENT  ──────────── */
+
+/* Default: hide custom dropdown, show native select (for 561px–767px mobile range) */
+#mobile-tier-dropdown {
+  display: none;
+  position: relative;
+}
+.mobile-tier-native {
+  display: flex;
+  flex: 1;
+  min-width: 0;
+}
+
+.mobile-tier-trigger {
+  display: inline-flex;
+  align-items: center;
+  justify-content: flex-start;
+  gap: 8px;
+  width: fit-content;
+  min-width: 160px;
+  padding: 6px 10px;
+  background-color: var(--background);
+  border: 1px solid var(--border);
+  border-radius: var(--radius);
+  color: var(--foreground);
+  font-size: 12px;
+  font-weight: 700;
+  cursor: pointer;
+  transition: border-color 0.15s ease, background-color 0.15s ease;
+  text-align: left;
+  white-space: nowrap;
+  overflow: visible;
+  box-sizing: border-box;
+}
+.mobile-tier-trigger:hover,
+.mobile-tier-trigger[aria-expanded="true"] {
+  border-color: var(--primary);
+}
+.mobile-tier-trigger-icon {
+  width: 14px;
+  height: 14px;
+  flex-shrink: 0;
+}
+.mobile-tier-trigger-text {
+  white-space: nowrap;
+  overflow: visible;
+  text-align: left;
+}
+.mobile-tier-trigger-badge {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  white-space: nowrap;
+  padding: 2px 9px;
+  border-radius: 9999px;
+  background-color: var(--badge-bg);
+  color: var(--badge-text);
+  font-size: 10px;
+  font-weight: 600;
+  flex-shrink: 0;
+}
+.mobile-tier-chevron {
+  width: 12px;
+  height: 12px;
+  flex-shrink: 0;
+  color: var(--muted-foreground);
+  transition: transform 0.2s ease;
+}
+.mobile-tier-trigger[aria-expanded="true"] .mobile-tier-chevron {
+  transform: rotate(180deg);
+}
+
+/* Dropdown panel */
+.mobile-tier-panel {
+  position: absolute;
+  top: calc(100% + 4px);
+  left: 0;
+  width: fit-content;
+  min-width: 160px;
+  background-color: var(--background);
+  border: 1px solid var(--border);
+  border-radius: var(--radius);
+  box-shadow: var(--shadow-lg);
+  z-index: 200;
+  list-style: none;
+  margin: 0;
+  padding: 4px 0;
+  opacity: 0;
+  transform: translateY(-6px);
+  pointer-events: none;
+  transition: opacity 0.15s ease, transform 0.15s ease;
+}
+.mobile-tier-panel.open {
+  opacity: 1;
+  transform: translateY(0);
+  pointer-events: auto;
+}
+
+/* Option rows */
+.mobile-tier-option {
+  display: flex;
+  align-items: center;
+  justify-content: flex-start;
+  gap: 8px;
+  padding: 5px 10px;
+  cursor: pointer;
+  transition: background-color 0.1s ease;
+  font-size: 12px;
+  font-weight: 400;
+  color: var(--foreground);
+  list-style: none;
+  box-sizing: border-box;
+}
+.mobile-tier-option:hover {
+  background-color: var(--card-header);
+}
+.mobile-tier-option[aria-selected="true"] {
+  background-color: var(--primary);
+  color: var(--primary-foreground);
+  font-weight: 700;
+}
+.mobile-tier-option-icon {
+  width: 14px;
+  height: 14px;
+  flex-shrink: 0;
+}
+.mobile-tier-option-name {
+  white-space: nowrap;
+}
+.mobile-tier-option-badge {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  white-space: nowrap;
+  padding: 2px 9px;
+  border-radius: 9999px;
+  background-color: var(--badge-bg);
+  color: var(--badge-text);
+  font-size: 10px;
+  font-weight: 600;
+  flex-shrink: 0;
+}
+.mobile-tier-option[aria-selected="true"] .mobile-tier-option-badge {
+  background-color: rgba(255, 255, 255, 0.25);
+  color: var(--primary-foreground);
+}
+
+/* ────────────  MOBILE STICKY BAR — TWO-ROW LAYOUT (≤560px)  ──────────── */
+
+@media (max-width: 560px) {
+  /* Stack the two control groups vertically */
+  #mobile-controls-row {
+    flex-direction: column;
+    align-items: stretch;
+    gap: 0;
+  }
+
+  /* Each group becomes a full-width horizontal row */
+  #mobile-controls-row > .sticky-tabs-group {
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+    width: 100%;
+    min-height: 0;
+    padding: 4px var(--space-2);
+    flex-shrink: unset;
+  }
+
+  /* Subtle horizontal divider between the two rows */
+  #mobile-controls-row > #timing-toggle-mobile {
+    border-bottom: 1px solid var(--border);
+  }
+
+  /* Controls area fills all space after the label+divider */
+  #mobile-controls-row .sticky-tabs-group-controls {
+    flex: 1;
+    min-width: 0;
+    padding-left: var(--space-2);
+  }
+
+  /* The relative wrapper around the select also fills space */
+  #mobile-controls-row .sticky-tabs-group-controls > .relative {
+    flex: 1;
+    min-width: 0;
+    display: flex;
+  }
+
+  /* Select fills the full remaining row width */
+  #mobile-controls-row #mobile-tier-select {
+    flex: 1;
+    width: 100%;
+    min-width: 0;
+    max-width: 100%;
+  }
+
+  /* Allow the dropdown panel to escape the sticky bar's overflow clipping */
+  #sticky-tabs-container {
+    overflow: visible;
+  }
+  #sticky-tabs-container .sticky-tabs-inner {
+    overflow: visible;
+  }
+  #mobile-controls-row {
+    overflow: visible;
+  }
+
+  /* Show custom dropdown, hide native select at ≤560px */
+  #mobile-tier-dropdown {
+    display: flex;
+  }
+  .mobile-tier-native {
+    display: none;
+  }
+}
+
+/* ────────────  DESKTOP STICKY BAR — GROUP SEPARATION + PADDING (≥561px)  ──────────── */
+@media (min-width: 561px) {
+  #desktop-tabs-row {
+    gap: 44px;
+  }
+  .sticky-tabs-inner {
+    padding-top: 18px !important;
   }
 }
 

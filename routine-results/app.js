@@ -42,12 +42,16 @@
     setupSaveResults();
     setupRetakeQuiz();
     loadRoutineRecommendations();
+    renderKitsSection();
     setupMobileHeaderPadding();
     initializeDropdownStates();
     
     // Initialize cart display
     updateCartBadge();
     updateMiniCart();
+
+    // Process all static Lucide <i data-lucide> icons in the document
+    if (window.lucide) lucide.createIcons();
   }
   
   // ──────────────────────────────────────────────
@@ -95,39 +99,45 @@
     
     function updateStickyPosition() {
       const headerHeight = header.offsetHeight;
+      // Use header height for both mobile and desktop so tabs sit just below the nav.
+      // On mobile the header is position:fixed, so we must use headerHeight as top
+      // or the sticky bar would stick at viewport top and sit behind the header.
       const isMobile = window.innerWidth <= 767;
+      const fallbackPx = isMobile ? 56 : 64;
+      const topPx = headerHeight > 0 ? headerHeight : fallbackPx;
+      const topValue = topPx + 'px';
       
-      // On mobile, header is fixed, so sticky tabs should stick at top: 0
-      // (they'll appear below the fixed header visually)
-      // On desktop, sticky tabs should stick below the header
-      const topValue = isMobile ? '0' : headerHeight + 'px';
-      
-      // Set position and top using inline styles (these have high specificity)
       stickyTabs.style.setProperty('position', 'sticky', 'important');
       stickyTabs.style.setProperty('top', topValue, 'important');
+      stickyTabs.style.setProperty('margin-top', '0', 'important');
       stickyTabs.style.setProperty('z-index', '40', 'important');
       stickyTabs.style.setProperty('width', '100%', 'important');
-      
-      // For webkit browsers, the browser will automatically handle -webkit-sticky
-      // when position: sticky is set
     }
     
-    // Set initial position immediately
+    // Initial run after DOM is ready
     updateStickyPosition();
     
-    // Also set it after delays to ensure header height is calculated
-    setTimeout(updateStickyPosition, 50);
-    setTimeout(updateStickyPosition, 200);
-    setTimeout(updateStickyPosition, 500);
+    // Run after layout/paint so header.offsetHeight is correct (e.g. on mobile before first paint)
+    requestAnimationFrame(function() {
+      requestAnimationFrame(updateStickyPosition);
+    });
     
-    // Update on resize (in case header height changes or screen size changes)
+    // Recalculate when header size changes (paint, mobile nav open/close, breakpoint change)
+    if (typeof ResizeObserver !== 'undefined') {
+      const ro = new ResizeObserver(function() {
+        updateStickyPosition();
+      });
+      ro.observe(header);
+    }
+    
+    // Recalculate on viewport resize (breakpoint changes, orientation, etc.)
     let resizeTimeout;
     window.addEventListener('resize', function() {
       clearTimeout(resizeTimeout);
       resizeTimeout = setTimeout(updateStickyPosition, 50);
     });
     
-    // Also update when mobile nav toggles (header height changes)
+    // When mobile nav toggles, header height changes; ResizeObserver handles it, but run once after a short delay for immediate feedback
     const mobileNavBtn = document.getElementById('mobile-menu-btn');
     if (mobileNavBtn) {
       mobileNavBtn.addEventListener('click', function() {
@@ -136,7 +146,7 @@
       });
     }
     
-    // Also update when window loads completely
+    // Final run when everything has loaded (fonts, images, etc.)
     if (document.readyState === 'complete') {
       updateStickyPosition();
     } else {
@@ -151,71 +161,64 @@
     const toggle = document.getElementById('skin-analysis-toggle');
     const content = document.getElementById('skin-analysis-content');
     const chevron = document.getElementById('skin-analysis-chevron');
-    
+
     if (!toggle || !content || !chevron) return;
-    
-    // Set initial state based on screen size
-    // Mobile (< 768px): collapsed, Desktop (>= 768px): expanded
-    function setInitialState() {
-      const isMobile = window.innerWidth < 768;
-      const isExpanded = !isMobile;
-      
-      toggle.setAttribute('aria-expanded', isExpanded);
-      content.style.overflow = 'hidden';
-      
-      if (isExpanded) {
-        content.style.display = 'block';
-        // Wait for content to render, then set maxHeight
-        setTimeout(() => {
-          content.style.maxHeight = content.scrollHeight + 'px';
-        }, 100);
-        chevron.style.transform = 'rotate(0deg)';
-      } else {
-        content.style.display = 'none';
-        content.style.maxHeight = '0';
-        chevron.style.transform = 'rotate(180deg)';
+
+    // Fixed open value — large enough to accommodate all content without
+    // requiring a scrollHeight read (which forces layout reflow).
+    const OPEN_MAX_HEIGHT = '600px';
+
+    // Capture the natural vertical padding from the stylesheet before we ever
+    // touch inline styles. getComputedStyle resolves CSS custom properties so
+    // --space-6 is returned as a concrete pixel value.
+    var computed = getComputedStyle(content);
+    var naturalPaddingTop    = computed.paddingTop;
+    var naturalPaddingBottom = computed.paddingBottom;
+
+    // Transition max-height AND padding so the box collapses to a true zero
+    // height. overflow: hidden alone does not clip the element's own padding,
+    // so without animating padding the content would still peek out at closed.
+    // will-change promotes the layer to the GPU compositor for smooth tweening.
+    content.style.overflow   = 'hidden';
+    content.style.willChange = 'max-height, padding-top, padding-bottom';
+    content.style.transition = 'max-height 300ms ease, padding-top 300ms ease, padding-bottom 300ms ease';
+
+    function openAccordion(animate) {
+      if (!animate) content.style.transition = 'none';
+      content.style.maxHeight      = OPEN_MAX_HEIGHT;
+      content.style.paddingTop     = naturalPaddingTop;
+      content.style.paddingBottom  = naturalPaddingBottom;
+      if (!animate) {
+        void content.offsetHeight; // flush styles before re-enabling transition
+        content.style.transition = 'max-height 300ms ease, padding-top 300ms ease, padding-bottom 300ms ease';
       }
+      toggle.setAttribute('aria-expanded', 'true');
+      chevron.style.transform = 'rotate(180deg)';
     }
-    
-    // Set initial state
-    setInitialState();
-    
-    // Toggle on click
+
+    function closeAccordion(animate) {
+      if (!animate) content.style.transition = 'none';
+      content.style.maxHeight      = '0';
+      content.style.paddingTop     = '0';
+      content.style.paddingBottom  = '0';
+      if (!animate) {
+        void content.offsetHeight; // flush styles before re-enabling transition
+        content.style.transition = 'max-height 300ms ease, padding-top 300ms ease, padding-bottom 300ms ease';
+      }
+      toggle.setAttribute('aria-expanded', 'false');
+      chevron.style.transform = 'rotate(0deg)';
+    }
+
+    // Always start closed regardless of viewport width
+    closeAccordion(false);
+
     toggle.addEventListener('click', function() {
-      const isExpanded = toggle.getAttribute('aria-expanded') === 'true';
-      const newState = !isExpanded;
-      
-      toggle.setAttribute('aria-expanded', newState);
-      
-      if (newState) {
-        content.style.display = 'block';
-        // Use setTimeout to ensure display is set before animating
-        setTimeout(() => {
-          content.style.maxHeight = content.scrollHeight + 'px';
-        }, 10);
-        chevron.style.transform = 'rotate(0deg)';
+      if (toggle.getAttribute('aria-expanded') === 'true') {
+        closeAccordion(true);
       } else {
-        content.style.maxHeight = '0';
-        chevron.style.transform = 'rotate(180deg)';
-        // Hide after animation completes
-        setTimeout(() => {
-          if (content.style.maxHeight === '0px') {
-            content.style.display = 'none';
-          }
-        }, 300);
+        openAccordion(true);
       }
     });
-    
-    // Update maxHeight when content changes (e.g., after dynamic content loads)
-    const updateMaxHeight = function() {
-      if (toggle.getAttribute('aria-expanded') === 'true') {
-        content.style.maxHeight = content.scrollHeight + 'px';
-      }
-    };
-    
-    // Watch for content changes
-    const observer = new MutationObserver(updateMaxHeight);
-    observer.observe(content, { childList: true, subtree: true });
   }
 
   // ──────────────────────────────────────────────
@@ -278,6 +281,12 @@
     };
     const goalDescription = concernGoals[QUIZ_RESULTS.concern] || 'Address your skin concerns';
 
+    // Keep accordion header subtitle in sync with the Your Goal field
+    var subtitleEl = document.getElementById('skin-analysis-subtitle');
+    if (subtitleEl) {
+      subtitleEl.textContent = 'Goal: ' + goalDescription;
+    }
+
     // Determine franchise for display
     let franchiseDisplay = 'Daily Skin Health';
     if (QUIZ_RESULTS.concern === 'Breakouts / acne' && ageNum < 25) {
@@ -298,36 +307,20 @@
       franchiseDisplay = 'MultiVitamin Power';
     }
 
-    // Icon component helper - smaller icons for compact layout
+    // Icon component helper — Lucide data-lucide tags, processed by createIcons after innerHTML injection
+    // Each field has a unique, semantically relevant icon:
+    //   age → cake (birthday/age)   concern → search-check (finding skin issues)
+    //   timing → sun (time of day)  preference → clock (routine scheduling)
+    //   sensitivity → shield        franchise → award    goal → target
     const iconSVG = (iconType) => {
       const icons = {
-        age: `<svg width="16" height="16" viewBox="0 0 20 20" fill="none" xmlns="http://www.w3.org/2000/svg">
-          <circle cx="10" cy="10" r="8.5" stroke="currentColor" stroke-width="1.5"/>
-          <path d="M10 5v5l3 3" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"/>
-        </svg>`,
-        concern: `<svg width="16" height="16" viewBox="0 0 20 20" fill="none" xmlns="http://www.w3.org/2000/svg">
-          <circle cx="10" cy="7" r="3" stroke="currentColor" stroke-width="1.5"/>
-          <path d="M5 17c0-2.5 2.2-5 5-5s5 2.5 5 5" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"/>
-        </svg>`,
-        timing: `<svg width="16" height="16" viewBox="0 0 20 20" fill="none" xmlns="http://www.w3.org/2000/svg">
-          <circle cx="10" cy="10" r="8.5" stroke="currentColor" stroke-width="1.5"/>
-          <path d="M10 6v4l3 2" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"/>
-        </svg>`,
-        preference: `<svg width="16" height="16" viewBox="0 0 20 20" fill="none" xmlns="http://www.w3.org/2000/svg">
-          <path d="M10 3L3 7v10l7 4 7-4V7l-7-4z" stroke="currentColor" stroke-width="1.5" stroke-linejoin="round"/>
-          <path d="M10 3v18M3 7l7 4 7-4" stroke="currentColor" stroke-width="1.5" stroke-linejoin="round"/>
-        </svg>`,
-        sensitivity: `<svg width="16" height="16" viewBox="0 0 20 20" fill="none" xmlns="http://www.w3.org/2000/svg">
-          <path d="M10 3v14M10 3c2.5 0 4.5 2 4.5 4.5S12.5 12 10 12s-4.5-2-4.5-4.5S7.5 3 10 3z" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"/>
-          <circle cx="10" cy="17" r="1.5" fill="currentColor"/>
-        </svg>`,
-        franchise: `<svg width="16" height="16" viewBox="0 0 20 20" fill="none" xmlns="http://www.w3.org/2000/svg">
-          <path d="M10 2l2 6h6l-5 4 2 6-5-4-5 4 2-6-5-4h6z" stroke="currentColor" stroke-width="1.5" stroke-linejoin="round"/>
-        </svg>`,
-        goal: `<svg width="18" height="18" viewBox="0 0 20 20" fill="none" xmlns="http://www.w3.org/2000/svg">
-          <circle cx="10" cy="10" r="8.5" stroke="currentColor" stroke-width="1.5"/>
-          <path d="M6 10l2.5 2.5 5.5-5.5" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/>
-        </svg>`
+        age:         '<i data-lucide="cake"         width="16" height="16" aria-hidden="true"></i>',
+        concern:     '<i data-lucide="search-check" width="16" height="16" aria-hidden="true"></i>',
+        timing:      '<i data-lucide="sun"          width="16" height="16" aria-hidden="true"></i>',
+        preference:  '<i data-lucide="clock"        width="16" height="16" aria-hidden="true"></i>',
+        sensitivity: '<i data-lucide="shield"       width="16" height="16" aria-hidden="true"></i>',
+        franchise:   '<i data-lucide="award"        width="16" height="16" aria-hidden="true"></i>',
+        goal:        '<i data-lucide="target"       width="18" height="18" aria-hidden="true"></i>'
       };
       return icons[iconType] || '';
     };
@@ -412,15 +405,7 @@
     `;
 
     container.innerHTML = html;
-    
-    // Update maxHeight if section is expanded (for smooth animation)
-    setTimeout(() => {
-      const toggle = document.getElementById('skin-analysis-toggle');
-      const isExpanded = toggle && toggle.getAttribute('aria-expanded') === 'true';
-      if (isExpanded && container.style.maxHeight !== '0px') {
-        container.style.maxHeight = container.scrollHeight + 'px';
-      }
-    }, 50);
+    if (window.lucide) lucide.createIcons({ nodes: [container] });
   }
 
   // ──────────────────────────────────────────────
@@ -562,8 +547,14 @@
       // Show desktop toggle
       if (toggleContainer) {
         toggleContainer.classList.remove('hidden');
-        // Update toggle button states
         toggleContainer.querySelectorAll('.timing-toggle-btn').forEach(btn => {
+          btn.classList.toggle('active', btn.getAttribute('data-timing') === selectedTiming);
+        });
+      }
+      // Sync mobile pill toggle state
+      var timingMobile = document.getElementById('mobile-ampm-toggle');
+      if (timingMobile) {
+        timingMobile.querySelectorAll('.timing-toggle-btn').forEach(btn => {
           btn.classList.toggle('active', btn.getAttribute('data-timing') === selectedTiming);
         });
       }
@@ -587,10 +578,15 @@
     
     let html = '';
     
-    // Render routine header
+    // Heading timing label:
+    //  - toggle visible → use selectedTiming ("AM" or "PM")
+    //  - toggle hidden (only one timing available) → "AM & PM"
+    var headingTimingLabel = allTiersHaveBoth ? selectedTiming : 'AM & PM';
+
+    // Render routine header — combines timing + tier: "AM Essential Routine"
     html += '<div class="mb-[--space-6]">';
-    html += '<h3 class="text-xl font-bold text-[--heading] mb-[--space-2]">' + selectedTiming + ' Routine</h3>';
-    html += '<p class="text-sm font-light text-[--muted-foreground] mb-[--space-6]">Add these ' + displayProducts.length + ' products to complete your ' + tier.toLowerCase() + ' ' + selectedTiming + ' routine.</p>';
+    html += '<h3 class="text-xl font-bold text-[--heading] mb-[--space-2]" data-panel-heading="' + tier.toLowerCase() + '">' + headingTimingLabel + ' ' + tier + ' Routine</h3>';
+    html += '<p class="text-[14px] font-light text-[--muted-foreground] mb-[--space-6]" data-panel-subheading="' + tier.toLowerCase() + '">Add these ' + displayProducts.length + ' products to complete your ' + tier + ' ' + headingTimingLabel + ' routine.</p>';
     html += '</div>';
     
     // Render product grid - extends to page margins on mobile
@@ -610,6 +606,42 @@
     
     // Update button states after rendering
     updateButtonStates();
+
+    // Initialize Lucide icons injected into this panel
+    if (window.lucide) lucide.createIcons({ nodes: [panel] });
+  }
+
+  // ──────────────────────────────────────────────
+  //  UPDATE PANEL HEADINGS (lightweight, no re-render)
+  // ──────────────────────────────────────────────
+  // Called immediately on every AM/PM toggle switch so headings respond
+  // instantly; the full loadRoutineRecommendations() re-render that follows
+  // will also rewrite these with updated product counts.
+  function updatePanelHeadings(newTiming) {
+    // Determine whether the timing toggle is currently visible
+    var toggleContainer = document.getElementById('timing-toggle-container');
+    var toggleVisible = toggleContainer && !toggleContainer.classList.contains('hidden');
+    var timingLabel = toggleVisible ? newTiming : 'AM & PM';
+
+    // Capitalise first letter of a tier slug ("essential" → "Essential")
+    function capitaliseTier(slug) {
+      return slug.charAt(0).toUpperCase() + slug.slice(1);
+    }
+
+    // Update every rendered panel heading — "AM Essential Routine" etc.
+    document.querySelectorAll('[data-panel-heading]').forEach(function(el) {
+      var tierName = capitaliseTier(el.getAttribute('data-panel-heading'));
+      el.textContent = timingLabel + ' ' + tierName + ' Routine';
+    });
+
+    // Update every rendered panel subheading — preserve existing product count
+    // until the full re-render replaces it with the recalculated value
+    document.querySelectorAll('[data-panel-subheading]').forEach(function(el) {
+      var tierName = capitaliseTier(el.getAttribute('data-panel-subheading'));
+      var countMatch = el.textContent.match(/\d+/);
+      var count = countMatch ? countMatch[0] : '?';
+      el.textContent = 'Add these ' + count + ' products to complete your ' + tierName + ' ' + timingLabel + ' routine.';
+    });
   }
 
   function renderProductCard(product, isUpgrade) {
@@ -671,10 +703,11 @@
     }
     
     // Build step banner that spans across the top
+    const timingIcon = timing === 'AM' ? 'sun' : 'moon';
     const stepBanner = `
       <div class="product-step-banner">
         <span class="product-step-banner-text">STEP ${stepNumber}</span>
-        ${timing ? `<span class="product-step-banner-timing">${timing}</span>` : ''}
+        ${timing ? `<span class="product-step-banner-timing"><i data-lucide="${timingIcon}" width="10" height="10" aria-hidden="true"></i>${timing}</span>` : ''}
       </div>
     `;
     
@@ -684,14 +717,14 @@
         <div class="product-card-img">
           <img src="${image}" alt="${productTitle}" loading="lazy" />
         </div>
-        <div class="product-card-body relative">
-          <button class="tooltip-trigger absolute top-[--space-2] right-[--space-2] flex-shrink-0" aria-label="Product info" data-tooltip="${description}">
-            <svg width="14" height="14" viewBox="0 0 16 16" fill="none"><circle cx="8" cy="8" r="7" stroke="var(--muted-foreground)" stroke-width="1.2"/><text x="8" y="11.5" text-anchor="middle" font-size="10" font-weight="700" fill="var(--muted-foreground)">i</text></svg>
+        <div class="product-card-body">
+          <button class="tooltip-trigger product-card-info-btn flex-shrink-0 z-10" aria-label="Product info" data-tooltip="${description}">
+            <i data-lucide="info" width="14" height="14" aria-hidden="true"></i>
           </button>
           <div class="mb-[--space-1]">
             <span class="text-[10px] font-bold uppercase tracking-[0.08em] text-[--muted-foreground]">${category}</span>
           </div>
-          <div class="flex items-start justify-between gap-[--space-2] pr-[--space-6]">
+          <div class="flex items-start justify-between gap-[--space-2] pr-[--space-6] mb-[--space-2]">
             <h4 class="text-sm font-bold text-[--foreground] leading-tight">${productTitle}</h4>
           </div>
           ${sizeSelectorHTML}
@@ -701,10 +734,7 @@
             </div>
             <div class="flex items-center gap-[--space-2]">
               <button class="remove-from-cart-btn hidden" data-product="${productSlug}" data-size="${defaultSize.size}" aria-label="Remove from cart">
-                <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-                  <line x1="18" y1="6" x2="6" y2="18"/>
-                  <line x1="6" y1="6" x2="18" y2="18"/>
-                </svg>
+                <i data-lucide="trash-2" width="14" height="14" aria-hidden="true"></i>
               </button>
               <button class="add-to-bag-btn" data-product="${productSlug}" data-price="${defaultPrice}" data-size="${defaultSize.size}">Add to Cart</button>
             </div>
@@ -763,11 +793,11 @@
         <div class="sm:w-[200px] sm:h-[200px] w-full aspect-square bg-[--card-header] flex items-center justify-center flex-shrink-0 overflow-hidden rounded-l sm:rounded-l sm:rounded-r-none rounded-t">
           <img src="${image}" alt="${productTitle}" class="w-full h-full object-cover" loading="lazy" />
         </div>
-        <div class="p-[--space-5] flex flex-col flex-1 relative justify-between" style="overflow: visible; min-height: 200px;">
-          <button class="tooltip-trigger absolute top-[--space-2] right-[--space-2] flex-shrink-0" aria-label="Product info" data-tooltip="${description}">
-            <svg width="14" height="14" viewBox="0 0 16 16" fill="none"><circle cx="8" cy="8" r="7" stroke="var(--muted-foreground)" stroke-width="1.2"/><text x="8" y="11.5" text-anchor="middle" font-size="10" font-weight="700" fill="var(--muted-foreground)">i</text></svg>
+        <div class="upgrade-card-content p-[--space-5] flex flex-col flex-1 justify-between relative" style="overflow: visible; min-height: 200px;">
+          <button class="tooltip-trigger product-card-info-btn flex-shrink-0 z-10" aria-label="Product info" data-tooltip="${description}">
+            <i data-lucide="info" width="14" height="14" aria-hidden="true"></i>
           </button>
-          ${timing ? `<div class="flex items-center gap-[--space-2] mb-[--space-2]"><span class="inline-flex items-center px-[--space-2] py-[--space-1] rounded text-[10px] font-bold bg-[--primary] text-[--primary-foreground]">${timing}</span></div>` : ''}
+          ${timing ? `<div class="flex items-center gap-[--space-2] mb-[--space-2]"><span class="inline-flex items-center gap-[--space-1] px-[--space-2] py-[--space-1] rounded text-[10px] font-bold bg-[--primary] text-[--primary-foreground]"><i data-lucide="${timing === 'AM' ? 'sun' : 'moon'}" width="10" height="10" aria-hidden="true"></i>${timing}</span></div>` : ''}
           <h3 class="text-base font-bold text-[--foreground] mb-[--space-2] pr-[--space-6]">${productTitle}</h3>
           ${sizeSelectorHTML}
           <div class="flex items-center justify-between">
@@ -776,10 +806,7 @@
             </div>
             <div class="flex items-center gap-[--space-2]">
               <button class="remove-from-cart-btn hidden" data-product="${productSlug}" data-size="${defaultSize.size}" aria-label="Remove from cart">
-                <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-                  <line x1="18" y1="6" x2="6" y2="18"/>
-                  <line x1="6" y1="6" x2="18" y2="18"/>
-                </svg>
+                <i data-lucide="trash-2" width="14" height="14" aria-hidden="true"></i>
               </button>
               <button class="add-to-bag-btn" data-product="${productSlug}" data-price="${defaultPrice}" data-size="${defaultSize.size}">Add to Cart</button>
             </div>
@@ -859,13 +886,13 @@
         <div class="sm:w-[200px] sm:h-[200px] w-full aspect-square bg-[--card-header] flex items-center justify-center flex-shrink-0 overflow-hidden rounded-l sm:rounded-l sm:rounded-r-none rounded-t">
           <img src="${image}" alt="${productTitle}" class="w-full h-full object-cover" loading="lazy" />
         </div>
-        <div class="p-[--space-5] flex flex-col flex-1 relative justify-between" style="overflow: visible; min-height: 200px;">
-          <button class="tooltip-trigger absolute top-[--space-2] right-[--space-2] flex-shrink-0" aria-label="Product info" data-tooltip="${description}">
-            <svg width="14" height="14" viewBox="0 0 16 16" fill="none"><circle cx="8" cy="8" r="7" stroke="var(--muted-foreground)" stroke-width="1.2"/><text x="8" y="11.5" text-anchor="middle" font-size="10" font-weight="700" fill="var(--muted-foreground)">i</text></svg>
+        <div class="upgrade-card-content p-[--space-5] flex flex-col flex-1 justify-between relative" style="overflow: visible; min-height: 200px;">
+          <button class="tooltip-trigger product-card-info-btn flex-shrink-0 z-10" aria-label="Product info" data-tooltip="${description}">
+            <i data-lucide="info" width="14" height="14" aria-hidden="true"></i>
           </button>
           <div class="flex items-center gap-[--space-2] mb-[--space-2]">
             <span class="inline-flex items-center px-[--space-2] py-[--space-1] rounded text-[10px] font-bold bg-[--primary] text-[--primary-foreground]">
-              BODY CARE
+              Bestseller · Body Care
             </span>
           </div>
           <h3 class="text-base font-bold text-[--foreground] mb-[--space-2] pr-[--space-6]">${productTitle}</h3>
@@ -876,10 +903,7 @@
             </div>
             <div class="flex items-center gap-[--space-2]">
               <button class="remove-from-cart-btn hidden" data-product="${productSlug}" data-size="${defaultSize.size}" aria-label="Remove from cart">
-                <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-                  <line x1="18" y1="6" x2="6" y2="18"/>
-                  <line x1="6" y1="6" x2="18" y2="18"/>
-                </svg>
+                <i data-lucide="trash-2" width="14" height="14" aria-hidden="true"></i>
               </button>
               <button class="add-to-bag-btn" data-product="${productSlug}" data-price="${defaultPrice}" data-size="${defaultSize.size}">Add to Cart</button>
             </div>
@@ -887,6 +911,88 @@
         </div>
       </div>
     `;
+  }
+
+  // ──────────────────────────────────────────────
+  //  RENDER KIT CARD (helper)
+  // ──────────────────────────────────────────────
+  function renderKitCard(productSlug, productTitle, price, image, description, label, retailPrice) {
+    return `
+      <div class="bg-[--card] rounded border border-[--border] shadow-sm flex flex-col sm:flex-row" data-product-slug="${productSlug}" style="overflow: visible;">
+        <div class="sm:w-[200px] sm:h-[200px] w-full aspect-square bg-[--card-header] flex items-center justify-center flex-shrink-0 overflow-hidden rounded-l sm:rounded-l sm:rounded-r-none rounded-t">
+          <img src="${image}" alt="${productTitle}" class="w-full h-full object-cover" loading="lazy" />
+        </div>
+        <div class="upgrade-card-content p-[--space-5] flex flex-col flex-1 justify-between relative" style="overflow: visible; min-height: 200px;">
+          <button class="tooltip-trigger product-card-info-btn flex-shrink-0 z-10" aria-label="Product info" data-tooltip="${description}">
+            <i data-lucide="info" width="14" height="14" aria-hidden="true"></i>
+          </button>
+          <div class="flex items-center gap-[--space-2] mb-[--space-2]">
+            <span class="inline-flex items-center px-[--space-2] py-[--space-1] rounded text-[10px] font-bold bg-[--primary] text-[--primary-foreground]">
+              ${label}
+            </span>
+          </div>
+          <h3 class="text-base font-bold text-[--foreground] mb-[--space-2] pr-[--space-6]">${productTitle}</h3>
+          <div class="mb-[--space-2]">
+            <label class="block text-[10px] font-bold uppercase tracking-[0.08em] text-[--muted-foreground] mb-[--space-2]">Size</label>
+            <div class="inline-flex px-[--space-3] py-[--space-2] rounded text-xs font-bold text-[--muted-foreground] bg-[--card]" style="width: fit-content; border: 1.5px solid var(--border); pointer-events: none; user-select: none; -webkit-user-select: none;" aria-hidden="true">KIT</div>
+          </div>
+          <div class="flex items-center justify-between">
+            <div class="flex items-center" style="gap: 6px;">
+              <span class="product-price text-sm font-bold text-[--foreground]" data-default-price="${price}">$${price}</span>
+              <span class="text-xs text-[--muted-foreground]" style="text-decoration: line-through;">$${retailPrice}</span>
+            </div>
+            <div class="flex items-center gap-[--space-2]">
+              <button class="remove-from-cart-btn hidden" data-product="${productSlug}" data-size="Kit" aria-label="Remove from cart">
+                <i data-lucide="trash-2" width="14" height="14" aria-hidden="true"></i>
+              </button>
+              <button class="add-to-bag-btn" data-product="${productSlug}" data-price="${price}" data-size="Kit">Add to Cart</button>
+            </div>
+          </div>
+        </div>
+      </div>
+    `;
+  }
+
+  // ──────────────────────────────────────────────
+  //  RENDER KITS SECTION
+  // ──────────────────────────────────────────────
+  function renderKitsSection() {
+    var container = document.getElementById('kits-section');
+    if (!container) return;
+
+    var html = `
+      <div class="mb-[--space-6]">
+        <h2 class="text-xl font-bold text-[--heading] mb-[--space-2]">Recommended Skin Kits &amp; Sets</h2>
+        <p class="text-[14px] font-light text-[--muted-foreground]">Curated collections that make a great introduction to Dermalogica or a thoughtful gift for any skin type.</p>
+      </div>
+      <div class="grid grid-cols-1 md:grid-cols-2 gap-[--space-4]">
+        ${renderKitCard(
+          'daily-brightness-boosters-kit',
+          'daily brightness boosters kit',
+          '49.50',
+          'https://www.dermalogica.com/cdn/shop/files/PDP_DailyBrightnessBoosters_UpdatedValueBadge_Cartion.jpg?v=1762198006&width=1946',
+          'Brighten, condition and hydrate your skin for a radiance boost.',
+          'Recommended For You',
+          '76.00'
+        )}
+        ${renderKitCard(
+          'discover-healthy-skin-kit',
+          'discover healthy skin kit',
+          '39.50',
+          'https://www.dermalogica.com/cdn/shop/files/PDP_DiscoverHealthySkinKit_UpdatedValueBadge_Cartion_e96c52a8-e3b3-4b27-8f75-7c49d6e21c7e.jpg?v=1756236678&width=1946',
+          'The perfect introduction to Dermalogica, this special collection of our favorite and most popular products is a complete regimen for all skin types.',
+          'Great For Gifting',
+          '59.00'
+        )}
+      </div>
+    `;
+
+    container.innerHTML = html;
+
+    // Wire up tooltips and cart buttons using the same pattern as the upgrade section
+    attachPanelListeners(container);
+    updateButtonStates();
+    if (window.lucide) lucide.createIcons({ nodes: [container] });
   }
 
   function renderUpgradeSection(currentTier, upgradeProductSlugs, nextTierName) {
@@ -928,10 +1034,20 @@
       return;
     }
     
+    const upgradeCopy = currentTier === 'enhanced'
+      ? {
+          title: 'Take Your Routine Further',
+          subtitle: "Take your skincare further with these targeted additions designed to complement and amplify your Enhanced routine."
+        }
+      : {
+          title: 'Enhance Your Routine',
+          subtitle: 'Take your skincare to the next level with these targeted products designed to amplify your results.'
+        };
+
     let html = `
       <div class="mb-[--space-6]">
-        <h2 class="text-xl font-bold text-[--heading] mb-[--space-2]">Enhance Your Routine</h2>
-        <p class="text-sm font-light text-[--muted-foreground]">Take your skincare to the next level with these targeted products designed to amplify your results.</p>
+        <h2 class="text-xl font-bold text-[--heading] mb-[--space-2]">${upgradeCopy.title}</h2>
+        <p class="text-[14px] font-light text-[--muted-foreground]">${upgradeCopy.subtitle}</p>
       </div>
       <div class="grid grid-cols-1 md:grid-cols-2 gap-[--space-4]">
     `;
@@ -954,6 +1070,9 @@
     
     // Update button states after rendering
     updateButtonStates();
+
+    // Initialize Lucide icons injected into this upgrade section
+    if (window.lucide) lucide.createIcons({ nodes: [container] });
   }
 
   function attachUpgradeListeners(container) {
@@ -1069,7 +1188,8 @@
           // Set added state
           btn.classList.remove('loading');
           btn.classList.add('added');
-          btn.innerHTML = '<svg width="14" height="14" viewBox="0 0 16 16" fill="none" class="inline mr-1"><path d="M13 4L6 11l-3-3" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg> Added';
+          btn.innerHTML = '<i data-lucide="check" width="14" height="14" class="inline mr-1" aria-hidden="true"></i> Added';
+          if (window.lucide) lucide.createIcons({ nodes: [btn] });
           
           // Update to in-cart state after brief delay
           setTimeout(function() {
@@ -1194,7 +1314,8 @@
           // Set added state
           btn.classList.remove('loading');
           btn.classList.add('added');
-          btn.innerHTML = '<svg width="14" height="14" viewBox="0 0 16 16" fill="none" class="inline mr-1"><path d="M13 4L6 11l-3-3" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg> Added';
+          btn.innerHTML = '<i data-lucide="check" width="14" height="14" class="inline mr-1" aria-hidden="true"></i> Added';
+          if (window.lucide) lucide.createIcons({ nodes: [btn] });
           
           // Update to in-cart state after brief delay
           setTimeout(function() {
@@ -1238,14 +1359,16 @@
             
             // Update button state
             pBtn.classList.add('added');
-            pBtn.innerHTML = '<svg width="14" height="14" viewBox="0 0 16 16" fill="none" class="inline mr-1"><path d="M13 4L6 11l-3-3" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg> Added';
+            pBtn.innerHTML = '<i data-lucide="check" width="14" height="14" class="inline mr-1" aria-hidden="true"></i> Added';
+            if (window.lucide) lucide.createIcons({ nodes: [pBtn] });
             
             // If this is the last button, update add all button
             if (index === buttons.length - 1) {
               setTimeout(function() {
                 addAllBtn.classList.remove('loading');
                 addAllBtn.classList.add('added');
-                addAllBtn.innerHTML = '<svg width="14" height="14" viewBox="0 0 16 16" fill="none" class="inline mr-1"><path d="M13 4L6 11l-3-3" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg> Added to Cart';
+                addAllBtn.innerHTML = '<i data-lucide="check" width="14" height="14" class="inline mr-1" aria-hidden="true"></i> Added to Cart';
+                if (window.lucide) lucide.createIcons({ nodes: [addAllBtn] });
                 
                 showToast('All ' + capitalize(routine) + ' products added to cart');
                 
@@ -1301,6 +1424,10 @@
     // Function to switch timing
     function switchTiming(newTiming) {
       selectedTiming = newTiming;
+
+      // Immediately update all rendered panel headings and subheadings so the
+      // text reflects the new timing before the full product re-render fires
+      updatePanelHeadings(newTiming);
       
       // Update desktop toggle buttons
       if (toggleContainer) {
@@ -1309,7 +1436,25 @@
         });
       }
       
-      // Update mobile dropdown label
+      // Update mobile pill toggle (same as desktop)
+      const timingToggleMobileContainer = document.getElementById('mobile-ampm-toggle');
+      if (timingToggleMobileContainer) {
+        timingToggleMobileContainer.querySelectorAll('.timing-toggle-btn').forEach(b => {
+          b.classList.toggle('active', b.getAttribute('data-timing') === newTiming);
+        });
+      }
+      
+      // Update thumb icon + label in every toggle track (desktop + mobile)
+      document.querySelectorAll('.timing-toggle-track').forEach(function(track) {
+        var thumb = track.querySelector('.timing-toggle-thumb');
+        if (thumb) {
+          var icon = newTiming === 'AM' ? 'sun' : 'moon';
+          thumb.innerHTML = '<i data-lucide="' + icon + '" width="12" height="12" aria-hidden="true"></i><span>' + newTiming + '</span>';
+          if (window.lucide) lucide.createIcons({ nodes: [thumb] });
+        }
+      });
+      
+      // Update mobile dropdown label (if present, e.g. other UI)
       if (timingDropdownLabel) {
         timingDropdownLabel.textContent = newTiming + ' Routine';
       }
@@ -1340,53 +1485,35 @@
       loadRoutineRecommendations();
     }
     
-    // Desktop toggle buttons
-    if (toggleContainer) {
-      toggleContainer.querySelectorAll('.timing-toggle-btn').forEach(btn => {
-        btn.addEventListener('click', function() {
-          const newTiming = this.getAttribute('data-timing');
+    function attachTimingToggleListeners(container) {
+      if (!container) return;
+      container.querySelectorAll('.timing-toggle-btn').forEach(btn => {
+        const handler = function() {
+          const newTiming = btn.getAttribute('data-timing');
           switchTiming(newTiming);
-        });
+        };
+        btn.addEventListener('click', handler);
+        btn.addEventListener('touchend', function(e) {
+          e.preventDefault();
+          handler();
+        }, { passive: false });
       });
     }
     
-    // Mobile custom dropdown
-    if (timingDropdownBtn && timingDropdownMenu) {
-      // Toggle dropdown on button click
-      timingDropdownBtn.addEventListener('click', function(e) {
-        e.stopPropagation();
-        const isExpanded = timingDropdownBtn.getAttribute('aria-expanded') === 'true';
-        
-        if (isExpanded) {
-          timingDropdownMenu.classList.add('hidden');
-          timingDropdownBtn.setAttribute('aria-expanded', 'false');
-          timingDropdownBtn.querySelector('svg').style.transform = 'rotate(0deg)';
-        } else {
-          timingDropdownMenu.classList.remove('hidden');
-          timingDropdownBtn.setAttribute('aria-expanded', 'true');
-          timingDropdownBtn.querySelector('svg').style.transform = 'rotate(180deg)';
-        }
-      });
-      
-      // Handle option clicks
-      timingDropdownMenu.querySelectorAll('.timing-dropdown-option').forEach(option => {
-        option.addEventListener('click', function() {
-          const value = this.getAttribute('data-value');
-          switchTiming(value);
-        });
-      });
-      
-      // Close dropdown when clicking outside
-      document.addEventListener('click', function(e) {
-        if (!timingDropdownBtn.contains(e.target) && !timingDropdownMenu.contains(e.target)) {
-          timingDropdownMenu.classList.add('hidden');
-          timingDropdownBtn.setAttribute('aria-expanded', 'false');
-          if (timingDropdownBtn.querySelector('svg')) {
-            timingDropdownBtn.querySelector('svg').style.transform = 'rotate(0deg)';
-          }
-        }
-      });
-    }
+    // Desktop pill toggle
+    attachTimingToggleListeners(toggleContainer);
+    // Mobile pill toggle (same component, touch-friendly)
+    attachTimingToggleListeners(document.getElementById('mobile-ampm-toggle'));
+    
+    // Initialize thumb icon + label to match current selectedTiming
+    document.querySelectorAll('.timing-toggle-track').forEach(function(track) {
+      var thumb = track.querySelector('.timing-toggle-thumb');
+      if (thumb) {
+        var icon = selectedTiming === 'AM' ? 'sun' : 'moon';
+        thumb.innerHTML = '<i data-lucide="' + icon + '" width="12" height="12" aria-hidden="true"></i><span>' + selectedTiming + '</span>';
+        if (window.lucide) lucide.createIcons({ nodes: [thumb] });
+      }
+    });
   }
 
   // ──────────────────────────────────────────────
@@ -1398,12 +1525,32 @@
     var tierDropdownBtn = document.getElementById('tier-dropdown-btn');
     var tierDropdownMenu = document.getElementById('tier-dropdown-menu');
     var tierDropdownLabel = document.getElementById('tier-dropdown-label');
-
+    // Mobile custom dropdown elements
+    var mobileTierDropdown       = document.getElementById('mobile-tier-dropdown');
+    var mobileTierTrigger        = document.getElementById('mobile-tier-trigger');
+    var mobileTierPanel          = document.getElementById('mobile-tier-panel');
+    var mobileTierTriggerText    = document.getElementById('mobile-tier-trigger-text');
+    var mobileTierTriggerBadge   = document.getElementById('mobile-tier-trigger-badge');
     // Tier labels mapping
     const tierLabels = {
       essential: 'Essential (3 Products)',
       enhanced: 'Enhanced (5 Products)',
       comprehensive: 'Comprehensive (7 Products)'
+    };
+
+    // Tier level-indicator SVG — identical markup for all tiers; CSS fills bars based on data-tier context
+    var TIER_ICON_SVG = '<svg class="mobile-tier-trigger-icon" xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect class="tier-bar-1" x="1.5" y="10.5" width="3" height="4" rx="1"/><rect class="tier-bar-2" x="6.5" y="6.5" width="3" height="8" rx="1"/><rect class="tier-bar-3" x="11.5" y="2.5" width="3" height="12" rx="1"/></svg>';
+    var TIER_SVG = {
+      essential:     TIER_ICON_SVG,
+      enhanced:      TIER_ICON_SVG,
+      comprehensive: TIER_ICON_SVG
+    };
+
+    // Per-tier data for the mobile custom dropdown
+    var tierData = {
+      essential:     { name: 'Essential',     count: '3 Products', svgIcon: TIER_SVG.essential     },
+      enhanced:      { name: 'Enhanced',      count: '5 Products', svgIcon: TIER_SVG.enhanced      },
+      comprehensive: { name: 'Comprehensive', count: '7 Products', svgIcon: TIER_SVG.comprehensive }
     };
 
     // Function to switch tabs
@@ -1460,6 +1607,26 @@
       
       // Show/hide appropriate upgrade section
       updateUpgradeVisibility(tierId);
+      
+      // Sync mobile custom dropdown trigger label, badge, icon, and data-tier (for CSS fill state)
+      if (tierData[tierId]) {
+        if (mobileTierTriggerText)  mobileTierTriggerText.textContent = tierData[tierId].name;
+        if (mobileTierTriggerBadge) mobileTierTriggerBadge.textContent = tierData[tierId].count;
+        if (mobileTierTrigger) mobileTierTrigger.setAttribute('data-tier', tierId);
+        var iconWrap = document.getElementById('mobile-tier-trigger-icon-wrap');
+        if (iconWrap) {
+          iconWrap.innerHTML = tierData[tierId].svgIcon;
+        }
+      }
+      // Update active state on panel options
+      if (mobileTierPanel) {
+        mobileTierPanel.querySelectorAll('.mobile-tier-option').forEach(function(opt) {
+          opt.setAttribute('aria-selected', opt.getAttribute('data-tier') === tierId ? 'true' : 'false');
+        });
+      }
+      // Close the panel after any tier change
+      if (mobileTierPanel)   mobileTierPanel.classList.remove('open');
+      if (mobileTierTrigger) mobileTierTrigger.setAttribute('aria-expanded', 'false');
     }
 
     // Desktop tab clicks
@@ -1470,40 +1637,110 @@
       });
     });
 
-    // Mobile custom dropdown
-    if (tierDropdownBtn && tierDropdownMenu) {
-      // Toggle dropdown on button click
-      tierDropdownBtn.addEventListener('click', function(e) {
+    // Mobile custom tier dropdown (≤560px)
+    if (mobileTierTrigger && mobileTierPanel) {
+      function openMobileTierDropdown() {
+        mobileTierPanel.classList.add('open');
+        mobileTierTrigger.setAttribute('aria-expanded', 'true');
+      }
+      function closeMobileTierDropdown() {
+        mobileTierPanel.classList.remove('open');
+        mobileTierTrigger.setAttribute('aria-expanded', 'false');
+      }
+
+      mobileTierTrigger.addEventListener('click', function(e) {
         e.stopPropagation();
+        if (mobileTierPanel.classList.contains('open')) {
+          closeMobileTierDropdown();
+        } else {
+          openMobileTierDropdown();
+        }
+      });
+      mobileTierTrigger.addEventListener('touchend', function(e) {
+        e.preventDefault();
+        e.stopPropagation();
+        if (mobileTierPanel.classList.contains('open')) {
+          closeMobileTierDropdown();
+        } else {
+          openMobileTierDropdown();
+        }
+      }, { passive: false });
+
+      mobileTierPanel.querySelectorAll('.mobile-tier-option').forEach(function(option) {
+        option.addEventListener('click', function(e) {
+          e.stopPropagation();
+          switchToTier(this.getAttribute('data-tier'));
+        });
+        option.addEventListener('touchend', function(e) {
+          e.preventDefault();
+          e.stopPropagation();
+          switchToTier(this.getAttribute('data-tier'));
+        }, { passive: false });
+      });
+
+      document.addEventListener('click', function(e) {
+        if (mobileTierDropdown && !mobileTierDropdown.contains(e.target)) {
+          closeMobileTierDropdown();
+        }
+      });
+      document.addEventListener('touchend', function(e) {
+        if (mobileTierDropdown && !mobileTierDropdown.contains(e.target)) {
+          closeMobileTierDropdown();
+        }
+      });
+    }
+
+    // Mobile tier dropdown (click + touchend for touch devices)
+    if (tierDropdownBtn && tierDropdownMenu) {
+      function toggleTierDropdown() {
         const isExpanded = tierDropdownBtn.getAttribute('aria-expanded') === 'true';
-        
         if (isExpanded) {
           tierDropdownMenu.classList.add('hidden');
           tierDropdownBtn.setAttribute('aria-expanded', 'false');
-          tierDropdownBtn.querySelector('svg').style.transform = 'rotate(0deg)';
+          var svg = tierDropdownBtn.querySelector('svg');
+          if (svg) svg.style.transform = 'rotate(0deg)';
         } else {
           tierDropdownMenu.classList.remove('hidden');
           tierDropdownBtn.setAttribute('aria-expanded', 'true');
-          tierDropdownBtn.querySelector('svg').style.transform = 'rotate(180deg)';
+          var svg = tierDropdownBtn.querySelector('svg');
+          if (svg) svg.style.transform = 'rotate(180deg)';
         }
+      }
+      function closeTierDropdown() {
+        tierDropdownMenu.classList.add('hidden');
+        tierDropdownBtn.setAttribute('aria-expanded', 'false');
+        var svg = tierDropdownBtn.querySelector('svg');
+        if (svg) svg.style.transform = 'rotate(0deg)';
+      }
+      tierDropdownBtn.addEventListener('click', function(e) {
+        e.stopPropagation();
+        toggleTierDropdown();
       });
+      tierDropdownBtn.addEventListener('touchend', function(e) {
+        e.preventDefault();
+        toggleTierDropdown();
+      }, { passive: false });
       
-      // Handle option clicks
       tierDropdownMenu.querySelectorAll('.tier-dropdown-option').forEach(option => {
         option.addEventListener('click', function() {
           const value = this.getAttribute('data-value');
           switchToTier(value);
         });
+        option.addEventListener('touchend', function(e) {
+          e.preventDefault();
+          const value = this.getAttribute('data-value');
+          switchToTier(value);
+        }, { passive: false });
       });
       
-      // Close dropdown when clicking outside
       document.addEventListener('click', function(e) {
         if (!tierDropdownBtn.contains(e.target) && !tierDropdownMenu.contains(e.target)) {
-          tierDropdownMenu.classList.add('hidden');
-          tierDropdownBtn.setAttribute('aria-expanded', 'false');
-          if (tierDropdownBtn.querySelector('svg')) {
-            tierDropdownBtn.querySelector('svg').style.transform = 'rotate(0deg)';
-          }
+          closeTierDropdown();
+        }
+      });
+      document.addEventListener('touchend', function(e) {
+        if (!tierDropdownBtn.contains(e.target) && !tierDropdownMenu.contains(e.target)) {
+          closeTierDropdown();
         }
       });
     }
@@ -1593,7 +1830,8 @@
           // Set added state
           btn.classList.remove('loading');
           btn.classList.add('added');
-          btn.innerHTML = '<svg width="14" height="14" viewBox="0 0 16 16" fill="none" class="inline mr-1"><path d="M13 4L6 11l-3-3" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg> Added';
+          btn.innerHTML = '<i data-lucide="check" width="14" height="14" class="inline mr-1" aria-hidden="true"></i> Added';
+          if (window.lucide) lucide.createIcons({ nodes: [btn] });
           
           // Update to in-cart state after brief delay
           setTimeout(function() {
@@ -1814,16 +2052,14 @@
               </div>
             </div>
             <button class="remove-from-cart-btn text-[--muted-foreground] hover:text-[--foreground] transition-colors" data-product="${item.product}" data-size="${item.size || 'Standard'}" aria-label="Remove item">
-              <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-                <line x1="18" y1="6" x2="6" y2="18"/>
-                <line x1="6" y1="6" x2="18" y2="18"/>
-              </svg>
+              <i data-lucide="x" width="16" height="16" aria-hidden="true"></i>
             </button>
           </div>
         `;
       });
       html += '</div>';
       miniCartItems.innerHTML = html;
+      if (window.lucide) lucide.createIcons({ nodes: [miniCartItems] });
 
       // Update total
       if (miniCartTotal) {

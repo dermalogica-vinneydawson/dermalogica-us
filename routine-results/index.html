@@ -53,7 +53,7 @@
   <link rel="stylesheet" href="styles.css" />
 </head>
 
-<body class="animated-gradient-bg min-h-screen font-sans text-[--foreground]">
+<body class="min-h-screen font-sans text-[--foreground]">
 
   <!-- ============================  HEADER  ============================ -->
   <header class="sticky top-0 z-50 bg-[--background] border-b border-[--border] shadow-sm">
@@ -84,11 +84,7 @@
         <!-- Cart icon with mini-cart -->
         <div class="relative">
           <button id="cart-toggle" class="relative p-[--space-1]" aria-label="Shopping bag" aria-expanded="false">
-            <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="var(--primary)" stroke-width="1.5">
-              <path d="M6 2L3 6v14a2 2 0 002 2h14a2 2 0 002-2V6l-3-4z"/>
-              <line x1="3" y1="6" x2="21" y2="6"/>
-              <path d="M16 10a4 4 0 01-8 0"/>
-            </svg>
+            <i data-lucide="shopping-bag" width="20" height="20" class="text-[--primary]" aria-hidden="true"></i>
             <span id="cart-count" class="hidden absolute -top-1 -right-1 w-[18px] h-[18px] rounded-full bg-[--primary] text-[10px] font-bold text-[--primary-foreground] flex items-center justify-center">0</span>
           </button>
           
@@ -118,9 +114,7 @@
         </div>
         <!-- Mobile menu -->
         <button class="md:hidden p-[--space-1]" aria-label="Menu" id="mobile-menu-btn">
-          <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="var(--primary)" stroke-width="1.5">
-            <line x1="3" y1="6" x2="21" y2="6"/><line x1="3" y1="12" x2="21" y2="12"/><line x1="3" y1="18" x2="21" y2="18"/>
-          </svg>
+          <i data-lucide="menu" width="20" height="20" class="text-[--primary]" aria-hidden="true"></i>
         </button>
       </div>
     </div>
@@ -135,27 +129,20 @@
   </header>
 
   <!-- ============================  HERO  ============================ -->
-  <section class="py-[--space-4] md:py-[--space-5] px-4 md:px-[--space-6] border-b border-[--border]">
+  <section class="hero-section py-[--space-4] md:py-[--space-5] px-4 md:px-[--space-6] border-b border-white/20 bg-[#5b6670]">
     <div class="max-w-[1280px] mx-auto flex flex-col sm:flex-row items-center justify-between gap-[--space-4]">
-      <h1 class="text-base md:text-lg font-bold text-[--heading] leading-tight">
+      <h1 class="text-base md:text-lg font-bold text-white leading-tight">
         Courtney's Personalized Routine
       </h1>
       
       <!-- Action Buttons -->
-      <div class="flex flex-col sm:flex-row items-center gap-[--space-3]">
-        <button id="save-results-btn" class="inline-flex items-center gap-[--space-2] px-[--space-5] py-[--space-2] bg-[--card] border border-[--border] rounded text-sm font-bold text-[--foreground] hover:bg-[--card-header] hover:border-[--primary] transition-all duration-[250ms]">
-          <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-            <path d="M4 4h16c1.1 0 2 .9 2 2v12c0 1.1-.9 2-2 2H4c-1.1 0-2-.9-2-2V6c0-1.1.9-2 2-2z"/>
-            <polyline points="22,6 12,13 2,6"/>
-          </svg>
+      <div class="flex flex-row items-center justify-center sm:justify-end gap-[--space-2] sm:gap-[--space-3]">
+        <button id="save-results-btn" class="inline-flex items-center gap-[--space-2] px-[--space-3] sm:px-[--space-5] py-[--space-2] bg-white border border-white/30 rounded text-xs sm:text-sm font-bold text-[#5b6670] hover:bg-[rgba(255,255,255,0.9)] hover:border-white transition-all duration-[250ms] whitespace-nowrap">
+          <i data-lucide="mail" width="16" height="16" aria-hidden="true"></i>
           <span>Save Results via Email</span>
         </button>
-        <button id="retake-quiz-btn" class="inline-flex items-center gap-[--space-2] px-[--space-5] py-[--space-2] bg-[--card] border border-[--border] rounded text-sm font-bold text-[--foreground] hover:bg-[--card-header] hover:border-[--primary] transition-all duration-[250ms]">
-          <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-            <polyline points="23 4 23 10 17 10"/>
-            <polyline points="1 20 1 14 7 14"/>
-            <path d="M3.51 9a9 9 0 0 1 14.85-3.36L23 10M1 14l4.64 4.36A9 9 0 0 0 20.49 15"/>
-          </svg>
+        <button id="retake-quiz-btn" class="inline-flex items-center gap-[--space-2] px-[--space-3] sm:px-[--space-5] py-[--space-2] bg-white border border-white/30 rounded text-xs sm:text-sm font-bold text-[#5b6670] hover:bg-[rgba(255,255,255,0.9)] hover:border-white transition-all duration-[250ms] whitespace-nowrap">
+          <i data-lucide="rotate-ccw" width="16" height="16" aria-hidden="true"></i>
           <span>Retake Quiz</span>
         </button>
       </div>
@@ -163,106 +150,99 @@
   </section>
 
   <!-- ──────────  ROUTINE TABS (STICKY)  ────────── -->
-  <div id="sticky-tabs-container" class="sticky z-40 bg-[--background] border-b border-[--border] shadow-sm backdrop-blur-sm bg-opacity-95">
-      <section class="max-w-[1280px] mx-auto px-4 md:px-[--space-6] py-[--space-2] md:py-[--space-4]" aria-label="Skincare routines">
-        <!-- Mobile: Custom Dropdown selects -->
-        <div class="md:hidden flex flex-col gap-[--space-2]">
-          <!-- Timing Toggle Dropdown (mobile only, only shown if both AM and PM are available) -->
-          <div id="timing-toggle-mobile" class="hidden">
-            <div class="custom-dropdown relative">
-              <button id="timing-dropdown-btn" class="w-full px-[--space-3] py-[--space-2] border border-[--border] rounded text-sm font-bold bg-[--card] text-[--foreground] flex items-center justify-between hover:bg-[--card-header] transition-colors" aria-expanded="false" aria-haspopup="listbox">
-                <span id="timing-dropdown-label">AM Routine</span>
-                <svg class="w-4 h-4 transition-transform" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                  <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7"/>
-                </svg>
-              </button>
-              <ul id="timing-dropdown-menu" class="custom-dropdown-menu hidden absolute top-full left-0 right-0 mt-1 bg-[--card] border border-[--border] rounded shadow-lg z-50">
-                <li>
-                  <button class="timing-dropdown-option w-full px-[--space-3] py-[--space-2] text-left text-sm font-bold text-[--foreground] hover:bg-[--card-header] transition-colors" data-value="AM">
-                    AM Routine
-                  </button>
-                </li>
-                <li>
-                  <button class="timing-dropdown-option w-full px-[--space-3] py-[--space-2] text-left text-sm font-bold text-[--foreground] hover:bg-[--card-header] transition-colors" data-value="PM">
-                    PM Routine
-                  </button>
-                </li>
-              </ul>
+  <div id="sticky-tabs-container" class="sticky z-40 bg-[--background] border-b border-[--border] shadow-sm overflow-hidden">
+      <section class="sticky-tabs-inner max-w-[1280px] mx-auto px-4 md:px-[--space-6] py-[--space-1] md:py-[--space-2] overflow-x-auto overflow-y-hidden scrollbar-hide" aria-label="Skincare routines">
+        <!-- Mobile: single row (≥561px) / two rows (≤560px) — pill toggle + native select -->
+        <div id="mobile-controls-row" class="md:hidden flex flex-row flex-nowrap items-center gap-[--space-3] w-full overflow-hidden">
+          <!-- AM/PM pill toggle (same as desktop; hidden when only one timing exists) -->
+          <div id="timing-toggle-mobile" class="sticky-tabs-group hidden flex-shrink-0">
+            <span class="sticky-tabs-label">Time of day:</span>
+            <span class="sticky-tabs-group-divider" aria-hidden="true"></span>
+            <div id="mobile-ampm-toggle" class="sticky-tabs-group-controls timing-toggle-track-wrap flex-shrink-0">
+              <div class="timing-toggle-track" role="group" aria-label="Time of day">
+                <button type="button" class="timing-toggle-btn timing-toggle-zone active" data-timing="AM"><i data-lucide="sun" width="12" height="12" aria-hidden="true"></i><span>AM</span></button>
+                <button type="button" class="timing-toggle-btn timing-toggle-zone" data-timing="PM"><i data-lucide="moon" width="12" height="12" aria-hidden="true"></i><span>PM</span></button>
+                <span class="timing-toggle-thumb" aria-hidden="true"></span>
+              </div>
             </div>
           </div>
-          
-          <!-- Tier Selection Dropdown (mobile only) -->
-          <div class="custom-dropdown relative">
-            <button id="tier-dropdown-btn" class="w-full px-[--space-3] py-[--space-2] border border-[--border] rounded text-sm font-bold bg-[--card] text-[--foreground] flex items-center justify-between hover:bg-[--card-header] transition-colors" aria-expanded="false" aria-haspopup="listbox">
-              <span id="tier-dropdown-label">Essential (3 Products)</span>
-              <svg class="w-4 h-4 transition-transform" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7"/>
-              </svg>
-            </button>
-            <ul id="tier-dropdown-menu" class="custom-dropdown-menu hidden absolute top-full left-0 right-0 mt-1 bg-[--card] border border-[--border] rounded shadow-lg z-50">
-              <li>
-                <button class="tier-dropdown-option w-full px-[--space-3] py-[--space-2] text-left text-sm font-bold text-[--foreground] hover:bg-[--card-header] transition-colors" data-value="essential">
-                  Essential (3 Products)
+          <!-- Tier: custom dropdown -->
+          <div class="sticky-tabs-group flex-1 min-w-0">
+            <span class="sticky-tabs-label">Routine tier:</span>
+            <span class="sticky-tabs-group-divider" aria-hidden="true"></span>
+            <div class="sticky-tabs-group-controls flex-1 min-w-0">
+
+              <!-- Custom dropdown (shown only at ≤560px via CSS) -->
+              <div id="mobile-tier-dropdown" class="mobile-tier-dropdown">
+                <button id="mobile-tier-trigger" type="button" class="mobile-tier-trigger"
+                  data-tier="essential" aria-expanded="false" aria-haspopup="listbox" aria-label="Select routine tier">
+                  <span id="mobile-tier-trigger-icon-wrap">
+                    <svg class="mobile-tier-trigger-icon" xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect class="tier-bar-1" x="1.5" y="10.5" width="3" height="4" rx="1"/><rect class="tier-bar-2" x="6.5" y="6.5" width="3" height="8" rx="1"/><rect class="tier-bar-3" x="11.5" y="2.5" width="3" height="12" rx="1"/></svg>
+                  </span>
+                  <span id="mobile-tier-trigger-text" class="mobile-tier-trigger-text">Essential</span>
+                  <span id="mobile-tier-trigger-badge" class="mobile-tier-trigger-badge">3 Products</span>
+                  <i data-lucide="chevron-down" class="mobile-tier-chevron" aria-hidden="true"></i>
                 </button>
-              </li>
-              <li>
-                <button class="tier-dropdown-option w-full px-[--space-3] py-[--space-2] text-left text-sm font-bold text-[--foreground] hover:bg-[--card-header] transition-colors" data-value="enhanced">
-                  Enhanced (5 Products)
-                </button>
-              </li>
-              <li>
-                <button class="tier-dropdown-option w-full px-[--space-3] py-[--space-2] text-left text-sm font-bold text-[--foreground] hover:bg-[--card-header] transition-colors" data-value="comprehensive">
-                  Comprehensive (7 Products)
-                </button>
-              </li>
-            </ul>
+                <ul id="mobile-tier-panel" class="mobile-tier-panel" role="listbox"
+                  aria-label="Select routine tier">
+                  <li class="mobile-tier-option" role="option" data-tier="essential" aria-selected="true">
+                    <svg class="mobile-tier-option-icon" xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect class="tier-bar-1" x="1.5" y="10.5" width="3" height="4" rx="1"/><rect class="tier-bar-2" x="6.5" y="6.5" width="3" height="8" rx="1"/><rect class="tier-bar-3" x="11.5" y="2.5" width="3" height="12" rx="1"/></svg>
+                    <span class="mobile-tier-option-name">Essential</span>
+                    <span class="mobile-tier-option-badge">3 Products</span>
+                  </li>
+                  <li class="mobile-tier-option" role="option" data-tier="enhanced" aria-selected="false">
+                    <svg class="mobile-tier-option-icon" xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect class="tier-bar-1" x="1.5" y="10.5" width="3" height="4" rx="1"/><rect class="tier-bar-2" x="6.5" y="6.5" width="3" height="8" rx="1"/><rect class="tier-bar-3" x="11.5" y="2.5" width="3" height="12" rx="1"/></svg>
+                    <span class="mobile-tier-option-name">Enhanced</span>
+                    <span class="mobile-tier-option-badge">5 Products</span>
+                  </li>
+                  <li class="mobile-tier-option" role="option" data-tier="comprehensive" aria-selected="false">
+                    <svg class="mobile-tier-option-icon" xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect class="tier-bar-1" x="1.5" y="10.5" width="3" height="4" rx="1"/><rect class="tier-bar-2" x="6.5" y="6.5" width="3" height="8" rx="1"/><rect class="tier-bar-3" x="11.5" y="2.5" width="3" height="12" rx="1"/></svg>
+                    <span class="mobile-tier-option-name">Comprehensive</span>
+                    <span class="mobile-tier-option-badge">7 Products</span>
+                  </li>
+                </ul>
+              </div>
+
+            </div>
           </div>
         </div>
         
-        <!-- Desktop: Button toggles and tabs -->
-        <div class="hidden md:block">
-          <!-- Timing Toggle (only shown if both AM and PM are available) -->
-          <div id="timing-toggle-container" class="flex items-center justify-center gap-[--space-2] mb-[--space-4] hidden">
-            <button class="timing-toggle-btn active" data-timing="AM">
-              <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 3v1m0 16v1m9-9h-1M4 12H3m15.364 6.364l-.707-.707M6.343 6.343l-.707-.707m12.728 0l-.707.707M6.343 17.657l-.707.707M16 12a4 4 0 11-8 0 4 4 0 018 0z"/>
-              </svg>
-              <span>AM Routine</span>
-            </button>
-            <button class="timing-toggle-btn" data-timing="PM">
-              <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M20.354 15.354A9 9 0 018.646 3.646 9.003 9.003 0 0012 21a9.003 9.003 0 008.354-5.646z"/>
-              </svg>
-              <span>PM Routine</span>
-            </button>
-          </div>
-          
-          <!-- Tab strip -->
-          <div class="flex flex-col sm:flex-row gap-[--space-3]" role="tablist" aria-label="Routine levels">
+        <!-- Desktop: pill-style labeled control groups, inline label + divider + buttons -->
+        <div class="hidden md:flex md:justify-center md:items-center md:w-full">
+          <div id="desktop-tabs-row" class="flex flex-row items-center gap-[--space-3]">
+            <div class="sticky-tabs-group" id="sticky-tabs-timing-group">
+              <span class="sticky-tabs-label">Time of day:</span>
+              <div id="timing-toggle-container" class="sticky-tabs-group-controls timing-toggle-track-wrap flex-shrink-0 hidden">
+                <div class="timing-toggle-track" role="group" aria-label="Time of day">
+                  <button type="button" class="timing-toggle-btn timing-toggle-zone active" data-timing="AM"><i data-lucide="sun" width="12" height="12" aria-hidden="true"></i><span>AM</span></button>
+                  <button type="button" class="timing-toggle-btn timing-toggle-zone" data-timing="PM"><i data-lucide="moon" width="12" height="12" aria-hidden="true"></i><span>PM</span></button>
+                  <span class="timing-toggle-thumb" aria-hidden="true"></span>
+                </div>
+              </div>
+            </div>
+            <div class="sticky-tabs-group">
+              <span class="sticky-tabs-label">Routine tier:</span>
+              <div class="sticky-tabs-group-controls sticky-tabs-tabstrip flex flex-row gap-[--space-2] min-w-0 overflow-x-auto scrollbar-hide" role="tablist" aria-label="Routine levels">
             <button role="tab" aria-selected="true" aria-controls="panel-essential" id="tab-essential"
-                    class="routine-tab routine-tab--active flex-1 flex items-center justify-center gap-[--space-2] px-[--space-5] py-[--space-3] rounded-lg text-sm font-bold transition-all duration-[250ms]">
-              <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z"/>
-              </svg>
+                    class="routine-tab routine-tab--active flex-shrink-0 flex items-center justify-center gap-[--space-2] px-[--space-3] py-[--space-2] text-xs font-bold transition-all duration-[250ms]">
+              <svg class="flex-shrink-0" xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect class="tier-bar-1" x="1.5" y="10.5" width="3" height="4" rx="1"/><rect class="tier-bar-2" x="6.5" y="6.5" width="3" height="8" rx="1"/><rect class="tier-bar-3" x="11.5" y="2.5" width="3" height="12" rx="1"/></svg>
               <span>Essential</span>
               <span class="routine-tab-count">3</span>
             </button>
             <button role="tab" aria-selected="false" aria-controls="panel-enhanced" id="tab-enhanced"
-                    class="routine-tab flex-1 flex items-center justify-center gap-[--space-2] px-[--space-5] py-[--space-3] rounded-lg text-sm font-bold transition-all duration-[250ms]">
-              <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 10V3L4 14h7v7l9-11h-7z"/>
-              </svg>
+                    class="routine-tab flex-shrink-0 flex items-center justify-center gap-[--space-2] px-[--space-3] py-[--space-2] text-xs font-bold transition-all duration-[250ms]">
+              <svg class="flex-shrink-0" xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect class="tier-bar-1" x="1.5" y="10.5" width="3" height="4" rx="1"/><rect class="tier-bar-2" x="6.5" y="6.5" width="3" height="8" rx="1"/><rect class="tier-bar-3" x="11.5" y="2.5" width="3" height="12" rx="1"/></svg>
               <span>Enhanced</span>
               <span class="routine-tab-count">5</span>
             </button>
             <button role="tab" aria-selected="false" aria-controls="panel-comprehensive" id="tab-comprehensive"
-                    class="routine-tab flex-1 flex items-center justify-center gap-[--space-2] px-[--space-5] py-[--space-3] rounded-lg text-sm font-bold transition-all duration-[250ms]">
-              <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 3v4M3 5h4M6 17v4m-2-2h4m5-16l2.286 6.857L21 12l-5.714 2.143L13 21l-2.286-6.857L5 12l5.714-2.143L13 3z"/>
-              </svg>
+                    class="routine-tab flex-shrink-0 flex items-center justify-center gap-[--space-2] px-[--space-3] py-[--space-2] text-xs font-bold transition-all duration-[250ms]">
+              <svg class="flex-shrink-0" xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect class="tier-bar-1" x="1.5" y="10.5" width="3" height="4" rx="1"/><rect class="tier-bar-2" x="6.5" y="6.5" width="3" height="8" rx="1"/><rect class="tier-bar-3" x="11.5" y="2.5" width="3" height="12" rx="1"/></svg>
               <span>Comprehensive</span>
               <span class="routine-tab-count">7</span>
             </button>
+              </div>
+            </div>
           </div>
         </div>
       </section>
@@ -272,12 +252,13 @@
   <main class="max-w-[1280px] mx-auto px-4 md:px-[--space-6] pb-[--space-20]">
 
     <!-- ──────────  SKIN ANALYSIS SUMMARY  ────────── -->
-    <section class="mt-[--space-8] mb-[--space-10] bg-[--card] rounded border border-[--border] shadow-sm overflow-hidden" aria-label="Skin analysis summary">
-      <button id="skin-analysis-toggle" class="w-full bg-[--card-header] px-4 md:px-[--space-6] py-[--space-4] border-b border-[--border] flex items-center justify-between hover:bg-[--card-header]/80 transition-colors" aria-expanded="true" aria-controls="skin-analysis-content">
-        <h2 class="text-lg font-bold text-[--heading]">Your Skin Analysis</h2>
-        <svg id="skin-analysis-chevron" class="w-5 h-5 text-[--muted-foreground] transition-transform duration-200" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-          <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7"/>
-        </svg>
+    <section class="mt-[--space-8] mb-4 bg-[--card] rounded border border-[--border] shadow-sm overflow-hidden" aria-label="Skin analysis summary">
+      <button id="skin-analysis-toggle" class="w-full bg-[--card-header] px-4 md:px-[--space-6] py-[--space-4] border-b border-[--border] flex items-center justify-between hover:bg-[--card-header]/80 transition-colors" aria-expanded="false" aria-controls="skin-analysis-content">
+        <div class="flex flex-col items-start gap-0.5">
+          <h2 class="text-lg font-bold text-[--heading]">Your Skin Profile</h2>
+          <p id="skin-analysis-subtitle" class="text-[12px] text-[--muted-foreground] font-normal leading-tight"></p>
+        </div>
+        <i data-lucide="chevron-down" id="skin-analysis-chevron" class="w-5 h-5 text-[--muted-foreground] transition-transform duration-200" aria-hidden="true"></i>
       </button>
       <div id="skin-analysis-content" class="px-4 md:px-[--space-6] py-[--space-6] transition-all duration-300 ease-in-out overflow-hidden">
         <!-- Content will be dynamically loaded here -->
@@ -285,7 +266,7 @@
     </section>
 
     <!-- ──────────  ROUTINE PANELS  ────────── -->
-    <section class="max-w-[1280px] mx-auto md:px-[--space-6] py-[--space-8]">
+    <section class="max-w-[1280px] mx-auto md:px-[--space-6] pt-4 pb-[--space-8]">
       <!-- ═══════  ESSENTIAL PANEL  ═══════ -->
       <div role="tabpanel" id="panel-essential" aria-labelledby="tab-essential" class="routine-panel">
         <!-- Products will be dynamically loaded here -->
@@ -317,11 +298,16 @@
     <section id="upgrade-comprehensive" style="display: none;">
     </section>
 
+    <!-- ──────────  KITS & SETS  ────────── -->
+    <section id="kits-section" class="max-w-[1280px] mx-auto md:px-[--space-6] mb-[--space-16]" aria-label="Recommended kits and sets">
+      <!-- Will be populated dynamically -->
+    </section>
+
     <!-- ──────────  PROFESSIONAL TREATMENTS  ────────── -->
     <section class="max-w-[1280px] mx-auto md:px-[--space-6] mb-[--space-16]" aria-label="Professional treatments">
       <div class="mb-[--space-6]">
         <h2 class="text-xl font-bold text-[--heading] mb-[--space-2]">Recommended Professional Treatments</h2>
-        <p class="text-sm font-light text-[--muted-foreground]">Maximize your results with in-salon treatments from a Dermalogica skin therapist.</p>
+        <p class="text-[14px] font-light text-[--muted-foreground]">Maximize your results with in-salon treatments from a Dermalogica skin therapist.</p>
       </div>
 
       <div class="grid grid-cols-1 md:grid-cols-2 gap-[--space-4]">
@@ -337,11 +323,8 @@
             <h3 class="text-base font-bold text-[--foreground] mb-[--space-1]">pro skin treatment</h3>
             <p class="text-xs font-light text-[--muted-foreground] mb-[--space-3]">Get the best skin you've ever had with our customizable skin treatment with treatment modality enhancement options.</p>
             <div class="flex items-center gap-[--space-2] mb-[--space-3]">
-              <span class="inline-flex items-center gap-[--space-1] text-xs text-[--muted-foreground]">
-                <svg width="14" height="14" viewBox="0 0 16 16" fill="none">
-                  <circle cx="8" cy="8" r="7" stroke="currentColor" stroke-width="1.2"/>
-                  <path d="M8 4v4l3 3" stroke="currentColor" stroke-width="1.2" stroke-linecap="round"/>
-                </svg>
+              <span class="inline-flex items-center gap-[--space-2] text-xs text-[--muted-foreground]">
+                <i data-lucide="clock" width="14" height="14" aria-hidden="true"></i>
                 <span>30 or 60 minutes</span>
               </span>
             </div>
@@ -361,11 +344,8 @@
             <h3 class="text-base font-bold text-[--foreground] mb-[--space-1]">pro bright skin treatment</h3>
             <p class="text-xs font-light text-[--muted-foreground] mb-[--space-3]">A 3-step skin treatment that boosts absorption of brightening actives – addressing dark spots and reducing uneven pigmentation to reveal brighter skin.</p>
             <div class="flex items-center gap-[--space-2] mb-[--space-3]">
-              <span class="inline-flex items-center gap-[--space-1] text-xs text-[--muted-foreground]">
-                <svg width="14" height="14" viewBox="0 0 16 16" fill="none">
-                  <circle cx="8" cy="8" r="7" stroke="currentColor" stroke-width="1.2"/>
-                  <path d="M8 4v4l3 3" stroke="currentColor" stroke-width="1.2" stroke-linecap="round"/>
-                </svg>
+              <span class="inline-flex items-center gap-[--space-2] text-xs text-[--muted-foreground]">
+                <i data-lucide="clock" width="14" height="14" aria-hidden="true"></i>
                 <span>30 or 60 minutes</span>
               </span>
             </div>
@@ -379,9 +359,7 @@
         <div class="bg-[--card-header] rounded-lg border border-[--border] p-[--space-5] flex flex-col sm:flex-row items-center gap-[--space-4]">
           <div class="flex-shrink-0">
             <div class="w-12 h-12 rounded-full bg-[--primary] flex items-center justify-center">
-              <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" class="text-[--primary-foreground]">
-                <path stroke-linecap="round" stroke-linejoin="round" d="M8 12h.01M12 12h.01M16 12h.01M21 12c0 4.418-4.03 8-9 8a9.863 9.863 0 01-4.255-.949L3 20l1.395-3.72C3.512 15.042 3 13.574 3 12c0-4.418 4.03-8 9-8s9 3.582 9 8z"/>
-              </svg>
+              <i data-lucide="message-circle" width="24" height="24" class="text-[--primary-foreground]" aria-hidden="true"></i>
             </div>
           </div>
           <div class="flex-1 text-center sm:text-left">
@@ -401,7 +379,7 @@
     <section class="max-w-[1280px] mx-auto md:px-[--space-6] mb-[--space-16]" aria-label="Featured article">
       <div class="mb-[--space-6]">
         <h2 class="text-xl font-bold text-[--heading] mb-[--space-2]">Featured Article</h2>
-        <p class="text-sm font-light text-[--muted-foreground]">Discover expert skincare tips and insights to enhance your routine.</p>
+        <p class="text-[14px] font-light text-[--muted-foreground]">Discover expert skincare tips and insights to enhance your routine.</p>
       </div>
       
       <div class="bg-[--card] rounded border border-[--border] shadow-sm overflow-hidden flex flex-col md:flex-row">
@@ -482,13 +460,10 @@
         <div class="flex items-center justify-between mb-[--space-4]">
           <h2 class="text-xl font-bold text-[--heading]">Save Your Routine</h2>
           <button class="modal-close text-[--muted-foreground] hover:text-[--foreground] transition-colors" data-modal-close="email-modal" aria-label="Close">
-            <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-              <line x1="18" y1="6" x2="6" y2="18"/>
-              <line x1="6" y1="6" x2="18" y2="18"/>
-            </svg>
+            <i data-lucide="x" width="24" height="24" aria-hidden="true"></i>
           </button>
         </div>
-        <p class="text-sm font-light text-[--muted-foreground] mb-[--space-5]">
+        <p class="text-[14px] font-light text-[--muted-foreground] mb-[--space-5]">
           Enter your email address to receive your personalized routine recommendations.
         </p>
         <form id="email-form" class="space-y-[--space-4]">
@@ -534,13 +509,10 @@
         <div class="flex items-center justify-between mb-[--space-4]">
           <h2 class="text-xl font-bold text-[--heading]">Retake Quiz</h2>
           <button class="modal-close text-[--muted-foreground] hover:text-[--foreground] transition-colors" data-modal-close="retake-modal" aria-label="Close">
-            <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-              <line x1="18" y1="6" x2="6" y2="18"/>
-              <line x1="6" y1="6" x2="18" y2="18"/>
-            </svg>
+            <i data-lucide="x" width="24" height="24" aria-hidden="true"></i>
           </button>
         </div>
-        <p class="text-sm font-light text-[--muted-foreground] mb-[--space-5]">
+        <p class="text-[14px] font-light text-[--muted-foreground] mb-[--space-5]">
           Are you sure you want to retake the quiz? Your current personalized routine results will be lost.
         </p>
         <div class="flex gap-[--space-3] pt-[--space-2]">
@@ -566,10 +538,13 @@
   <!-- ============================  TOAST NOTIFICATION  ============================ -->
   <div id="toast" class="fixed bottom-[--space-6] right-[--space-6] z-[100] hidden">
     <div class="bg-[--foreground] text-[--background] px-[--space-6] py-[--space-3] rounded shadow-lg text-sm font-normal flex items-center gap-[--space-3]">
-      <svg width="16" height="16" viewBox="0 0 16 16" fill="none"><circle cx="8" cy="8" r="7" stroke="var(--success)" stroke-width="1.5"/><path d="M5 8l2 2 4-4" stroke="var(--success)" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/></svg>
+      <i data-lucide="check-circle" width="16" height="16" style="color: var(--success)" aria-hidden="true"></i>
       <span id="toast-message">Added to bag</span>
     </div>
   </div>
+
+  <!-- Lucide icons (UMD build — exposes global `lucide`) -->
+  <script src="https://unpkg.com/lucide@latest/dist/umd/lucide.min.js"></script>
 
   <!-- Scripts -->
   <script src="product-data.js"></script>

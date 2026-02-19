@@ -7,7 +7,7 @@
 
 :root {
   /* ---- Color Tokens ---- */
-  --background:          rgba(255, 255, 255, 1);
+  --background:          rgba(242, 244, 246, 1);
   --foreground:          rgba(91, 102, 112, 1);
   --primary:             rgba(91, 102, 112, 1);
   --primary-foreground:  rgba(255, 255, 255, 1);
@@ -158,27 +158,6 @@ ul, ol {
   list-style: none;
 }
 
-/* ============================================================
-   ANIMATED GRADIENT BACKGROUND
-   ============================================================ */
-
-@keyframes breathe {
-  0%   { background-position: 0% 50%; }
-  50%  { background-position: 100% 50%; }
-  100% { background-position: 0% 50%; }
-}
-
-.animated-gradient-bg {
-  background: linear-gradient(
-    -45deg,
-    var(--gradient-1),
-    var(--gradient-2),
-    var(--gradient-3),
-    var(--gradient-1)
-  );
-  background-size: 400% 400%;
-  animation: breathe 10s ease infinite;
-}
 
 /* ============================================================
    SCROLLBAR STYLING
