@@ -52,6 +52,15 @@
 
     // Process all static Lucide <i data-lucide> icons in the document
     if (window.lucide) lucide.createIcons();
+
+    // Close size dropdowns when clicking outside any dropdown
+    // Uses trigger._openPanel because the panel lives on <body> while open
+    document.addEventListener('click', function() {
+      document.querySelectorAll('.size-dropdown-trigger[aria-expanded="true"]').forEach(function(trigger) {
+        var p = trigger._openPanel;
+        if (p) closeSizePanel(trigger, p);
+      });
+    });
   }
   
   // ──────────────────────────────────────────────
@@ -378,13 +387,13 @@
             <p class="text-sm font-normal text-[--foreground] leading-tight">${sensitivityDisplay}</p>
           </div>
         </div>
-        <!-- Recommended Franchise -->
+        <!-- Product System -->
         <div class="flex items-start gap-[--space-2] p-[--space-3] bg-[--card-header] rounded border border-[--border]">
           <div class="flex-shrink-0 text-[--primary] mt-0.5">
             ${iconSVG('franchise')}
           </div>
           <div class="flex-1 min-w-0">
-            <h3 class="text-[10px] font-bold uppercase tracking-[0.08em] text-[--muted-foreground] mb-0.5">Recommended Franchise</h3>
+            <h3 class="text-[10px] font-bold uppercase tracking-[0.08em] text-[--muted-foreground] mb-0.5">Product System</h3>
             <p class="text-sm font-normal text-[--foreground] leading-tight">${franchiseDisplay}</p>
           </div>
         </div>
@@ -599,6 +608,7 @@
     // Add summary CTA
     html += renderRoutineSummary(tier, displayProducts.length, totalPrice, selectedTiming);
 
+    cleanupOrphanedPanels();
     panel.innerHTML = html;
     
     // Re-attach event listeners for this panel
@@ -644,6 +654,149 @@
     });
   }
 
+  // ──────────────────────────────────────────────
+  //  CUSTOM SIZE DROPDOWN HELPERS
+  // ──────────────────────────────────────────────
+
+  function buildSizeDropdownHTML(productSlug, sizes, defaultSize) {
+    var options = sizes.map(function(s) {
+      var isSelected = s.size === defaultSize.size;
+      return '<li class="size-dropdown-option" role="option" aria-selected="' + isSelected + '" data-size="' + s.size + '" data-price="' + s.price.toFixed(2) + '">' + s.size + '</li>';
+    }).join('');
+    return `
+      <div class="mb-[--space-2]">
+        <label class="block text-[10px] font-bold uppercase tracking-[0.08em] text-[--muted-foreground] mb-[--space-2]">Size</label>
+        <div class="size-dropdown">
+          <button type="button" class="size-dropdown-trigger" aria-expanded="false" aria-haspopup="listbox" aria-label="Select product size">
+            <span class="size-dropdown-trigger-text">${defaultSize.size}</span>
+            <i data-lucide="chevron-down" class="size-dropdown-chevron" aria-hidden="true"></i>
+          </button>
+          <ul class="size-dropdown-panel" role="listbox" aria-label="Select product size">${options}</ul>
+        </div>
+      </div>
+    `;
+  }
+
+  function applySizeChange(productCard, selectedSize, selectedPrice) {
+    var priceElement = productCard.querySelector('.product-price');
+    if (priceElement) {
+      priceElement.style.opacity = '0.5';
+      setTimeout(function() {
+        priceElement.textContent = '$' + selectedPrice;
+        priceElement.style.opacity = '1';
+      }, 150);
+    }
+    var addToCartBtn = productCard.querySelector('.add-to-bag-btn');
+    var removeBtn = productCard.querySelector('.remove-from-cart-btn');
+    if (addToCartBtn) {
+      addToCartBtn.setAttribute('data-price', selectedPrice);
+      addToCartBtn.setAttribute('data-size', selectedSize);
+      if (removeBtn) removeBtn.setAttribute('data-size', selectedSize);
+      if (addToCartBtn.classList.contains('in-cart')) {
+        addToCartBtn.classList.remove('in-cart');
+        if (removeBtn) removeBtn.classList.add('hidden');
+        updateButtonStates();
+      } else {
+        updateButtonStates();
+      }
+    }
+  }
+
+  function openSizePanel(trigger, panel) {
+    var rect = trigger.getBoundingClientRect();
+    // Store the source .size-dropdown so we can return the panel on close
+    panel._sourceContainer = trigger.closest('.size-dropdown');
+    // Keep a back-reference so the click-outside handler can reach the panel
+    trigger._openPanel = panel;
+    // Move panel to <body> — escapes every overflow/stacking context in the card tree
+    document.body.appendChild(panel);
+    panel.style.position = 'fixed';
+    panel.style.top = (rect.bottom + 4) + 'px';
+    panel.style.left = rect.left + 'px';
+    panel.style.minWidth = rect.width + 'px';
+    trigger.setAttribute('aria-expanded', 'true');
+    panel.classList.add('open');
+    // Close immediately on the first scroll; once:true removes the listener automatically
+    panel._scrollHandler = function() { closeSizePanel(trigger, panel); };
+    window.addEventListener('scroll', panel._scrollHandler, { once: true, passive: true });
+  }
+
+  function closeSizePanel(trigger, panel) {
+    // Remove scroll listener before any state changes (no-op if already fired)
+    if (panel._scrollHandler) {
+      window.removeEventListener('scroll', panel._scrollHandler);
+      panel._scrollHandler = null;
+    }
+    trigger.setAttribute('aria-expanded', 'false');
+    trigger._openPanel = null;
+    panel.classList.remove('open');
+    // Return panel to its original .size-dropdown container
+    var source = panel._sourceContainer;
+    if (source && panel.parentNode === document.body) {
+      source.appendChild(panel);
+      panel._sourceContainer = null;
+    }
+    panel.style.position = '';
+    panel.style.top = '';
+    panel.style.left = '';
+    panel.style.minWidth = '';
+  }
+
+  function cleanupOrphanedPanels() {
+    // Remove any size panels still on body (their source card was destroyed)
+    document.querySelectorAll('body > .size-dropdown-panel').forEach(function(p) {
+      p.remove();
+    });
+    // Reset any trigger that still reports as expanded after its card was removed
+    document.querySelectorAll('.size-dropdown-trigger[aria-expanded="true"]').forEach(function(t) {
+      t.setAttribute('aria-expanded', 'false');
+    });
+  }
+
+  function setupCustomSizeDropdowns(root) {
+    root.querySelectorAll('.size-dropdown').forEach(function(dropdown) {
+      if (dropdown.hasAttribute('data-size-listener')) return;
+      dropdown.setAttribute('data-size-listener', 'true');
+      var trigger = dropdown.querySelector('.size-dropdown-trigger');
+      var panel = dropdown.querySelector('.size-dropdown-panel');
+      if (!trigger || !panel) return;
+
+      trigger.addEventListener('click', function(e) {
+        e.stopPropagation();
+        var isOpen = trigger.getAttribute('aria-expanded') === 'true';
+        // Close all other open size dropdowns first
+        document.querySelectorAll('.size-dropdown-trigger[aria-expanded="true"]').forEach(function(t) {
+          if (t !== trigger) {
+            var p = t.closest('.size-dropdown').querySelector('.size-dropdown-panel');
+            if (p) closeSizePanel(t, p);
+          }
+        });
+        if (isOpen) {
+          closeSizePanel(trigger, panel);
+        } else {
+          openSizePanel(trigger, panel);
+        }
+      });
+
+      panel.querySelectorAll('.size-dropdown-option').forEach(function(option) {
+        option.addEventListener('click', function(e) {
+          e.stopPropagation();
+          var selectedSize = option.getAttribute('data-size');
+          var selectedPrice = option.getAttribute('data-price');
+          panel.querySelectorAll('.size-dropdown-option').forEach(function(o) {
+            o.setAttribute('aria-selected', 'false');
+          });
+          option.setAttribute('aria-selected', 'true');
+          var triggerText = trigger.querySelector('.size-dropdown-trigger-text');
+          if (triggerText) triggerText.textContent = selectedSize;
+          closeSizePanel(trigger, panel);
+          var productCard = dropdown.closest('[data-product-slug]');
+          if (productCard) applySizeChange(productCard, selectedSize, selectedPrice);
+        });
+      });
+    });
+  }
+
   function renderProductCard(product, isUpgrade) {
     const details = product.details;
     const productSlug = slugify(product.product);
@@ -673,33 +826,10 @@
       return renderMinimalUpgradeCard(product, productTitle, defaultPrice, image, description, timing, productSlug, sizes, defaultSize);
     }
     
-    // Build size selector HTML (dropdown)
+    // Build size selector HTML (custom dropdown)
     let sizeSelectorHTML = '';
     if (hasMultipleSizes) {
-      sizeSelectorHTML = `
-        <div class="mb-[--space-2]">
-          <label for="size-select-${productSlug}" class="block text-[10px] font-bold uppercase tracking-[0.08em] text-[--muted-foreground] mb-[--space-2]">Size</label>
-          <select 
-            id="size-select-${productSlug}"
-            class="product-size-select" 
-            data-product-slug="${productSlug}"
-            aria-label="Select product size"
-          >
-            ${sizes.map((sizeOption, index) => {
-              const isDefault = index === sizes.length - 1;
-              return `
-                <option 
-                  value="${sizeOption.size}"
-                  data-price="${sizeOption.price.toFixed(2)}"
-                  ${isDefault ? 'selected' : ''}
-                >
-                  ${sizeOption.size}
-                </option>
-              `;
-            }).join('')}
-          </select>
-        </div>
-      `;
+      sizeSelectorHTML = buildSizeDropdownHTML(productSlug, sizes, defaultSize);
     }
     
     // Build step banner that spans across the top
@@ -759,33 +889,10 @@
     const defaultPrice = defaultSize.price.toFixed(2);
     const hasMultipleSizes = sizes.length > 1;
     
-    // Build size selector HTML (dropdown)
+    // Build size selector HTML (custom dropdown)
     let sizeSelectorHTML = '';
     if (hasMultipleSizes) {
-      sizeSelectorHTML = `
-        <div class="mb-[--space-2]">
-          <label for="size-select-${productSlug}" class="block text-[10px] font-bold uppercase tracking-[0.08em] text-[--muted-foreground] mb-[--space-2]">Size</label>
-          <select 
-            id="size-select-${productSlug}"
-            class="product-size-select" 
-            data-product-slug="${productSlug}"
-            aria-label="Select product size"
-          >
-            ${sizes.map((sizeOption, index) => {
-              const isDefault = index === sizes.length - 1;
-              return `
-                <option 
-                  value="${sizeOption.size}"
-                  data-price="${sizeOption.price.toFixed(2)}"
-                  ${isDefault ? 'selected' : ''}
-                >
-                  ${sizeOption.size}
-                </option>
-              `;
-            }).join('')}
-          </select>
-        </div>
-      `;
+      sizeSelectorHTML = buildSizeDropdownHTML(productSlug, sizes, defaultSize);
     }
     
     return `
@@ -852,33 +959,10 @@
     const defaultPrice = defaultSize.price.toFixed(2);
     const hasMultipleSizes = sizes.length > 1;
     
-    // Build size selector HTML (dropdown)
+    // Build size selector HTML (custom dropdown)
     let sizeSelectorHTML = '';
     if (hasMultipleSizes) {
-      sizeSelectorHTML = `
-        <div class="mb-[--space-2]">
-          <label for="${sizeSelectId}" class="block text-[10px] font-bold uppercase tracking-[0.08em] text-[--muted-foreground] mb-[--space-2]">Size</label>
-          <select 
-            id="${sizeSelectId}"
-            class="product-size-select" 
-            data-product-slug="${productSlug}"
-            aria-label="Select product size"
-          >
-            ${sizes.map((sizeOption, index) => {
-              const isDefault = index === sizes.length - 1;
-              return `
-                <option 
-                  value="${sizeOption.size}"
-                  data-price="${sizeOption.price.toFixed(2)}"
-                  ${isDefault ? 'selected' : ''}
-                >
-                  ${sizeOption.size}
-                </option>
-              `;
-            }).join('')}
-          </select>
-        </div>
-      `;
+      sizeSelectorHTML = buildSizeDropdownHTML(productSlug, sizes, defaultSize);
     }
     
     return `
@@ -987,6 +1071,7 @@
       </div>
     `;
 
+    cleanupOrphanedPanels();
     container.innerHTML = html;
 
     // Wire up tooltips and cart buttons using the same pattern as the upgrade section
@@ -1062,6 +1147,7 @@
     
     html += '</div>';
     
+    cleanupOrphanedPanels();
     container.innerHTML = html;
     container.style.display = 'block';
     
@@ -1086,51 +1172,8 @@
       trigger.appendChild(bubble);
     });
 
-    // Add size selector handlers (dropdown)
-    container.querySelectorAll('.product-size-select').forEach(select => {
-      if (select.hasAttribute('data-listener-attached')) return;
-      select.setAttribute('data-listener-attached', 'true');
-      
-      select.addEventListener('change', function() {
-        const productCard = select.closest('[data-product-slug]');
-        if (!productCard) return;
-        
-        const selectedOption = select.options[select.selectedIndex];
-        const selectedSize = selectedOption.value;
-        const selectedPrice = selectedOption.getAttribute('data-price');
-        const productSlug = select.getAttribute('data-product-slug');
-        
-        // Update price display with smooth transition
-        const priceElement = productCard.querySelector('.product-price');
-        if (priceElement) {
-          priceElement.style.opacity = '0.5';
-          setTimeout(function() {
-            priceElement.textContent = '$' + selectedPrice;
-            priceElement.style.opacity = '1';
-          }, 150);
-        }
-        
-        // Update add to cart button with new variant
-        const addToCartBtn = productCard.querySelector('.add-to-bag-btn');
-        const removeBtn = productCard.querySelector('.remove-from-cart-btn');
-        if (addToCartBtn) {
-          addToCartBtn.setAttribute('data-price', selectedPrice);
-          addToCartBtn.setAttribute('data-size', selectedSize);
-          if (removeBtn) {
-            removeBtn.setAttribute('data-size', selectedSize);
-          }
-          
-          // If button was in "In Cart" state, check if new variant is in cart
-          if (addToCartBtn.classList.contains('in-cart')) {
-            addToCartBtn.classList.remove('in-cart');
-            if (removeBtn) removeBtn.classList.add('hidden');
-            updateButtonStates();
-          } else {
-            updateButtonStates();
-          }
-        }
-      });
-    });
+    // Wire custom size dropdowns
+    setupCustomSizeDropdowns(container);
 
     // Add remove from cart button handlers
     container.querySelectorAll('.remove-from-cart-btn').forEach(btn => {
@@ -1212,51 +1255,8 @@
       trigger.appendChild(bubble);
     });
 
-    // Add size selector handlers (dropdown)
-    panel.querySelectorAll('.product-size-select').forEach(select => {
-      if (select.hasAttribute('data-listener-attached')) return;
-      select.setAttribute('data-listener-attached', 'true');
-      
-      select.addEventListener('change', function() {
-        const productCard = select.closest('[data-product-slug]');
-        if (!productCard) return;
-        
-        const selectedOption = select.options[select.selectedIndex];
-        const selectedSize = selectedOption.value;
-        const selectedPrice = selectedOption.getAttribute('data-price');
-        const productSlug = select.getAttribute('data-product-slug');
-        
-        // Update price display with smooth transition
-        const priceElement = productCard.querySelector('.product-price');
-        if (priceElement) {
-          priceElement.style.opacity = '0.5';
-          setTimeout(function() {
-            priceElement.textContent = '$' + selectedPrice;
-            priceElement.style.opacity = '1';
-          }, 150);
-        }
-        
-        // Update add to cart button with new variant
-        const addToCartBtn = productCard.querySelector('.add-to-bag-btn');
-        const removeBtn = productCard.querySelector('.remove-from-cart-btn');
-        if (addToCartBtn) {
-          addToCartBtn.setAttribute('data-price', selectedPrice);
-          addToCartBtn.setAttribute('data-size', selectedSize);
-          if (removeBtn) {
-            removeBtn.setAttribute('data-size', selectedSize);
-          }
-          
-          // If button was in "In Cart" state, check if new variant is in cart
-          if (addToCartBtn.classList.contains('in-cart')) {
-            addToCartBtn.classList.remove('in-cart');
-            if (removeBtn) removeBtn.classList.add('hidden');
-            updateButtonStates();
-          } else {
-            updateButtonStates();
-          }
-        }
-      });
-    });
+    // Wire custom size dropdowns
+    setupCustomSizeDropdowns(panel);
 
     // Add remove from cart button handlers
     panel.querySelectorAll('.remove-from-cart-btn').forEach(btn => {
@@ -1867,51 +1867,8 @@
   }
 
   function setupSizeSelectors() {
-    // Handle size selector dropdowns (for static elements like body care)
-    document.querySelectorAll('.product-size-select').forEach(function(select) {
-      if (select.hasAttribute('data-listener-attached')) return;
-      select.setAttribute('data-listener-attached', 'true');
-      
-      select.addEventListener('change', function() {
-        const productCard = select.closest('[data-product-slug]');
-        if (!productCard) return;
-        
-        const selectedOption = select.options[select.selectedIndex];
-        const selectedSize = selectedOption.value;
-        const selectedPrice = selectedOption.getAttribute('data-price');
-        const productSlug = select.getAttribute('data-product-slug');
-        
-        // Update price display with smooth transition
-        const priceElement = productCard.querySelector('.product-price');
-        if (priceElement) {
-          priceElement.style.opacity = '0.5';
-          setTimeout(function() {
-            priceElement.textContent = '$' + selectedPrice;
-            priceElement.style.opacity = '1';
-          }, 150);
-        }
-        
-        // Update add to cart button with new variant
-        const addToCartBtn = productCard.querySelector('.add-to-bag-btn');
-        const removeBtn = productCard.querySelector('.remove-from-cart-btn');
-        if (addToCartBtn) {
-          addToCartBtn.setAttribute('data-price', selectedPrice);
-          addToCartBtn.setAttribute('data-size', selectedSize);
-          if (removeBtn) {
-            removeBtn.setAttribute('data-size', selectedSize);
-          }
-          
-          // If button was in "In Cart" state, check if new variant is in cart
-          if (addToCartBtn.classList.contains('in-cart')) {
-            addToCartBtn.classList.remove('in-cart');
-            if (removeBtn) removeBtn.classList.add('hidden');
-            updateButtonStates();
-          } else {
-            updateButtonStates();
-          }
-        }
-      });
-    });
+    // Wire custom size dropdowns for any statically rendered cards
+    setupCustomSizeDropdowns(document);
 
     // Handle remove from cart buttons (for static elements)
     document.querySelectorAll('.remove-from-cart-btn').forEach(function(btn) {

@@ -796,6 +796,89 @@ html {
 
 /* ────────────  PRODUCT SIZE SELECTOR (DROPDOWN)  ──────────── */
 
+/* ────────────  CUSTOM SIZE DROPDOWN  ──────────── */
+.size-dropdown {
+  position: relative;
+  display: inline-block;
+}
+.size-dropdown-trigger {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  width: fit-content;
+  min-width: 120px;
+  padding: var(--space-2) var(--space-3);
+  background-color: var(--background);
+  border: 1.5px solid var(--border);
+  border-radius: var(--radius);
+  color: var(--foreground);
+  font-size: var(--font-size-xs);
+  font-weight: var(--font-weight-bold);
+  cursor: pointer;
+  transition: border-color var(--transition-fast), background-color var(--transition-fast);
+  text-align: left;
+  white-space: nowrap;
+}
+.size-dropdown-trigger:hover,
+.size-dropdown-trigger[aria-expanded="true"] {
+  border-color: var(--primary);
+}
+.size-dropdown-chevron {
+  width: 12px;
+  height: 12px;
+  flex-shrink: 0;
+  color: var(--muted-foreground);
+  transition: transform 0.2s ease;
+  margin-left: auto;
+}
+.size-dropdown-trigger[aria-expanded="true"] .size-dropdown-chevron {
+  transform: rotate(180deg);
+}
+.size-dropdown-panel {
+  /* Default closed state — JS sets position:fixed + top/left when open (portal pattern) */
+  position: absolute;
+  top: calc(100% + 4px);
+  left: 0;
+  width: fit-content;
+  min-width: 120px;
+  background-color: var(--background);
+  border: 1px solid var(--border);
+  border-radius: var(--radius);
+  box-shadow: var(--shadow-lg);
+  z-index: 9999;
+  list-style: none;
+  margin: 0;
+  padding: 4px 0;
+  opacity: 0;
+  transform: translateY(-6px);
+  pointer-events: none;
+  transition: opacity 0.15s ease, transform 0.15s ease;
+}
+.size-dropdown-panel.open {
+  opacity: 1;
+  transform: translateY(0);
+  pointer-events: auto;
+}
+.size-dropdown-option {
+  display: block;
+  padding: 6px 12px;
+  cursor: pointer;
+  font-size: var(--font-size-xs);
+  font-weight: 400;
+  color: var(--foreground);
+  white-space: nowrap;
+  transition: background-color 0.1s ease;
+  list-style: none;
+}
+.size-dropdown-option:hover {
+  background-color: var(--card-header);
+}
+.size-dropdown-option[aria-selected="true"] {
+  background-color: var(--primary);
+  color: var(--primary-foreground);
+  font-weight: 700;
+}
+
 .product-size-select {
   width: 100%;
   padding: var(--space-2) var(--space-3);
