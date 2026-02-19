@@ -7,7 +7,7 @@
 
 :root {
   /* ---- Color Tokens ---- */
-  --background:          rgba(242, 244, 246, 1);
+  --background:          #FCFCFD;
   --foreground:          rgba(91, 102, 112, 1);
   --primary:             rgba(91, 102, 112, 1);
   --primary-foreground:  rgba(255, 255, 255, 1);

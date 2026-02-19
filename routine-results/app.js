@@ -925,7 +925,7 @@
 
   function renderRoutineSummary(tier, productCount, totalPrice, timing) {
     return `
-      <div class="flex flex-col sm:flex-row items-center justify-between gap-[--space-4] p-[--space-6] bg-[--card-header] rounded border border-[--border]">
+      <div class="flex flex-col sm:flex-row items-center justify-between gap-[--space-4] p-[--space-6] bg-white rounded border border-[--border]">
         <div>
           <p class="text-base font-bold text-[--foreground]">${tier} ${timing} Routine — ${productCount} Products</p>
           <p class="text-sm font-light text-[--muted-foreground]">Total: <span class="font-bold text-[--foreground]">$${totalPrice.toFixed(2)}</span></p>
@@ -1188,7 +1188,6 @@
         const size = btn.getAttribute('data-size') || 'Standard';
         
         removeFromCart(productSlug, size);
-        showToast('Item removed from cart');
         updateButtonStates();
       });
     });
@@ -1226,7 +1225,6 @@
         // Simulate API call delay
         setTimeout(function() {
           addToCart(product, price, productName, size);
-          showToast('"' + productName + '" (' + size + ') added to cart');
           
           // Set added state
           btn.classList.remove('loading');
@@ -1271,7 +1269,6 @@
         const size = btn.getAttribute('data-size') || 'Standard';
         
         removeFromCart(productSlug, size);
-        showToast('Item removed from cart');
         updateButtonStates();
       });
     });
@@ -1309,7 +1306,6 @@
         // Simulate API call delay
         setTimeout(function() {
           addToCart(product, price, productName, size);
-          showToast('"' + productName + '" (' + size + ') added to cart');
           
           // Set added state
           btn.classList.remove('loading');
@@ -1369,8 +1365,6 @@
                 addAllBtn.classList.add('added');
                 addAllBtn.innerHTML = '<i data-lucide="check" width="14" height="14" class="inline mr-1" aria-hidden="true"></i> Added to Cart';
                 if (window.lucide) lucide.createIcons({ nodes: [addAllBtn] });
-                
-                showToast('All ' + capitalize(routine) + ' products added to cart');
                 
                 setTimeout(function() {
                   addAllBtn.classList.remove('added');
@@ -1825,7 +1819,6 @@
         // Simulate API call delay
         setTimeout(function() {
           addToCart(product, price, productName, size);
-          showToast('"' + productName + '" (' + size + ') added to cart');
           
           // Set added state
           btn.classList.remove('loading');
@@ -1883,7 +1876,6 @@
         const size = btn.getAttribute('data-size') || 'Standard';
         
         removeFromCart(productSlug, size);
-        showToast('Item removed from cart');
         updateButtonStates();
       });
     });
@@ -1953,7 +1945,6 @@
         // Small delay for better UX
         setTimeout(function() {
           nextTab.click();
-          showToast('🎉 Upgraded to ' + capitalize(nextTier) + ' routine!');
         }, 500);
       }
     }

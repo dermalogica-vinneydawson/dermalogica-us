@@ -57,74 +57,92 @@
 
   <!-- ============================  HEADER  ============================ -->
   <header class="sticky top-0 z-50 bg-[--background] border-b border-[--border] shadow-sm">
-    <div class="max-w-[1280px] mx-auto flex items-center justify-between px-4 md:px-[--space-6] py-[--space-3]">
-      <!-- Logo -->
-      <a href="#" class="flex items-center gap-[--space-2]" aria-label="Dermalogica home">
-        <img src="https://cdn.shopify.com/s/files/1/0422/8857/8713/files/dermalogica-logo.svg?v=1658756270" 
-             alt="Dermalogica" 
-             class="h-5 w-auto"
-             loading="eager" />
-      </a>
-
-      <!-- Desktop Nav -->
-      <nav class="hidden md:flex items-center gap-[--space-8]" aria-label="Main navigation">
-        <a href="#" class="text-sm font-normal text-[--muted-foreground] hover:text-[--foreground] transition-colors duration-[250ms]">Shop</a>
-        <a href="#" class="text-sm font-normal text-[--muted-foreground] hover:text-[--foreground] transition-colors duration-[250ms]">Skin Concerns</a>
-        <a href="#" class="text-sm font-normal text-[--muted-foreground] hover:text-[--foreground] transition-colors duration-[250ms]">Professional</a>
-        <a href="#" class="text-sm font-normal text-[--muted-foreground] hover:text-[--foreground] transition-colors duration-[250ms]">About</a>
-      </nav>
-
-      <!-- Right actions -->
-      <div class="flex items-center gap-[--space-4]">
-        <!-- User -->
-        <div class="hidden sm:flex items-center gap-[--space-2]">
-          <div class="w-[32px] h-[32px] rounded-full bg-[--primary] flex items-center justify-center text-xs font-bold text-[--primary-foreground]">C</div>
-          <span class="text-sm font-normal text-[--foreground]">Courtney</span>
+    <div class="max-w-[1280px] mx-auto px-4 md:px-[--space-6] flex flex-col">
+      <!-- Row 1: mobile = [hamburger + search] | logo | [user + cart]; desktop = spacer | logo | [search + user + cart] -->
+      <div class="relative flex items-center py-[--space-3]">
+        <!-- Left: mobile = hamburger + search; desktop = spacer -->
+        <div class="flex flex-1 min-w-0 items-center justify-start gap-[--space-2]">
+          <div class="flex md:hidden items-center gap-[--space-2]">
+            <button type="button" class="p-[--space-1]" aria-label="Menu" id="mobile-menu-btn">
+              <i data-lucide="menu" width="20" height="20" class="text-[--primary]" aria-hidden="true"></i>
+            </button>
+            <button type="button" class="p-[--space-1]" aria-label="Search">
+              <i data-lucide="search" width="20" height="20" class="text-[--primary]" aria-hidden="true"></i>
+            </button>
+          </div>
+          <div class="hidden md:block w-full"></div>
         </div>
-        <!-- Cart icon with mini-cart -->
-        <div class="relative">
-          <button id="cart-toggle" class="relative p-[--space-1]" aria-label="Shopping bag" aria-expanded="false">
-            <i data-lucide="shopping-bag" width="20" height="20" class="text-[--primary]" aria-hidden="true"></i>
-            <span id="cart-count" class="hidden absolute -top-1 -right-1 w-[18px] h-[18px] rounded-full bg-[--primary] text-[10px] font-bold text-[--primary-foreground] flex items-center justify-center">0</span>
+        <!-- Logo: centered -->
+        <a href="#" class="flex flex-shrink-0 items-center gap-[--space-2] md:absolute md:left-1/2 md:-translate-x-1/2" aria-label="Dermalogica home">
+          <img src="https://cdn.shopify.com/s/files/1/0422/8857/8713/files/dermalogica-logo.svg?v=1658756270" 
+               alt="Dermalogica" 
+               class="h-4 w-auto md:h-5"
+               loading="eager" />
+        </a>
+        <!-- Right: search (desktop), user, cart -->
+        <div class="flex flex-1 min-w-0 items-center justify-end gap-[--space-4]">
+          <button type="button" class="hidden md:block p-[--space-1]" aria-label="Search">
+            <i data-lucide="search" width="20" height="20" class="text-[--primary]" aria-hidden="true"></i>
           </button>
-          
-          <!-- Mini-cart dropdown -->
-          <div id="mini-cart" class="absolute right-0 top-full mt-[--space-2] w-[320px] bg-[--card] border border-[--border] rounded-lg shadow-lg z-50 hidden">
-            <div class="p-[--space-4] border-b border-[--border]">
-              <div class="flex items-center justify-between">
-                <h3 class="text-sm font-bold text-[--foreground]">Cart</h3>
-                <span id="mini-cart-count" class="text-xs font-light text-[--muted-foreground]">0 items</span>
+          <!-- User: icon only on mobile, icon + name on desktop -->
+          <a href="#" class="flex items-center gap-[--space-2]" aria-label="Account">
+            <div class="w-[32px] h-[32px] rounded-full bg-[--primary] flex items-center justify-center text-xs font-bold text-[--primary-foreground] flex-shrink-0">C</div>
+            <span class="hidden md:inline text-sm font-normal text-[--foreground]">Courtney</span>
+          </a>
+          <!-- Cart icon with mini-cart -->
+          <div class="relative">
+            <button id="cart-toggle" class="relative p-[--space-1]" aria-label="Shopping bag" aria-expanded="false">
+              <i data-lucide="shopping-bag" width="20" height="20" class="text-[--primary]" aria-hidden="true"></i>
+              <span id="cart-count" class="hidden absolute -top-1 -right-1 w-[18px] h-[18px] rounded-full bg-[--primary] text-[10px] font-bold text-[--primary-foreground] flex items-center justify-center">0</span>
+            </button>
+            <!-- Mini-cart dropdown -->
+            <div id="mini-cart" class="absolute right-0 top-full mt-[--space-2] w-[320px] bg-[--card] border border-[--border] rounded-lg shadow-lg z-50 hidden">
+              <div class="p-[--space-4] border-b border-[--border]">
+                <div class="flex items-center justify-between">
+                  <h3 class="text-sm font-bold text-[--foreground]">Cart</h3>
+                  <span id="mini-cart-count" class="text-xs font-light text-[--muted-foreground]">0 items</span>
+                </div>
               </div>
-            </div>
-            <div id="mini-cart-items" class="max-h-[400px] overflow-y-auto">
-              <div class="p-[--space-6] text-center">
-                <p class="text-sm font-light text-[--muted-foreground]">Your cart is empty</p>
+              <div id="mini-cart-items" class="max-h-[400px] overflow-y-auto">
+                <div class="p-[--space-6] text-center">
+                  <p class="text-sm font-light text-[--muted-foreground]">Your cart is empty</p>
+                </div>
               </div>
-            </div>
-            <div id="mini-cart-footer" class="p-[--space-4] border-t border-[--border] hidden">
-              <div class="flex items-center justify-between mb-[--space-3]">
-                <span class="text-sm font-bold text-[--foreground]">Total</span>
-                <span id="mini-cart-total" class="text-base font-bold text-[--foreground]">$0.00</span>
+              <div id="mini-cart-footer" class="p-[--space-4] border-t border-[--border] hidden">
+                <div class="flex items-center justify-between mb-[--space-3]">
+                  <span class="text-sm font-bold text-[--foreground]">Total</span>
+                  <span id="mini-cart-total" class="text-base font-bold text-[--foreground]">$0.00</span>
+                </div>
+                <a href="#" class="block w-full px-[--space-4] py-[--space-3] bg-[--primary] text-[--primary-foreground] rounded text-sm font-bold uppercase tracking-[0.08em] text-center hover:bg-[--primary]/90 transition-colors">
+                  View Cart
+                </a>
               </div>
-              <a href="#" class="block w-full px-[--space-4] py-[--space-3] bg-[--primary] text-[--primary-foreground] rounded text-sm font-bold uppercase tracking-[0.08em] text-center hover:bg-[--primary]/90 transition-colors">
-                View Cart
-              </a>
             </div>
           </div>
         </div>
-        <!-- Mobile menu -->
-        <button class="md:hidden p-[--space-1]" aria-label="Menu" id="mobile-menu-btn">
-          <i data-lucide="menu" width="20" height="20" class="text-[--primary]" aria-hidden="true"></i>
-        </button>
       </div>
+
+      <!-- Row 2: desktop nav links centered -->
+      <nav class="hidden md:flex justify-center items-center gap-[--space-8] pb-[--space-3]" aria-label="Main navigation">
+        <a href="#" class="text-xs font-bold uppercase tracking-[0.05em] text-[--muted-foreground] hover:text-[--foreground] transition-colors duration-[250ms]">Shop</a>
+        <a href="#" class="text-xs font-bold uppercase tracking-[0.05em] text-[--muted-foreground] hover:text-[--foreground] transition-colors duration-[250ms]">Clear Start</a>
+        <a href="#" class="text-xs font-bold uppercase tracking-[0.05em] text-[--muted-foreground] hover:text-[--foreground] transition-colors duration-[250ms]">Pro Treatments</a>
+        <a href="#" class="text-xs font-bold uppercase tracking-[0.05em] text-[--muted-foreground] hover:text-[--foreground] transition-colors duration-[250ms]">About</a>
+        <a href="#" class="text-xs font-bold uppercase tracking-[0.05em] text-[--muted-foreground] hover:text-[--foreground] transition-colors duration-[250ms]">Face Mapping</a>
+        <a href="#" class="text-xs font-bold uppercase tracking-[0.05em] text-[--muted-foreground] hover:text-[--foreground] transition-colors duration-[250ms]">Offers</a>
+        <a href="#" class="text-xs font-bold uppercase tracking-[0.05em] text-[--muted-foreground] hover:text-[--foreground] transition-colors duration-[250ms]">Rewards</a>
+      </nav>
     </div>
 
     <!-- Mobile nav drawer -->
     <nav id="mobile-nav" class="md:hidden hidden border-t border-[--border] bg-[--background] px-4 py-[--space-4] flex flex-col gap-[--space-4]" aria-label="Mobile navigation">
-      <a href="#" class="text-sm font-normal text-[--muted-foreground]">Shop</a>
-      <a href="#" class="text-sm font-normal text-[--muted-foreground]">Skin Concerns</a>
-      <a href="#" class="text-sm font-normal text-[--muted-foreground]">Professional</a>
-      <a href="#" class="text-sm font-normal text-[--muted-foreground]">About</a>
+      <a href="#" class="text-xs font-bold uppercase tracking-[0.05em] text-[--muted-foreground]">Shop</a>
+      <a href="#" class="text-xs font-bold uppercase tracking-[0.05em] text-[--muted-foreground]">Clear Start</a>
+      <a href="#" class="text-xs font-bold uppercase tracking-[0.05em] text-[--muted-foreground]">Pro Treatments</a>
+      <a href="#" class="text-xs font-bold uppercase tracking-[0.05em] text-[--muted-foreground]">About</a>
+      <a href="#" class="text-xs font-bold uppercase tracking-[0.05em] text-[--muted-foreground]">Face Mapping</a>
+      <a href="#" class="text-xs font-bold uppercase tracking-[0.05em] text-[--muted-foreground]">Offers</a>
+      <a href="#" class="text-xs font-bold uppercase tracking-[0.05em] text-[--muted-foreground]">Rewards</a>
     </nav>
   </header>
 
@@ -252,15 +270,15 @@
   <main class="max-w-[1280px] mx-auto px-4 md:px-[--space-6] pb-[--space-20]">
 
     <!-- ──────────  SKIN ANALYSIS SUMMARY  ────────── -->
-    <section class="mt-[--space-8] mb-4 bg-[--card] rounded border border-[--border] shadow-sm overflow-hidden" aria-label="Skin analysis summary">
-      <button id="skin-analysis-toggle" class="w-full bg-[--card-header] px-4 md:px-[--space-6] py-[--space-4] border-b border-[--border] flex items-center justify-between hover:bg-[--card-header]/80 transition-colors" aria-expanded="false" aria-controls="skin-analysis-content">
+    <section class="mt-[--space-8] mb-4 bg-white rounded border border-[--border] shadow-sm overflow-hidden" aria-label="Skin analysis summary">
+      <button id="skin-analysis-toggle" class="w-full bg-white px-4 md:px-[--space-6] py-[--space-4] border-b border-[--border] flex items-center justify-between hover:bg-white transition-colors" aria-expanded="false" aria-controls="skin-analysis-content">
         <div class="flex flex-col items-start gap-0.5">
           <h2 class="text-lg font-bold text-[--heading]">Your Skin Profile</h2>
           <p id="skin-analysis-subtitle" class="text-[12px] text-[--muted-foreground] font-normal leading-tight"></p>
         </div>
         <i data-lucide="chevron-down" id="skin-analysis-chevron" class="w-5 h-5 text-[--muted-foreground] transition-transform duration-200" aria-hidden="true"></i>
       </button>
-      <div id="skin-analysis-content" class="px-4 md:px-[--space-6] py-[--space-6] transition-all duration-300 ease-in-out overflow-hidden">
+      <div id="skin-analysis-content" class="bg-white px-4 md:px-[--space-6] py-[--space-6] transition-all duration-300 ease-in-out overflow-hidden">
         <!-- Content will be dynamically loaded here -->
       </div>
     </section>
@@ -356,7 +374,7 @@
 
       <!-- Virtual Professional Chat - Secondary Action -->
       <div class="mt-[--space-6]">
-        <div class="bg-[--card-header] rounded-lg border border-[--border] p-[--space-5] flex flex-col sm:flex-row items-center gap-[--space-4]">
+        <div class="bg-white rounded-lg border border-[--border] p-[--space-5] flex flex-col sm:flex-row items-center justify-center sm:justify-between gap-[--space-4]">
           <div class="flex-shrink-0">
             <div class="w-12 h-12 rounded-full bg-[--primary] flex items-center justify-center">
               <i data-lucide="message-circle" width="24" height="24" class="text-[--primary-foreground]" aria-hidden="true"></i>
@@ -366,10 +384,8 @@
             <h3 class="text-sm font-bold text-[--foreground] mb-[--space-1]">Have questions about your routine?</h3>
             <p class="text-xs font-light text-[--muted-foreground]">Chat with a virtual professional skin therapist for personalized guidance.</p>
           </div>
-          <div class="flex-shrink-0">
-            <button class="px-[--space-5] py-[--space-2] bg-[--card] border border-[--border] rounded text-xs font-bold text-[--foreground] uppercase tracking-[0.08em] hover:bg-[--card-header] hover:border-[--primary] transition-all duration-[250ms]">
-              Start Chat
-            </button>
+          <div class="flex-shrink-0 w-full sm:w-auto flex justify-center sm:justify-end">
+            <a href="#" class="text-xs font-bold text-[--primary] uppercase tracking-[0.08em] hover:underline">Start Chat</a>
           </div>
         </div>
       </div>

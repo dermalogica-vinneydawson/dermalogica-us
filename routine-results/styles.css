@@ -58,12 +58,21 @@ body {
   width: 100%;
   left: 0;
   right: 0;
-  background-color: var(--background); /* Solid so content doesn't bleed through when scrolling */
+  background-color: #F2F4F7;
+  background-color: #f8f9fa; /* Lighter than page (--background) for contrast */
   transition: box-shadow var(--transition-normal), background-color var(--transition-normal);
 }
 
 #sticky-tabs-container:not(:hover) {
   box-shadow: 0 1px 3px rgba(0, 0, 0, 0.05);
+}
+
+/* Parent container: balanced padding so content isn't tight to edges (mobile; desktop overridden at 561px) */
+.sticky-tabs-inner {
+  padding-top: 0 !important;
+  padding-bottom: 0 !important;
+  padding-left: var(--space-5) !important;
+  padding-right: var(--space-5) !important;
 }
 
 /* Sticky bar control groups: stacked label-above-control layout */
@@ -145,7 +154,7 @@ body {
 /* Dropdown button styling - looks like a select input */
 #tier-dropdown-btn,
 #timing-dropdown-btn {
-  background-color: var(--background);
+  background-color: white;
   border: 1px solid var(--border);
   border-radius: var(--radius);
   cursor: pointer;
@@ -161,7 +170,7 @@ body {
 
 #tier-dropdown-btn:hover,
 #timing-dropdown-btn:hover {
-  background-color: var(--card);
+  background-color: white;
   border-color: var(--primary);
 }
 
@@ -186,7 +195,7 @@ body {
   left: 0;
   right: 0;
   margin-top: 4px;
-  background-color: var(--card);
+  background-color: white;
   border: 1px solid var(--border);
   border-radius: var(--radius);
   box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1), 0 2px 4px -1px rgba(0, 0, 0, 0.06);
@@ -230,7 +239,7 @@ body {
   width: 100%;
   padding: var(--space-3) var(--space-3);
   text-align: left;
-  background-color: transparent;
+  background-color: white;
   border: none;
   cursor: pointer;
   transition: background-color var(--transition-normal);
@@ -242,18 +251,18 @@ body {
 
 .custom-dropdown-menu button:hover,
 .custom-dropdown-menu button:focus {
-  background-color: var(--card-header);
+  background-color: #f0f0f0;
   outline: none;
 }
 
 .custom-dropdown-menu button:active {
-  background-color: var(--card-header);
+  background-color: #f0f0f0;
 }
 
 /* Active/selected state for dropdown options */
 .custom-dropdown-menu button[aria-selected="true"],
 .custom-dropdown-menu button.selected {
-  background-color: var(--card-header);
+  background-color: #f0f0f0;
   color: var(--primary);
 }
 
@@ -271,7 +280,7 @@ html {
   gap: var(--space-2);
   padding: var(--space-2) var(--space-5);
   border-radius: var(--radius);
-  background-color: var(--card);
+  background-color: white;
   color: var(--muted-foreground);
   border: 1px solid var(--border);
   font-size: var(--font-size-sm);
@@ -282,7 +291,7 @@ html {
   cursor: pointer;
 }
 .timing-toggle-btn:hover {
-  background-color: var(--card-header);
+  background-color: white;
   border-color: var(--border);
   color: var(--foreground);
 }
@@ -305,9 +314,9 @@ html {
   position: relative;
   align-items: center;
   width: 120px;
-  height: 28px;
-  background-color: var(--card-header);
-  border-radius: var(--radius-full);
+  height: 34px;
+  background-color: white;
+  border-radius: var(--radius);
   border: 1px solid var(--border);
 }
 .timing-toggle-track .timing-toggle-btn.timing-toggle-zone {
@@ -347,7 +356,7 @@ html {
   bottom: 2px;
   width: calc(50% - 4px);
   background-color: var(--primary);
-  border-radius: 9999px;
+  border-radius: var(--radius);
   transition: transform 0.2s ease;
   z-index: 2;
   pointer-events: none;
@@ -382,12 +391,13 @@ html {
   color: var(--tab-inactive-text);
   border: 1px solid var(--border);
   border-radius: var(--radius);
-  font-weight: var(--font-weight-normal);
+  font-weight: 400;
   font-size: var(--font-size-sm);
   letter-spacing: var(--letter-spacing);
   position: relative;
   overflow: hidden;
   box-sizing: border-box !important;
+  transition: background-color var(--transition-fast), border-color var(--transition-fast), color var(--transition-fast), font-weight var(--transition-fast);
 }
 .routine-tab::before {
   content: '';
@@ -419,7 +429,7 @@ html {
   align-items: center !important;
   justify-content: center !important;
   box-sizing: border-box !important;
-  font-weight: var(--font-weight-bold) !important;
+  font-weight: 700 !important;
 }
 .routine-tab--active::before {
   background-color: var(--primary-foreground);
@@ -808,7 +818,7 @@ html {
   width: fit-content;
   min-width: 120px;
   padding: var(--space-2) var(--space-3);
-  background-color: var(--background);
+  background-color: white;
   border: 1.5px solid var(--border);
   border-radius: var(--radius);
   color: var(--foreground);
@@ -841,7 +851,7 @@ html {
   left: 0;
   width: fit-content;
   min-width: 120px;
-  background-color: var(--background);
+  background-color: white;
   border: 1px solid var(--border);
   border-radius: var(--radius);
   box-shadow: var(--shadow-lg);
@@ -869,9 +879,10 @@ html {
   white-space: nowrap;
   transition: background-color 0.1s ease;
   list-style: none;
+  background-color: white;
 }
 .size-dropdown-option:hover {
-  background-color: var(--card-header);
+  background-color: #f0f0f0;
 }
 .size-dropdown-option[aria-selected="true"] {
   background-color: var(--primary);
@@ -1168,14 +1179,14 @@ section[id^="upgrade-"] p {
   width: fit-content;
   min-width: 160px;
   padding: 6px 10px;
-  background-color: var(--background);
+  background-color: white;
   border: 1px solid var(--border);
   border-radius: var(--radius);
   color: var(--foreground);
   font-size: 12px;
   font-weight: 700;
   cursor: pointer;
-  transition: border-color 0.15s ease, background-color 0.15s ease;
+  transition: border-color 0.15s ease;
   text-align: left;
   white-space: nowrap;
   overflow: visible;
@@ -1226,7 +1237,7 @@ section[id^="upgrade-"] p {
   left: 0;
   width: fit-content;
   min-width: 160px;
-  background-color: var(--background);
+  background-color: white;
   border: 1px solid var(--border);
   border-radius: var(--radius);
   box-shadow: var(--shadow-lg);
@@ -1259,9 +1270,10 @@ section[id^="upgrade-"] p {
   color: var(--foreground);
   list-style: none;
   box-sizing: border-box;
+  background-color: white;
 }
 .mobile-tier-option:hover {
-  background-color: var(--card-header);
+  background-color: #f0f0f0;
 }
 .mobile-tier-option[aria-selected="true"] {
   background-color: var(--primary);
@@ -1311,16 +1323,31 @@ section[id^="upgrade-"] p {
     align-items: center;
     width: 100%;
     min-height: 0;
-    padding: 4px var(--space-2);
+    padding: var(--space-4) var(--space-2);
     flex-shrink: unset;
   }
 
-  /* Subtle horizontal divider between the two rows */
-  #mobile-controls-row > #timing-toggle-mobile {
-    border-bottom: 1px solid var(--border);
+  /* Remove vertical line separators on mobile */
+  #mobile-controls-row .sticky-tabs-group-divider {
+    display: none;
   }
 
-  /* Controls area fills all space after the label+divider */
+  /* Vertically center label text with controls on mobile */
+  #mobile-controls-row .sticky-tabs-label {
+    align-self: center;
+  }
+
+  /* Horizontal divider between the two rows — more gap so Routine tier isn't tight to the line */
+  #mobile-controls-row > #timing-toggle-mobile {
+    border-bottom: 1px solid var(--border);
+    padding-bottom: var(--space-3);
+    margin-bottom: var(--space-2);
+  }
+  #mobile-controls-row > .sticky-tabs-group:last-child {
+    padding-top: var(--space-3);
+  }
+
+  /* Controls area fills all space after the label */
   #mobile-controls-row .sticky-tabs-group-controls {
     flex: 1;
     min-width: 0;
@@ -1369,6 +1396,9 @@ section[id^="upgrade-"] p {
   }
   .sticky-tabs-inner {
     padding-top: 18px !important;
+    padding-bottom: 18px !important;
+    padding-left: var(--space-8) !important;
+    padding-right: var(--space-8) !important;
   }
 }
 
@@ -1427,4 +1457,22 @@ section[id^="upgrade-"] p {
 
 #email-input:valid:not(:placeholder-shown) {
   border-color: var(--success);
+}
+
+/* ────────────  FOOTER  ──────────── */
+footer {
+  background-color: #5b6670 !important;
+  color: #fff !important;
+}
+footer a,
+footer h4,
+footer p,
+footer li {
+  color: #fff !important;
+}
+footer a:hover {
+  color: rgba(255, 255, 255, 0.9) !important;
+}
+footer .border-t {
+  border-color: rgba(255, 255, 255, 0.3);
 }
