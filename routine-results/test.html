@@ -1,0 +1,53 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Routine Finder — Recommendation Engine Test</title>
+</head>
+<body>
+  <h1>Recommendation Engine Test</h1>
+  <div id="results"></div>
+
+  <script src="js/data/product-data.js"></script>
+  <script>
+    (function() {
+      const results = document.getElementById('results');
+      if (!window.DermalogicaData) {
+        results.innerHTML = '<p style="color:red">FAIL: DermalogicaData not loaded</p>';
+        return;
+      }
+
+      const testCases = [
+        {
+          name: 'BioLumin-C (28, dullness)',
+          quiz: { age: '28', concern: 'Dullness / uneven tone', tier: 'Essential', timing: 'Both', sensitive: false },
+          expectedMin: 6 // 3 AM + 3 PM for Essential
+        },
+        {
+          name: 'UltraCalming (sensitive)',
+          quiz: { age: '35', concern: 'Sensitivity / redness', tier: 'Essential', timing: 'AM', sensitive: true },
+          expectedMin: 3
+        },
+        {
+          name: 'Clear Start (teen acne)',
+          quiz: { age: '18', concern: 'Breakouts / acne', tier: 'Essential', timing: 'Both', sensitive: false },
+          expectedMin: 6
+        }
+      ];
+
+      let html = '<ul>';
+      let allPass = true;
+      testCases.forEach(tc => {
+        const products = window.DermalogicaData.getRecommendations(tc.quiz);
+        const pass = products.length >= tc.expectedMin;
+        if (!pass) allPass = false;
+        html += '<li>' + (pass ? '✓' : '✗') + ' ' + tc.name + ': ' + products.length + ' products (expected ≥' + tc.expectedMin + ')</li>';
+      });
+      html += '</ul>';
+      html += '<p><strong>' + (allPass ? 'All tests passed.' : 'Some tests failed.') + '</strong></p>';
+      results.innerHTML = html;
+    })();
+  </script>
+</body>
+</html>

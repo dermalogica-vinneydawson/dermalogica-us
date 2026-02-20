@@ -1,12 +1,19 @@
 /**
  * Product Database & Recommendation Logic
  * Generated from Routine Matrix CSV
+ *
+ * Structure:
+ *   - PRODUCT_SIZES: Size options and prices per product
+ *   - PRODUCT_DETAILS: Images, descriptions, categories
+ *   - ROUTINE_MATRIX: Franchise/tier/timing mapping (from CSV)
+ *   - window.DermalogicaData: Public API (getRecommendations, selectFranchise, etc.)
  */
 
 (function(window) {
   'use strict';
 
-  // Product sizes with prices (default size is typically 5.1oz for cleansers/moisturizers, 1.0oz for serums)
+  // === PRODUCT SIZES ===
+  // Size options and prices per product (default size is typically 5.1oz for cleansers, 1.0oz for serums)
   const PRODUCT_SIZES = {
     'Special Cleansing Gel': [
       { size: '1.7 oz', price: 32.00 },
@@ -135,7 +142,8 @@
     return sizes[sizes.length - 1]; // Return largest size as default
   }
 
-  // Product details database (prices, images, descriptions)
+  // === PRODUCT_DETAILS ===
+  // Prices, images, descriptions, categories per product
   const PRODUCT_DETAILS = {
     'Special Cleansing Gel': {
       price: 46.00,
@@ -451,7 +459,8 @@
     }
   };
 
-  // Routine Matrix from CSV
+  // === ROUTINE MATRIX ===
+  // From data/Routine Finder Quiz System [master] - Routine Matrix.csv
   const ROUTINE_MATRIX = [
   {
     "franchise": "Daily Skin Health",
@@ -2885,13 +2894,22 @@
   }
 ];
 
-  // Expose to window
+  // === RECOMMENDATION ENGINE ===
+  // Public API exposed as window.DermalogicaData
   window.DermalogicaData = {
     products: PRODUCT_DETAILS,
+    PRODUCT_DETAILS: PRODUCT_DETAILS, // Alias for backward compatibility
     routineMatrix: ROUTINE_MATRIX,
     
     /**
-     * Get routine recommendations based on quiz results
+     * Get routine recommendations based on quiz results.
+     * @param {Object} quizResults - { age, concern, tier, timing, sensitive }
+     * @param {string} quizResults.age - User age
+     * @param {string} quizResults.concern - Top skin concern
+     * @param {string} quizResults.tier - Essential | Enhanced | Comprehensive
+     * @param {string} quizResults.timing - AM | PM | Both
+     * @param {boolean} quizResults.sensitive - Use sensitive alternatives
+     * @returns {Array<{product:string,step:number,timing:string,details:Object}>} Product list with details
      */
     getRecommendations: function(quizResults) {
       const { age, concern, tier, timing, sensitive } = quizResults;

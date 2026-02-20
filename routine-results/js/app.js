@@ -7,12 +7,17 @@
  *  - Tooltip rendering from data-tooltip attributes
  *  - Add-to-bag with cart count badge + toast notification
  *  - Mobile navigation toggle
+ *
+ * Key DOM IDs (do not remove): #sticky-tabs-container, #skin-analysis-content,
+ * #panel-essential, #panel-enhanced, #panel-comprehensive, #tab-essential,
+ * #tab-enhanced, #tab-comprehensive, #timing-toggle-container, #cart-toggle,
+ * #mini-cart, #toast, #email-modal, #retake-modal
  */
 
 (function () {
   'use strict';
 
-  // Simulated quiz results (would come from actual quiz)
+  /** Simulated quiz results — replace with real quiz data in Shopify integration */
   const QUIZ_RESULTS = {
     age: '28',
     concern: 'Dullness / uneven tone',
@@ -320,7 +325,7 @@
     // Each field has a unique, semantically relevant icon:
     //   age → cake (birthday/age)   concern → search-check (finding skin issues)
     //   timing → sun (time of day)  preference → clock (routine scheduling)
-    //   sensitivity → shield        franchise → award    goal → target
+    //   sensitivity → shield        franchise → layers   goal → target
     const iconSVG = (iconType) => {
       const icons = {
         age:         '<i data-lucide="cake"         width="16" height="16" aria-hidden="true"></i>',
@@ -328,7 +333,7 @@
         timing:      '<i data-lucide="sun"          width="16" height="16" aria-hidden="true"></i>',
         preference:  '<i data-lucide="clock"        width="16" height="16" aria-hidden="true"></i>',
         sensitivity: '<i data-lucide="shield"       width="16" height="16" aria-hidden="true"></i>',
-        franchise:   '<i data-lucide="award"        width="16" height="16" aria-hidden="true"></i>',
+        franchise:   '<i data-lucide="layers"      width="16" height="16" aria-hidden="true"></i>',
         goal:        '<i data-lucide="target"       width="18" height="18" aria-hidden="true"></i>'
       };
       return icons[iconType] || '';
@@ -400,7 +405,7 @@
       </div>
       
       <!-- Your Goal - Compact highlighted summary -->
-      <div class="bg-[--card-header] rounded-lg border-2 border-[--primary] p-[--space-4] shadow-sm">
+      <div class="bg-[--card-header] rounded-lg border border-[--primary] p-[--space-4] shadow-sm">
         <div class="flex items-start gap-[--space-2]">
           <div class="flex-shrink-0 text-[--primary] mt-0.5">
             ${iconSVG('goal')}

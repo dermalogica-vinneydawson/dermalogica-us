@@ -1,0 +1,84 @@
+---
+description: Tailwind CSS v4.0 reference — installation, config, utilities, and breaking changes so agents use v4 patterns correctly
+globs: "**/*.{css,html,js,ts,jsx,tsx,vue,svelte}"
+alwaysApply: false
+---
+
+# Tailwind CSS v4.0 — Agent Reference
+
+Use this when suggesting Tailwind classes, config, or setup. Tailwind v4 differs significantly from v3.
+
+## Installation & Setup
+
+**v4 uses a single CSS import — no `@tailwind` directives:**
+
+```css
+@import "tailwindcss";
+```
+
+**PostCSS:** `npm i tailwindcss @tailwindcss/postcss` then add `"@tailwindcss/postcss"` to plugins.
+
+**Vite:** Use `@tailwindcss/vite` instead of PostCSS for best performance.
+
+## Configuration — CSS-First
+
+**No `tailwind.config.js`.** Configure in CSS via `@theme`:
+
+```css
+@import "tailwindcss";
+
+@theme {
+  --font-display: "Satoshi", "sans-serif";
+  --breakpoint-3xl: 1920px;
+  --color-avocado-500: oklch(0.84 0.18 117.33);
+  --ease-fluid: cubic-bezier(0.3, 0, 0, 1);
+}
+```
+
+Design tokens become native CSS variables (e.g. `var(--color-avocado-500)`).
+
+## Content Detection
+
+**No `content` array.** v4 auto-detects source files. Use `@source` only if you need to include excluded paths:
+
+```css
+@source "../node_modules/@my-company/ui-lib";
+```
+
+## Key Utility Changes
+
+| v3 | v4 |
+|----|-----|
+| `bg-gradient-to-r` | `bg-linear-to-r` |
+| `bg-gradient-to-r from-X to-Y` | `bg-linear-to-r from-X to-Y` (same) |
+| `grid-cols-[13]` (arbitrary) | `grid-cols-13` (built-in) |
+| `data-[current]:opacity-100` (needs config) | `data-current:opacity-100` (built-in) |
+| `@tailwindcss/container-queries` plugin | `@container`, `@min-*`, `@max-*` in core |
+
+## Container Queries (Built-in)
+
+```html
+<div class="@container">
+  <div class="grid-cols-1 @sm:grid-cols-3 @lg:grid-cols-4">...</div>
+</div>
+```
+
+Max-width: `@max-md:grid-cols-1`. Ranges: `@min-md:@max-xl:hidden`.
+
+## New Variants & Utilities
+
+- **`not-*`:** `not-hover:opacity-75`, `not-supports-hanging-punctuation:px-4`
+- **`starting`:** For `@starting-style` enter/exit transitions
+- **3D transforms:** `rotate-x-*`, `rotate-y-*`, `scale-z-*`, `translate-z-*`, `perspective-distant`
+- **Gradients:** `bg-linear-45`, `bg-conic-*`, `bg-radial-*`; modifiers like `bg-linear-to-r/oklch`
+
+## What to Avoid
+
+- Do not suggest `tailwind.config.js` for new v4 projects
+- Do not suggest `content: [...]` — it's automatic
+- Do not suggest `@tailwind base; @tailwind components; @tailwind utilities;` — use `@import "tailwindcss"`
+- Do not suggest the `@tailwindcss/container-queries` plugin — container queries are built-in
+
+## Upgrade Path
+
+Existing v3 projects: use the [official upgrade guide](https://tailwindcss.com/docs/upgrade-guide) and automated upgrade tool.

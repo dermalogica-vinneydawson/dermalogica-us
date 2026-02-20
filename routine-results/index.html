@@ -6,7 +6,7 @@
   <title>Your Personalized Routine — Dermalogica</title>
 
   <!-- Design-system tokens -->
-  <link rel="stylesheet" href="globals.css" />
+  <link rel="stylesheet" href="css/globals.css" />
 
   <!-- Tailwind CDN (play mode — configure arbitrary CSS-var support) -->
   <script src="https://cdn.tailwindcss.com"></script>
@@ -50,7 +50,7 @@
   </script>
 
   <!-- Component styles (references CSS variables via Tailwind arbitrary values) -->
-  <link rel="stylesheet" href="styles.css" />
+  <link rel="stylesheet" href="css/styles.css" />
 </head>
 
 <body class="min-h-screen font-sans text-[--foreground]">
@@ -242,19 +242,19 @@
               <span class="sticky-tabs-label">Routine tier:</span>
               <div class="sticky-tabs-group-controls sticky-tabs-tabstrip flex flex-row gap-[--space-2] min-w-0 overflow-x-auto scrollbar-hide" role="tablist" aria-label="Routine levels">
             <button role="tab" aria-selected="true" aria-controls="panel-essential" id="tab-essential"
-                    class="routine-tab routine-tab--active flex-shrink-0 flex items-center justify-center gap-[--space-2] px-[--space-3] py-[--space-2] text-xs font-bold transition-all duration-[250ms]">
+                    class="routine-tab routine-tab--active flex-shrink-0 flex items-center justify-center gap-[--space-2] px-[--space-3] py-[--space-2] text-xs transition-all duration-[250ms]">
               <svg class="flex-shrink-0" xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect class="tier-bar-1" x="1.5" y="10.5" width="3" height="4" rx="1"/><rect class="tier-bar-2" x="6.5" y="6.5" width="3" height="8" rx="1"/><rect class="tier-bar-3" x="11.5" y="2.5" width="3" height="12" rx="1"/></svg>
               <span>Essential</span>
               <span class="routine-tab-count">3</span>
             </button>
             <button role="tab" aria-selected="false" aria-controls="panel-enhanced" id="tab-enhanced"
-                    class="routine-tab flex-shrink-0 flex items-center justify-center gap-[--space-2] px-[--space-3] py-[--space-2] text-xs font-bold transition-all duration-[250ms]">
+                    class="routine-tab flex-shrink-0 flex items-center justify-center gap-[--space-2] px-[--space-3] py-[--space-2] text-xs transition-all duration-[250ms]">
               <svg class="flex-shrink-0" xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect class="tier-bar-1" x="1.5" y="10.5" width="3" height="4" rx="1"/><rect class="tier-bar-2" x="6.5" y="6.5" width="3" height="8" rx="1"/><rect class="tier-bar-3" x="11.5" y="2.5" width="3" height="12" rx="1"/></svg>
               <span>Enhanced</span>
               <span class="routine-tab-count">5</span>
             </button>
             <button role="tab" aria-selected="false" aria-controls="panel-comprehensive" id="tab-comprehensive"
-                    class="routine-tab flex-shrink-0 flex items-center justify-center gap-[--space-2] px-[--space-3] py-[--space-2] text-xs font-bold transition-all duration-[250ms]">
+                    class="routine-tab flex-shrink-0 flex items-center justify-center gap-[--space-2] px-[--space-3] py-[--space-2] text-xs transition-all duration-[250ms]">
               <svg class="flex-shrink-0" xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect class="tier-bar-1" x="1.5" y="10.5" width="3" height="4" rx="1"/><rect class="tier-bar-2" x="6.5" y="6.5" width="3" height="8" rx="1"/><rect class="tier-bar-3" x="11.5" y="2.5" width="3" height="12" rx="1"/></svg>
               <span>Comprehensive</span>
               <span class="routine-tab-count">7</span>
@@ -563,7 +563,7 @@
   <script src="https://unpkg.com/lucide@latest/dist/umd/lucide.min.js"></script>
 
   <!-- Scripts -->
-  <script src="product-data.js"></script>
-  <script src="app.js"></script>
+  <script src="js/data/product-data.js"></script>
+  <script src="js/app.js"></script>
 </body>
 </html>
